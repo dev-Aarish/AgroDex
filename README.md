@@ -7,14 +7,25 @@
 <h3 align="center">AgroDex</h3>
 <p align="center">
 AgroDex fights food fraud in Indonesian by pairing Hedera’s immutable ledger with Gemini AI for auditing in real-time food.
-
-
-  
-
-
 </p>
 </div>
 
+## 🏆 SSOC 2026 Project Selection
+
+We are excited to announce that this project has been officially selected for **Social Summer Of Code (SSOC) 2026**.
+
+
+# 🌟 Open Source Participation
+
+This project proudly participates in the following open-source programs:
+
+| Program | Program Name | Status |
+|---------|--------------|--------|
+| ♨️ | **Social Summer of Code (SSOC) 2026** | Active |
+
+> 💡 We warmly welcome contributors from all the above programs.  
+Please check open issues and follow the contribution guidelines before submitting a PR.
+> 
 ## About The Project
 
 The Problem
