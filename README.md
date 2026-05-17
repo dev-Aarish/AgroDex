@@ -25,6 +25,7 @@ This project proudly participates in the following open-source programs:
 
 > 💡 We warmly welcome contributors from all the above programs.  
 Please check open issues and follow the contribution guidelines before submitting a PR.
+P.S: **Remember that you should be atleast knowing the basic of web3 blockchain using Hedera. If you're not an expert or understand this project, please do not open the issue / PR unless you know it.**
 > 
 ## About The Project
 
