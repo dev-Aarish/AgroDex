@@ -32,20 +32,20 @@ function NewTabHint() {
 
 function HelpPanel({ network }: { network: string }) {
   return (
-    <div className="space-y-3 p-4 rounded-lg border bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200">
-      <div className="font-semibold text-gray-900 flex items-center gap-2">
-        <AlertCircle className="h-5 w-5 text-blue-600" />
-          No account <span className="uppercase font-bold text-blue-700">{network}</span> available
+    <div className="space-y-3 p-4 rounded-lg border bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 border-blue-200 dark:border-blue-900/50">
+      <div className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+        <AlertCircle className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+          No account <span className="uppercase font-bold text-blue-700 dark:text-blue-400">{network}</span> available
       </div>
       
-      <div className="text-sm text-gray-700 space-y-2">
+      <div className="text-sm text-gray-700 dark:text-slate-300 space-y-2">
         <p className="font-medium">To connect your HashPack wallet, follow these steps:</p>
         <ol className="list-decimal ml-5 space-y-2">
           <li>
             <strong>Install the HashPack extension</strong>
             <br />
             <a
-              className="text-blue-700 underline hover:text-blue-900 inline-flex items-center gap-1"
+              className="text-blue-700 dark:text-blue-400 underline hover:text-blue-900 dark:hover:text-blue-300 inline-flex items-center gap-1"
               target="_blank"
               rel="noreferrer"
               href="https://chromewebstore.google.com/detail/hashpack/heoegjdnijfacjfoebdnlobjekoebcag"
@@ -57,7 +57,7 @@ function HelpPanel({ network }: { network: string }) {
             <strong>Create a Hedera Testnet account</strong>
             <br />
             <a
-              className="text-blue-700 underline hover:text-blue-900 inline-flex items-center gap-1"
+              className="text-blue-700 dark:text-blue-400 underline hover:text-blue-900 dark:hover:text-blue-300 inline-flex items-center gap-1"
               target="_blank"
               rel="noreferrer"
               href="https://portal.hedera.com/register"
@@ -68,20 +68,20 @@ function HelpPanel({ network }: { network: string }) {
           <li>
             <strong>Import your account into HashPack</strong>
             <br />
-            <span className="text-gray-600">
+            <span className="text-gray-600 dark:text-slate-400">
               HashPack → Settings → Networks → <strong>Testnet</strong> → <em>Import an account</em> (paste your private key from the portal)
             </span>
           </li>
           <li>
             <strong>Login back</strong>
             <br />
-            <span className="text-gray-600">Come back here and click "Retry"</span>
+            <span className="text-gray-600 dark:text-slate-400">Come back here and click "Retry"</span>
           </li>
         </ol>
       </div>
 
       <div className="flex gap-2 flex-wrap pt-2">
-        <Button asChild variant="default" size="sm" className="bg-black hover:bg-gray-800">
+        <Button asChild variant="default" size="sm" className="bg-black hover:bg-gray-800 dark:bg-slate-800 dark:hover:bg-slate-700">
           <a
             target="_blank"
             rel="noreferrer"
@@ -91,7 +91,7 @@ function HelpPanel({ network }: { network: string }) {
             Install HashPack
           </a>
         </Button>
-        <Button asChild variant="default" size="sm" className="bg-black hover:bg-gray-800">
+        <Button asChild variant="default" size="sm" className="bg-black hover:bg-gray-800 dark:bg-slate-800 dark:hover:bg-slate-700">
           <a target="_blank" rel="noreferrer" href="https://portal.hedera.com/register">
             <ExternalLink className="h-3 w-3 mr-1" />
             Create a Testnet account
@@ -121,18 +121,18 @@ export default function WalletLogin() {
       {embedded && <NewTabHint />}
 
       {state.status === 'paired' && (
-        <Alert variant="default" className="bg-green-50 border-green-200">
-          <CheckCircle2 className="h-4 w-4 text-green-600" />
-          <AlertDescription className="text-green-800">
+        <Alert variant="default" className="bg-green-50 border-green-200 dark:bg-green-950/20 dark:border-green-900/50">
+          <CheckCircle2 className="h-4 w-4 text-green-600 dark:text-green-400" />
+          <AlertDescription className="text-green-800 dark:text-green-200">
             Connected: {state.sessionData?.accountIds?.[0] ?? 'Hedera Account'}
           </AlertDescription>
         </Alert>
       )}
 
       {state.status === 'connecting' && (
-        <Alert variant="default" className="bg-blue-50 border-blue-200">
-          <AlertCircle className="h-4 w-4 text-blue-600" />
-          <AlertDescription className="text-blue-800">
+        <Alert variant="default" className="bg-blue-50 border-blue-200 dark:bg-blue-950/20 dark:border-blue-900/50">
+          <AlertCircle className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+          <AlertDescription className="text-blue-800 dark:text-blue-200">
             Connecting… Check the extension popup or use the QR code in the modal.
           </AlertDescription>
         </Alert>
@@ -168,7 +168,7 @@ export default function WalletLogin() {
         )}
       </div>
 
-      <p className="text-xs text-gray-500">
+      <p className="text-xs text-gray-500 dark:text-slate-400">
         💡 Tip: If nothing happens, open the application in a new tab and make sure HashPack is installed and enabled on this site..
       </p>
     </div>

@@ -148,7 +148,7 @@ export default function BatchVerify() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-blue-950/20 dark:via-background dark:to-indigo-950/20 dark:bg-background text-foreground">
       <Helmet>
         <title>Verify Batch | AgroDex</title>
       </Helmet>
@@ -156,13 +156,13 @@ export default function BatchVerify() {
       <div className="max-w-5xl mx-auto space-y-8 p-4 md:p-8">
         {/* Hero Section */}
         <div className="text-center space-y-4">
-          <div className="inline-block p-3 bg-blue-100 rounded-2xl mb-2">
-            <ShieldCheck className="h-8 w-8 text-blue-600" />
+          <div className="inline-block p-3 bg-blue-100 dark:bg-blue-950/50 rounded-2xl mb-2">
+            <ShieldCheck className="h-8 w-8 text-blue-600 dark:text-blue-400" />
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">
             Verify Batch Authenticity
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-lg text-gray-600 dark:text-slate-300 max-w-2xl mx-auto">
             Validate product provenance and trace complete supply chain history
           </p>
         </div>
@@ -179,13 +179,13 @@ export default function BatchVerify() {
 
         {/* Verification Form - Only show if no URL params */}
         {!showResults && (
-          <Card className="shadow-xl border-0">
+          <Card className="shadow-xl border-0 bg-card text-card-foreground dark:border dark:border-slate-800">
             <CardHeader className="space-y-1 pb-6">
-              <CardTitle className="text-2xl flex items-center gap-2">
-                <Search className="h-6 w-6 text-blue-600" />
+              <CardTitle className="text-2xl flex items-center gap-2 text-gray-900 dark:text-white">
+                <Search className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                 Verify Certificate
               </CardTitle>
-              <CardDescription className="text-base">
+              <CardDescription className="text-base text-slate-500 dark:text-slate-400">
                 Enter NFT credentials to validate batch authenticity and view
                 complete provenance
               </CardDescription>
@@ -196,9 +196,9 @@ export default function BatchVerify() {
                   <div className="space-y-2">
                     <Label
                       htmlFor="tokenId"
-                      className="text-sm font-semibold text-gray-700 flex items-center gap-2"
+                      className="text-sm font-semibold text-gray-700 dark:text-slate-300 flex items-center gap-2"
                     >
-                      <Hash className="h-4 w-4 text-blue-600" />
+                      <Hash className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                       Token ID
                     </Label>
                     <Input
@@ -206,7 +206,7 @@ export default function BatchVerify() {
                       placeholder="0.0.123456"
                       value={tokenId}
                       onChange={(e) => setTokenId(e.target.value)}
-                      className="h-11 font-mono border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                      className="h-11 font-mono border-gray-300 dark:border-slate-800 dark:bg-slate-900 text-foreground focus:border-blue-500 focus:ring-blue-500"
                       required
                     />
                   </div>
@@ -214,9 +214,9 @@ export default function BatchVerify() {
                   <div className="space-y-2">
                     <Label
                       htmlFor="serialNumber"
-                      className="text-sm font-semibold text-gray-700 flex items-center gap-2"
+                      className="text-sm font-semibold text-gray-700 dark:text-slate-300 flex items-center gap-2"
                     >
-                      <Hash className="h-4 w-4 text-blue-600" />
+                      <Hash className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                       Serial Number
                     </Label>
                     <Input
@@ -224,7 +224,7 @@ export default function BatchVerify() {
                       placeholder="1"
                       value={serialNumber}
                       onChange={(e) => setSerialNumber(e.target.value)}
-                      className="h-11 font-mono border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                      className="h-11 font-mono border-gray-300 dark:border-slate-800 dark:bg-slate-900 text-foreground focus:border-blue-500 focus:ring-blue-500"
                       required
                     />
                   </div>
@@ -254,15 +254,15 @@ export default function BatchVerify() {
 
         {/* Verification Results - Only show if URL params present */}
         {showResults && (
-          <Card className="shadow-xl border-0">
+          <Card className="shadow-xl border-0 bg-card text-card-foreground dark:border dark:border-slate-800">
             <CardContent className="pt-6">
               {mutation.isPending && (
                 <div className="text-center py-12">
-                  <Loader2 className="h-12 w-12 animate-spin mx-auto text-blue-600 mb-4" />
-                  <h2 className="text-2xl font-semibold text-gray-900">
+                  <Loader2 className="h-12 w-12 animate-spin mx-auto text-blue-600 dark:text-blue-400 mb-4" />
+                  <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
                     Loading Verification Data...
                   </h2>
-                  <p className="text-gray-600 mt-2">
+                  <p className="text-gray-600 dark:text-slate-300 mt-2">
                     Contacting Hedera Mirror Node and AI...
                   </p>
                 </div>
@@ -272,9 +272,9 @@ export default function BatchVerify() {
                 <div className="mt-6 space-y-6">
                   {/* Handle batch not found (404 business logic) */}
                   {isNotFound ? (
-                    <Alert className="border-amber-200 bg-amber-50 shadow-md">
+                    <Alert className="border-amber-200 dark:border-amber-900/30 bg-amber-50 dark:bg-amber-950/20 shadow-md">
                       <AlertCircle className="h-5 w-5 text-amber-600" />
-                      <AlertDescription className="text-amber-900">
+                      <AlertDescription className="text-amber-900 dark:text-amber-300">
                         <div className="space-y-2">
                           <span className="text-lg font-bold block">
                             Lot not found / not registered
@@ -283,11 +283,11 @@ export default function BatchVerify() {
                             No batch matches this Token ID and Serial Number in
                             AgroDex at the moment.
                           </p>
-                          <div className="bg-white/50 p-3 rounded border border-amber-200 mt-3">
-                            <p className="text-xs font-semibold text-amber-800">
+                          <div className="bg-white/50 dark:bg-slate-900/50 p-3 rounded border border-amber-200 dark:border-slate-800 mt-3">
+                            <p className="text-xs font-semibold text-amber-800 dark:text-amber-400">
                               Token ID : {params.tokenId}
                             </p>
-                            <p className="text-xs font-semibold text-amber-800">
+                            <p className="text-xs font-semibold text-amber-800 dark:text-amber-400">
                               Serial Number : {params.serialNumber}
                             </p>
                           </div>
@@ -295,9 +295,9 @@ export default function BatchVerify() {
                       </AlertDescription>
                     </Alert>
                   ) : verifiedResult ? (
-                    <Alert className="border-emerald-200 bg-emerald-50 shadow-md">
+                    <Alert className="border-emerald-200 dark:border-emerald-900/30 bg-emerald-50 dark:bg-emerald-950/20 shadow-md">
                       <CheckCircle2 className="h-5 w-5 text-emerald-600" />
-                      <AlertDescription className="text-emerald-900">
+                      <AlertDescription className="text-emerald-900 dark:text-emerald-300">
                         <div className="flex items-center justify-between">
                           <span className="text-lg font-bold">
                             Lot verified
@@ -325,44 +325,44 @@ export default function BatchVerify() {
 
                   {/* Only show details if batch was found */}
                   {verifiedResult && (
-                    <Card className="border-blue-200 shadow-lg">
+                    <Card className="border-blue-200 dark:border-blue-950/30 bg-card text-card-foreground shadow-lg">
                       <CardHeader className="pb-4">
-                        <CardTitle className="text-xl font-bold">
+                        <CardTitle className="text-xl font-bold text-gray-900 dark:text-white">
                           Verification Details
                         </CardTitle>
                       </CardHeader>
                       <CardContent className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                            <p className="text-xs font-semibold text-gray-600 mb-1">
+                          <div className="bg-gray-50 dark:bg-slate-900 p-4 rounded-lg border border-gray-200 dark:border-slate-800">
+                            <p className="text-xs font-semibold text-gray-600 dark:text-slate-400 mb-1">
                               Token ID
                             </p>
-                            <p className="font-mono font-bold text-gray-900">
+                            <p className="font-mono font-bold text-gray-900 dark:text-white">
                               {verifiedResult.tokenId}
                             </p>
                           </div>
-                          <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                            <p className="text-xs font-semibold text-gray-600 mb-1">
+                          <div className="bg-gray-50 dark:bg-slate-900 p-4 rounded-lg border border-gray-200 dark:border-slate-800">
+                            <p className="text-xs font-semibold text-gray-600 dark:text-slate-400 mb-1">
                               Serial Number
                             </p>
-                            <p className="font-mono font-bold text-gray-900">
+                            <p className="font-mono font-bold text-gray-900 dark:text-white">
                               {verifiedResult.serialNumber}
                             </p>
                           </div>
-                          <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                            <p className="text-xs font-semibold text-gray-600 mb-1">
+                          <div className="bg-gray-50 dark:bg-slate-900 p-4 rounded-lg border border-gray-200 dark:border-slate-800">
+                            <p className="text-xs font-semibold text-gray-600 dark:text-slate-400 mb-1">
                               Status
                             </p>
                             <Badge className="bg-emerald-600 text-white font-semibold">
                               {verifiedResult.status}
                             </Badge>
                           </div>
-                          <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                            <p className="text-xs font-semibold text-gray-600 mb-1 flex items-center gap-1">
+                          <div className="bg-gray-50 dark:bg-slate-900 p-4 rounded-lg border border-gray-200 dark:border-slate-800">
+                            <p className="text-xs font-semibold text-gray-600 dark:text-slate-400 mb-1 flex items-center gap-1">
                               <Calendar className="h-3 w-3" />
                               Verified on
                             </p>
-                            <p className="text-sm font-semibold text-gray-900">
+                            <p className="text-sm font-semibold text-gray-900 dark:text-white">
                               {new Date(
                                 verifiedResult.verifiedAt,
                               ).toLocaleString()}
@@ -370,14 +370,14 @@ export default function BatchVerify() {
                           </div>
                         </div>
 
-                        <div className="border-t pt-4">
-                          <p className="font-bold text-gray-900 mb-3 flex items-center gap-2">
-                            <ExternalLink className="h-4 w-4 text-blue-600" />
+                        <div className="border-t border-gray-200 dark:border-slate-800 pt-4">
+                          <p className="font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+                            <ExternalLink className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                             HCS Transaction Trail
                           </p>
                           <div className="space-y-2">
                             {verifiedResult.hcsTransactionIds.length === 0 && (
-                              <p className="text-sm text-gray-600">
+                              <p className="text-sm text-gray-600 dark:text-slate-400">
                                 No HCS transactions found for this batch.
                               </p>
                             )}
@@ -388,7 +388,7 @@ export default function BatchVerify() {
                                   href={`https://hashscan.io/testnet/transaction/${txId}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="text-sm text-blue-600 hover:text-blue-800 font-mono flex items-center gap-1 hover:underline"
+                                  className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-mono flex items-center gap-1 hover:underline"
                                 >
                                   {txId} <ExternalLink className="h-3 w-3" />
                                 </a>
@@ -398,11 +398,11 @@ export default function BatchVerify() {
                         </div>
 
                         {verifiedResult.ai_summary && (
-                          <div className="border-t pt-4 space-y-4">
+                          <div className="border-t border-gray-200 dark:border-slate-800 pt-4 space-y-4">
                             <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
                               <div className="flex items-center gap-2">
-                                <Sparkles className="h-5 w-5 text-violet-600" />
-                                <p className="font-bold text-lg text-gray-900">
+                                <Sparkles className="h-5 w-5 text-violet-600 dark:text-violet-400" />
+                                <p className="font-bold text-lg text-gray-900 dark:text-white">
                                   AI Provenance Summary
                                 </p>
                               </div>
@@ -414,7 +414,7 @@ export default function BatchVerify() {
                                     language === "en" ? "default" : "outline"
                                   }
                                   className={
-                                    language === "en" ? "bg-blue-600" : ""
+                                    language === "en" ? "bg-blue-600 hover:bg-blue-700" : "border-gray-300 dark:border-slate-800 text-gray-700 dark:text-slate-300"
                                   }
                                   onClick={() => setLanguage("en")}
                                 >
@@ -426,14 +426,14 @@ export default function BatchVerify() {
                             {verifiedResult.ai_summary.trustScore !== null &&
                               verifiedResult.ai_summary.trustScore !==
                                 undefined && (
-                                <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-emerald-50 to-blue-50 rounded-lg border border-emerald-200 shadow-sm">
-                                  <Award className="h-8 w-8 text-emerald-600" />
+                                <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-emerald-50 to-blue-50 dark:from-emerald-950/20 dark:to-blue-950/20 rounded-lg border border-emerald-200 dark:border-emerald-900/30 shadow-sm">
+                                  <Award className="h-8 w-8 text-emerald-600 dark:text-emerald-400" />
                                   <div className="flex-1">
-                                    <div className="text-2xl font-bold text-emerald-700">
+                                    <div className="text-2xl font-bold text-emerald-700 dark:text-emerald-400">
                                       Trust Score:{" "}
                                       {verifiedResult.ai_summary.trustScore}/100
                                     </div>
-                                    <div className="text-sm text-gray-700 mt-1">
+                                    <div className="text-sm text-gray-700 dark:text-slate-300 mt-1">
                                       {
                                         verifiedResult.ai_summary
                                           .trustExplanation
@@ -443,8 +443,8 @@ export default function BatchVerify() {
                                 </div>
                               )}
 
-                            <div className="bg-gradient-to-br from-white to-gray-50 p-5 rounded-lg border border-gray-200 shadow-sm">
-                              <p className="text-base text-gray-800 leading-relaxed">
+                            <div className="bg-gradient-to-br from-white to-gray-50 dark:from-slate-900 dark:to-slate-950 p-5 rounded-lg border border-gray-200 dark:border-slate-800 shadow-sm">
+                              <p className="text-base text-gray-800 dark:text-slate-350 leading-relaxed">
                                 {language === "en"
                                   ? verifiedResult.ai_summary.summary_en
                                   : verifiedResult.ai_summary.summary_fr}
@@ -454,11 +454,11 @@ export default function BatchVerify() {
                             {verifiedResult.ai_summary.timeline &&
                               verifiedResult.ai_summary.timeline.length > 0 && (
                                 <div>
-                                  <p className="font-bold text-gray-900 mb-3 flex items-center gap-2">
-                                    <Clock className="h-5 w-5 text-blue-600" />
+                                  <p className="font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+                                    <Clock className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                                     Supply Chain Timeline
                                   </p>
-                                  <div className="space-y-3 relative before:absolute before:left-4 before:top-8 before:bottom-8 before:w-0.5 before:bg-blue-200">
+                                  <div className="space-y-3 relative before:absolute before:left-4 before:top-8 before:bottom-8 before:w-0.5 before:bg-blue-200 dark:before:bg-blue-950">
                                     {verifiedResult.ai_summary.timeline.map(
                                       (item, idx: number) => (
                                         <div
@@ -468,11 +468,11 @@ export default function BatchVerify() {
                                           <div className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-md z-10">
                                             {idx + 1}
                                           </div>
-                                          <div className="flex-1 bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-                                            <div className="font-bold text-gray-900">
+                                          <div className="flex-1 bg-white dark:bg-slate-900 p-4 rounded-lg border border-gray-200 dark:border-slate-800 shadow-sm">
+                                            <div className="font-bold text-gray-900 dark:text-white">
                                               {item.event}
                                             </div>
-                                            <div className="text-xs text-gray-500 mt-1 flex items-center gap-1">
+                                            <div className="text-xs text-gray-500 dark:text-slate-400 mt-1 flex items-center gap-1">
                                               <Calendar className="h-3 w-3" />
                                               {new Date(
                                                 item.timestamp,
@@ -482,7 +482,7 @@ export default function BatchVerify() {
                                               href={`https://hashscan.io/testnet/transaction/${item.txId}`}
                                               target="_blank"
                                               rel="noopener noreferrer"
-                                              className="text-xs text-blue-600 hover:text-blue-800 font-mono flex items-center gap-1 mt-2 hover:underline"
+                                              className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-mono flex items-center gap-1 mt-2 hover:underline"
                                             >
                                               {item.txId}{" "}
                                               <ExternalLink className="h-3 w-3" />
@@ -499,10 +499,10 @@ export default function BatchVerify() {
 
                         {verifiedResult.hcsMessages &&
                           verifiedResult.hcsMessages.length > 0 && (
-                            <div className="border-t pt-4">
+                            <div className="border-t border-gray-200 dark:border-slate-800 pt-4">
                               <div className="flex items-center gap-2 mb-4">
-                                <MessageCircle className="h-5 w-5 text-blue-600" />
-                                <p className="font-bold text-lg text-gray-900">
+                                <MessageCircle className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                                <p className="font-bold text-lg text-gray-900 dark:text-white">
                                   Ask About This Product
                                 </p>
                               </div>
@@ -516,7 +516,7 @@ export default function BatchVerify() {
                                       setQuestion(e.target.value)
                                     }
                                     rows={3}
-                                    className="flex-1 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                                    className="flex-1 border-gray-300 dark:border-slate-800 dark:bg-slate-900 text-foreground focus:border-blue-500 focus:ring-blue-500"
                                   />
                                   <Button
                                     onClick={handleAskQuestion}
@@ -532,14 +532,14 @@ export default function BatchVerify() {
                                 </div>
 
                                 {qaResponse && (
-                                  <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-5 rounded-lg border border-blue-200 shadow-sm space-y-3">
-                                    <p className="text-base text-gray-900 font-medium leading-relaxed">
+                                  <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 p-5 rounded-lg border border-blue-200 dark:border-blue-900/30 shadow-sm space-y-3">
+                                    <p className="text-base text-gray-900 dark:text-white font-medium leading-relaxed">
                                       {qaResponse.answer}
                                     </p>
                                     {qaResponse.evidenceTxIds &&
                                       qaResponse.evidenceTxIds.length > 0 && (
-                                        <div className="pt-3 border-t border-blue-200">
-                                          <p className="text-sm font-bold text-gray-700 mb-2">
+                                        <div className="pt-3 border-t border-blue-200 dark:border-blue-900/20">
+                                          <p className="text-sm font-bold text-gray-700 dark:text-slate-300 mb-2">
                                             Evidence:
                                           </p>
                                           <div className="flex flex-wrap gap-2">
@@ -550,7 +550,7 @@ export default function BatchVerify() {
                                                   href={`https://hashscan.io/testnet/transaction/${txId}`}
                                                   target="_blank"
                                                   rel="noopener noreferrer"
-                                                  className="text-xs bg-white px-2 py-1 rounded border border-blue-300 hover:bg-blue-100 flex items-center gap-1"
+                                                  className="text-xs bg-white dark:bg-slate-900 text-gray-800 dark:text-slate-350 px-2 py-1 rounded border border-blue-300 dark:border-blue-900/30 hover:bg-blue-105 hover:dark:bg-slate-800 flex items-center gap-1"
                                                 >
                                                   {txId.substring(0, 20)}...{" "}
                                                   <ExternalLink className="h-3 w-3" />
@@ -561,7 +561,7 @@ export default function BatchVerify() {
                                         </div>
                                       )}
                                     {qaResponse.ms && (
-                                      <p className="text-xs text-gray-500">
+                                      <p className="text-xs text-gray-500 dark:text-slate-400">
                                         Answered in {qaResponse.ms}ms
                                       </p>
                                     )}
@@ -572,11 +572,11 @@ export default function BatchVerify() {
                           )}
 
                         {verifiedResult.nftMetadata && (
-                          <details className="border-t pt-4">
-                            <summary className="font-semibold mb-2 cursor-pointer">
+                          <details className="border-t border-gray-200 dark:border-slate-800 pt-4">
+                            <summary className="font-semibold mb-2 cursor-pointer text-gray-900 dark:text-white">
                               NFT Metadata
                             </summary>
-                            <pre className="bg-gray-50 p-3 rounded border text-xs overflow-auto max-h-48">
+                            <pre className="bg-gray-50 dark:bg-slate-900 p-3 rounded border border-gray-200 dark:border-slate-800 text-xs overflow-auto max-h-48 text-foreground">
                               {JSON.stringify(
                                 verifiedResult.nftMetadata,
                                 null,
@@ -592,9 +592,9 @@ export default function BatchVerify() {
               )}
 
               {mutation.isError && (
-                <Alert className="mt-6 border-red-200 bg-red-50 shadow-md">
+                <Alert className="mt-6 border-red-200 bg-red-50 dark:bg-red-950/20 shadow-md">
                   <AlertCircle className="h-5 w-5 text-red-600" />
-                  <AlertDescription className="text-red-900 font-semibold">
+                  <AlertDescription className="text-red-900 dark:text-red-300 font-semibold">
                     {" "}
                     {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}{" "}
                     {(mutation.error as any)?.response?.data?.details ||

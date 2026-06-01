@@ -11,6 +11,7 @@ import { AlertCircle, Mail, Lock } from "lucide-react";
 import WalletLogin from "@/components/WalletLogin";
 import { Helmet } from "react-helmet-async";
 import logoUrl from "@/assets/agritrust-logo.svg";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function AuthLanding() {
   const navigate = useNavigate();
@@ -56,17 +57,17 @@ export default function AuthLanding() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-emerald-600 via-teal-600 to-blue-600">
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-emerald-600 via-teal-600 to-blue-600 dark:from-emerald-950 dark:via-slate-900 dark:to-blue-950">
         <div className="text-center">
           <div className="h-12 w-12 animate-spin rounded-full border-4 border-white border-t-transparent mx-auto"></div>
-          <p className="mt-4 text-white">Loading...</p>
+          <p className="mt-4 text-white dark:text-slate-200">Loading...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-emerald-600 via-teal-600 to-blue-600">
+    <div className="min-h-screen w-full bg-gradient-to-br from-emerald-600 via-teal-600 to-blue-600 dark:from-emerald-950 dark:via-slate-900 dark:to-blue-950">
       <Helmet>
         <title>Welcome | AgroDex</title>
       </Helmet>
@@ -77,19 +78,24 @@ export default function AuthLanding() {
             <img
               src={logoUrl}
               alt="AgroDex"
-              className="h-9 w-auto drop-shadow-sm brightness-0 invert bg-white/80 p-1 rounded-md"
+              className="h-9 w-auto drop-shadow-sm brightness-0 invert bg-white/80 dark:bg-white/10 dark:backdrop-blur-sm p-1 rounded-md"
             />
             <span className="sr-only">AgroDex</span>
             <span className="ml-2 rounded-full bg-white/10 px-2.5 py-1 text-xs text-emerald-50 ring-1 ring-white/20">
               Hedera Verified • Testnet
             </span>
           </div>
-          <button
-            onClick={() => setIsSignUp(!isSignUp)}
-            className="rounded-xl bg-white/10 px-3 py-1.5 text-sm text-white ring-1 ring-white/20 hover:bg-white/15 transition-colors"
-          >
-            {isSignUp ? "Sign In" : "Create account"}
-          </button>
+          <div className="flex items-center gap-4">
+            <div className="text-white hover:text-emerald-100">
+              <ThemeToggle />
+            </div>
+            <button
+              onClick={() => setIsSignUp(!isSignUp)}
+              className="rounded-xl bg-white/10 px-3 py-1.5 text-sm text-white ring-1 ring-white/20 hover:bg-white/15 transition-colors"
+            >
+              {isSignUp ? "Sign In" : "Create account"}
+            </button>
+          </div>
         </div>
 
         <div className="mt-10 grid items-center gap-8 lg:grid-cols-2">
@@ -153,8 +159,8 @@ export default function AuthLanding() {
               transition={{ duration: 0.5 }}
               className="w-full max-w-[520px]"
             >
-              <div className="rounded-3xl bg-white/60 p-1 shadow-[0_20px_60px_rgba(0,0,0,0.15)] backdrop-blur-sm">
-                <div className="grid gap-4 rounded-3xl bg-white p-6 lg:grid-cols-2">
+              <div className="rounded-3xl bg-white/60 dark:bg-slate-800/40 p-1 shadow-[0_20px_60px_rgba(0,0,0,0.15)] backdrop-blur-sm">
+                <div className="grid gap-4 rounded-3xl bg-white dark:bg-slate-900 p-6 lg:grid-cols-2">
                   {/* Illustration */}
                   <motion.div
                     initial={{ opacity: 0, scale: 0.98 }}
@@ -181,10 +187,10 @@ export default function AuthLanding() {
 
                   {/* Auth panel */}
                   <div className="flex flex-col justify-center">
-                    <h2 className="text-xl font-semibold text-gray-900">
+                    <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
                       {isSignUp ? "Create Account" : "Welcome Back"}
                     </h2>
-                    <p className="mt-1 text-sm text-gray-500">
+                    <p className="mt-1 text-sm text-gray-500 dark:text-slate-400">
                       {isSignUp
                         ? "Start tracking your agricultural batches"
                         : "Sign in to access your account."}
@@ -208,16 +214,16 @@ export default function AuthLanding() {
                         </button>
                         <div className="relative">
                           <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t border-gray-200"></div>
+                            <div className="w-full border-t border-gray-200 dark:border-slate-800"></div>
                           </div>
                           <div className="relative flex justify-center text-xs">
-                            <span className="bg-white px-2 text-gray-500">
+                            <span className="bg-white dark:bg-slate-900 px-2 text-gray-500 dark:text-slate-400">
                               or
                             </span>
                           </div>
                         </div>
                         <WalletLogin />
-                        <p className="mt-2 text-xs text-gray-500 text-center">
+                        <p className="mt-2 text-xs text-gray-500 dark:text-slate-400 text-center">
                           Your identity stays secure — Hedera WalletConnect.
                         </p>
                       </div>
@@ -229,7 +235,7 @@ export default function AuthLanding() {
                         <div className="space-y-2">
                           <Label
                             htmlFor="email"
-                            className="text-sm font-medium text-gray-700"
+                            className="text-sm font-medium text-gray-700 dark:text-slate-300"
                           >
                             Email
                           </Label>
@@ -240,7 +246,7 @@ export default function AuthLanding() {
                               type="email"
                               value={email}
                               onChange={(e) => setEmail(e.target.value)}
-                              className="pl-10"
+                              className="pl-10 dark:bg-slate-950 dark:border-slate-800 dark:text-white"
                               placeholder="you@example.com"
                               required
                             />
@@ -249,7 +255,7 @@ export default function AuthLanding() {
                         <div className="space-y-2">
                           <Label
                             htmlFor="password"
-                            className="text-sm font-medium text-gray-700"
+                            className="text-sm font-medium text-gray-700 dark:text-slate-300"
                           >
                             Password
                           </Label>
@@ -260,7 +266,7 @@ export default function AuthLanding() {
                               type="password"
                               value={password}
                               onChange={(e) => setPassword(e.target.value)}
-                              className="pl-10"
+                              className="pl-10 dark:bg-slate-950 dark:border-slate-800 dark:text-white"
                               placeholder="••••••••"
                               required
                             />
@@ -287,7 +293,7 @@ export default function AuthLanding() {
                         <button
                           type="button"
                           onClick={() => setShowEmailForm(false)}
-                          className="w-full text-sm text-gray-600 hover:text-gray-900"
+                          className="w-full text-sm text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white"
                         >
                           ← Back to options
                         </button>

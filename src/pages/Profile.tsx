@@ -104,16 +104,16 @@ export default function Profile() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 dark:from-green-950/20 dark:to-blue-950/20 dark:bg-background text-foreground">
       <Helmet>
         <title>Profile | AgroDex</title>
       </Helmet>
       <Navbar />
       <div className="container mx-auto max-w-2xl py-8 px-4">
-        <Card>
+        <Card className="bg-card text-card-foreground dark:border-slate-800">
           <CardHeader>
-            <CardTitle>User Profile</CardTitle>
-            <CardDescription>
+            <CardTitle className="text-gray-900 dark:text-white">User Profile</CardTitle>
+            <CardDescription className="text-slate-500 dark:text-slate-400">
               Manage your account and linked Hedera wallet
             </CardDescription>
           </CardHeader>
@@ -126,9 +126,9 @@ export default function Profile() {
             )}
 
             {success && (
-              <Alert className="border-green-500 bg-green-50">
+              <Alert className="border-green-500 dark:border-green-950/30 bg-green-50 dark:bg-green-950/20">
                 <CheckCircle className="h-4 w-4 text-green-600" />
-                <AlertDescription className="text-green-800">
+                <AlertDescription className="text-green-800 dark:text-green-400">
                   {success}
                 </AlertDescription>
               </Alert>
@@ -136,28 +136,28 @@ export default function Profile() {
 
             <div className="space-y-4">
               <div>
-                <label className="text-sm font-medium text-gray-700">
+                <label className="text-sm font-medium text-gray-700 dark:text-slate-300">
                   Email
                 </label>
                 <div className="flex items-center gap-2 mt-1">
                   <Mail className="h-4 w-4 text-gray-500" />
-                  <span className="text-gray-900">
+                  <span className="text-gray-900 dark:text-white">
                     {user?.email || "Anonymous"}
                   </span>
                 </div>
               </div>
 
               <div>
-                <label className="text-sm font-medium text-gray-700">
+                <label className="text-sm font-medium text-gray-700 dark:text-slate-300">
                   Username
                 </label>
-                <p className="text-gray-900 mt-1">
+                <p className="text-gray-900 dark:text-white mt-1">
                   {profile?.username || "Not set"}
                 </p>
               </div>
 
               <div>
-                <label className="text-sm font-medium text-gray-700">
+                <label className="text-sm font-medium text-gray-700 dark:text-slate-300">
                   Authentication Method
                 </label>
                 <div className="mt-1">
@@ -174,25 +174,25 @@ export default function Profile() {
               </div>
 
               <div>
-                <label className="text-sm font-medium text-gray-700">
+                <label className="text-sm font-medium text-gray-700 dark:text-slate-300">
                   Hedera Wallet
                 </label>
                 {profile?.hedera_account_id ? (
                   <div className="flex items-center gap-2 mt-1">
-                    <Wallet className="h-4 w-4 text-green-600" />
-                    <span className="text-gray-900 font-mono text-sm">
+                    <Wallet className="h-4 w-4 text-green-600 dark:text-green-400" />
+                    <span className="text-gray-900 dark:text-white font-mono text-sm">
                       {profile.hedera_account_id}
                     </span>
                     <Badge
                       variant="outline"
-                      className="text-green-600 border-green-600"
+                      className="text-green-605 border-green-600 dark:text-green-400 dark:border-green-400"
                     >
                       Linked
                     </Badge>
                   </div>
                 ) : (
                   <div className="mt-2">
-                    <p className="text-sm text-gray-500 mb-2">
+                    <p className="text-sm text-gray-500 dark:text-slate-400 mb-2">
                       No wallet linked. Connect your HashPack wallet to enable
                       hybrid authentication.
                     </p>
@@ -200,6 +200,7 @@ export default function Profile() {
                       onClick={handleLinkWallet}
                       disabled={linking}
                       variant="outline"
+                      className="border-gray-300 dark:border-slate-800 text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800"
                     >
                       <LinkIcon className="mr-2 h-4 w-4" />
                       {linking ? "Linking..." : "Link Hedera Wallet"}
@@ -209,21 +210,21 @@ export default function Profile() {
               </div>
 
               <div>
-                <label className="text-sm font-medium text-gray-700">
+                <label className="text-sm font-medium text-gray-700 dark:text-slate-300">
                   Member Since
                 </label>
-                <p className="text-gray-900 mt-1">
+                <p className="text-gray-900 dark:text-white mt-1">
                   {profile?.created_at
                     ? new Date(profile.created_at).toLocaleDateString()
                     : "Unknown"}
                 </p>
               </div>
 
-              <div className="pt-4 border-t">
+              <div className="pt-4 border-t border-gray-200 dark:border-slate-800">
                 <Button
                   onClick={() => navigate("/session-settings")}
                   variant="outline"
-                  className="w-full"
+                  className="w-full border-gray-300 dark:border-slate-800 text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800"
                 >
                   <Clock className="mr-2 h-4 w-4" />
                   Manage session duration

@@ -19,6 +19,7 @@ import WalletLogin from "@/components/WalletLogin";
 import { motion } from "framer-motion";
 import { Helmet } from "react-helmet-async";
 import logoUrl from "@/assets/agritrust-logo.svg";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -63,24 +64,28 @@ export default function Login() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-emerald-50 to-blue-50">
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-emerald-50 to-blue-50 dark:from-emerald-950/20 dark:to-blue-950/20 dark:bg-slate-950">
         <div className="text-center">
-          <div className="h-12 w-12 animate-spin rounded-full border-4 border-emerald-600 border-t-transparent mx-auto"></div>
-          <p className="mt-4 font-body text-gray-600">Loading...</p>
+          <div className="h-12 w-12 animate-spin rounded-full border-4 border-emerald-600 dark:border-emerald-400 border-t-transparent mx-auto"></div>
+          <p className="mt-4 font-body text-gray-600 dark:text-slate-400">Loading...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-white relative overflow-hidden">
+    <div className="flex min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-white dark:from-emerald-950/20 dark:via-blue-950/20 dark:to-slate-950 dark:bg-slate-950 relative overflow-hidden">
       <Helmet>
         <title>Login | AgroDex</title>
       </Helmet>
+      {/* Theme Toggle in top-right */}
+      <div className="absolute top-4 right-4 z-50">
+        <ThemeToggle />
+      </div>
       {/* Decorative Background Elements */}
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-emerald-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" />
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-emerald-200 dark:bg-emerald-900/10 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" />
       <div
-        className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"
+        className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-blue-200 dark:bg-blue-900/10 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"
         style={{ animationDelay: "2s" }}
       />
 
@@ -114,7 +119,7 @@ export default function Login() {
             <img
               src={logoUrl}
               alt="AgroDex"
-              className="h-16 w-auto drop-shadow-2xl bg-white/90 p-2 rounded-xl"
+              className="h-16 w-auto drop-shadow-2xl bg-white/90 dark:bg-white/10 dark:backdrop-blur-md p-2 rounded-xl"
             />
           </div>
           <h1 className="text-6xl font-extrabold text-white mb-6 leading-tight drop-shadow-2xl">
@@ -210,28 +215,28 @@ export default function Login() {
               <img
                 src={logoUrl}
                 alt="AgroDex"
-                className="h-16 w-auto mx-auto mb-4 lg:hidden bg-white p-2 rounded-xl"
+                className="h-16 w-auto mx-auto mb-4 lg:hidden bg-white dark:bg-slate-800 p-2 rounded-xl"
               />
-              <h2 className="text-3xl font-extrabold text-gray-900 mb-2">
+              <h2 className="text-3xl font-extrabold text-gray-900 dark:text-white mb-2">
                 Welcome to AgroDex
               </h2>
-              <p className="text-gray-600 font-body">
+              <p className="text-gray-600 dark:text-slate-400 font-body">
                 Sign in to access your account.
               </p>
             </motion.div>
           </div>
 
           <Tabs defaultValue="email" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-8 bg-gray-100 p-1 rounded-xl">
+            <TabsList className="grid w-full grid-cols-2 mb-8 bg-gray-100 dark:bg-slate-800 p-1 rounded-xl">
               <TabsTrigger
                 value="email"
-                className="text-base font-bold rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md transition-all"
+                className="text-base font-bold rounded-lg data-[state=active]:bg-white dark:data-[state=active]:bg-slate-950 dark:data-[state=active]:text-white dark:text-slate-400 data-[state=active]:shadow-md transition-all"
               >
                 Email Login
               </TabsTrigger>
               <TabsTrigger
                 value="wallet"
-                className="text-base font-bold rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md transition-all"
+                className="text-base font-bold rounded-lg data-[state=active]:bg-white dark:data-[state=active]:bg-slate-950 dark:data-[state=active]:text-white dark:text-slate-400 data-[state=active]:shadow-md transition-all"
               >
                 Wallet Login
               </TabsTrigger>
@@ -243,12 +248,12 @@ export default function Login() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4 }}
               >
-                <Card className="border-2 border-gray-200 shadow-2xl rounded-2xl overflow-hidden">
-                  <CardHeader className="bg-gradient-to-br from-emerald-50 to-blue-50 pb-8">
-                    <CardTitle className="text-3xl font-extrabold text-gray-900">
+                <Card className="border-2 border-gray-200 dark:border-slate-800 dark:bg-slate-900 shadow-2xl rounded-2xl overflow-hidden">
+                  <CardHeader className="bg-gradient-to-br from-emerald-50 to-blue-50 dark:from-emerald-950/20 dark:to-blue-950/20 pb-8">
+                    <CardTitle className="text-3xl font-extrabold text-gray-900 dark:text-white">
                       Sign In
                     </CardTitle>
-                    <CardDescription className="font-body text-base text-gray-600">
+                    <CardDescription className="font-body text-base text-gray-600 dark:text-slate-400">
                       Enter your credentials to access your account
                     </CardDescription>
                   </CardHeader>
@@ -257,7 +262,7 @@ export default function Login() {
                       <div className="space-y-2">
                         <Label
                           htmlFor="email"
-                          className="text-sm font-bold text-gray-700"
+                          className="text-sm font-bold text-gray-700 dark:text-slate-300"
                         >
                           Email
                         </Label>
@@ -269,7 +274,7 @@ export default function Login() {
                             placeholder="your@email.com"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="pl-12 h-14 border-2 border-gray-200 rounded-xl font-body text-base focus:border-emerald-500 focus:ring-emerald-500 transition-colors"
+                            className="pl-12 h-14 border-2 border-gray-200 dark:border-slate-700 dark:bg-slate-950 dark:text-white rounded-xl font-body text-base focus:border-emerald-500 focus:ring-emerald-500 transition-colors"
                             required
                           />
                         </div>
@@ -277,7 +282,7 @@ export default function Login() {
                       <div className="space-y-2">
                         <Label
                           htmlFor="password"
-                          className="text-sm font-bold text-gray-700"
+                          className="text-sm font-bold text-gray-700 dark:text-slate-300"
                         >
                           Password
                         </Label>
@@ -289,7 +294,7 @@ export default function Login() {
                             placeholder="••••••••"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="pl-12 h-14 border-2 border-gray-200 rounded-xl font-body text-base focus:border-emerald-500 focus:ring-emerald-500 transition-colors"
+                            className="pl-12 h-14 border-2 border-gray-200 dark:border-slate-700 dark:bg-slate-950 dark:text-white rounded-xl font-body text-base focus:border-emerald-500 focus:ring-emerald-500 transition-colors"
                             required
                           />
                         </div>
@@ -302,7 +307,7 @@ export default function Login() {
                         >
                           <Alert
                             variant="destructive"
-                            className="border-2 border-red-200 bg-red-50 rounded-xl"
+                            className="border-2 border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-950/20 dark:text-red-200 rounded-xl"
                           >
                             <AlertCircle className="h-5 w-5" />
                             <AlertDescription className="font-body text-base">
@@ -338,7 +343,7 @@ export default function Login() {
                         <button
                           type="button"
                           onClick={() => setIsSignUp(!isSignUp)}
-                          className="text-sm text-emerald-600 hover:text-emerald-700 font-bold font-body hover:underline transition-all"
+                          className="text-sm text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 font-bold font-body hover:underline transition-all"
                         >
                           {isSignUp
                             ? "Already have an account? Sign In"
@@ -357,12 +362,12 @@ export default function Login() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4 }}
               >
-                <Card className="border-2 border-gray-200 shadow-2xl rounded-2xl overflow-hidden">
-                  <CardHeader className="bg-gradient-to-br from-blue-50 to-purple-50 pb-8">
-                    <CardTitle className="text-3xl font-extrabold text-gray-900">
+                <Card className="border-2 border-gray-200 dark:border-slate-800 dark:bg-slate-900 shadow-2xl rounded-2xl overflow-hidden">
+                  <CardHeader className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20 pb-8">
+                    <CardTitle className="text-3xl font-extrabold text-gray-900 dark:text-white">
                       Wallet Login
                     </CardTitle>
-                    <CardDescription className="font-body text-base text-gray-600">
+                    <CardDescription className="font-body text-base text-gray-600 dark:text-slate-400">
                       Connect your Hedera wallet to continue
                     </CardDescription>
                   </CardHeader>

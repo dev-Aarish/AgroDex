@@ -92,18 +92,18 @@ export default function BatchTokenize() {
     const verifyUrl = `${window.location.origin}/verify/${tokenId}/${serialNumber}`;
 
     return (
-      <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-fuchsia-50">
+      <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-fuchsia-50 dark:from-violet-950/20 dark:via-background dark:to-fuchsia-950/20 dark:bg-background text-foreground">
         <Helmet>
           <title>Report Generated | AgroDex</title>
         </Helmet>
         <Navbar />
         <div className="max-w-3xl mx-auto p-4 md:p-8 animate-fade-in">
-          <div className="text-center p-6 md:p-8 bg-white shadow-xl rounded-lg">
-            <CheckCircle2 className="h-16 w-16 text-green-600 mx-auto mb-4" />
-            <h1 className="text-3xl md:text-4xl font-bold text-green-600 mb-2">
+          <div className="text-center p-6 md:p-8 bg-card text-card-foreground shadow-xl rounded-lg border border-gray-100 dark:border-slate-805">
+            <CheckCircle2 className="h-16 w-16 text-green-600 dark:text-green-400 mx-auto mb-4" />
+            <h1 className="text-3xl md:text-4xl font-bold text-green-600 dark:text-green-400 mb-2">
               Report Generated & Certificate Minted!
             </h1>
-            <p className="text-gray-600 mb-8">
+            <p className="text-gray-600 dark:text-slate-300 mb-8">
               Your AI trust analysis is complete and permanently stored on
               Hedera
             </p>
@@ -114,35 +114,35 @@ export default function BatchTokenize() {
                   <TrustBadge score={ai_summary.trustScore} />
                 </div>
 
-                <div className="my-6 p-4 bg-gradient-to-r from-violet-50 to-fuchsia-50 rounded-lg border border-violet-200">
-                  <div className="flex items-center gap-2 text-violet-700 font-bold text-lg mb-3">
+                <div className="my-6 p-4 bg-gradient-to-r from-violet-50 to-fuchsia-50 dark:from-violet-950/20 dark:to-fuchsia-950/20 rounded-lg border border-violet-200 dark:border-violet-900/30">
+                  <div className="flex items-center gap-2 text-violet-700 dark:text-violet-400 font-bold text-lg mb-3">
                     <Sparkles className="h-5 w-5" />
                     <span>AI Summary (EN)</span>
                   </div>
-                  <p className="text-gray-700 text-left italic">
+                  <p className="text-gray-700 dark:text-slate-300 text-left italic">
                     "{ai_summary.summary_en}"
                   </p>
                 </div>
 
                 {ai_summary.summary_fr && (
-                  <div className="my-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
-                    <div className="flex items-center gap-2 text-blue-700 font-bold text-lg mb-3">
+                  <div className="my-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 rounded-lg border border-blue-200 dark:border-blue-900/30">
+                    <div className="flex items-center gap-2 text-blue-700 dark:text-blue-400 font-bold text-lg mb-3">
                       <Sparkles className="h-5 w-5" />
                       <span>Résumé IA (FR)</span>
                     </div>
-                    <p className="text-gray-700 text-left italic">
+                    <p className="text-gray-700 dark:text-slate-300 text-left italic">
                       "{ai_summary.summary_fr}"
                     </p>
                   </div>
                 )}
 
                 {ai_summary.trustExplanation && (
-                  <div className="my-6 p-4 bg-emerald-50 rounded-lg border border-emerald-200">
-                    <div className="flex items-center gap-2 text-emerald-700 font-bold text-base mb-2">
+                  <div className="my-6 p-4 bg-emerald-50 dark:bg-emerald-950/20 rounded-lg border border-emerald-200 dark:border-emerald-900/30">
+                    <div className="flex items-center gap-2 text-emerald-700 dark:text-emerald-400 font-bold text-base mb-2">
                       <Award className="h-5 w-5" />
                       <span>Trust Score Explanation</span>
                     </div>
-                    <p className="text-gray-700 text-sm text-left">
+                    <p className="text-gray-700 dark:text-slate-300 text-sm text-left">
                       {ai_summary.trustExplanation}
                     </p>
                   </div>
@@ -150,18 +150,18 @@ export default function BatchTokenize() {
               </>
             )}
 
-            <div className="my-6 space-y-3 p-4 bg-gray-50 rounded-lg">
+            <div className="my-6 space-y-3 p-4 bg-gray-50 dark:bg-slate-900 rounded-lg border border-gray-100 dark:border-slate-800">
               <div className="flex items-center justify-between">
-                <span className="font-semibold text-gray-700">Token ID:</span>
-                <span className="font-mono text-sm text-gray-900">
+                <span className="font-semibold text-gray-700 dark:text-slate-400">Token ID:</span>
+                <span className="font-mono text-sm text-gray-900 dark:text-slate-200">
                   {tokenId}
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="font-semibold text-gray-700">
+                <span className="font-semibold text-gray-700 dark:text-slate-400">
                   Serial Number:
                 </span>
-                <span className="font-mono text-sm text-gray-900">
+                <span className="font-mono text-sm text-gray-900 dark:text-slate-200">
                   {serialNumber}
                 </span>
               </div>
@@ -169,22 +169,22 @@ export default function BatchTokenize() {
                 href={`https://hashscan.io/testnet/token/${tokenId}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 text-blue-600 hover:text-blue-700 hover:underline transition-colors"
+                className="flex items-center justify-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:underline transition-colors"
               >
                 <ExternalLink className="h-4 w-4" />
                 View on HashScan
               </a>
             </div>
 
-            <div className="flex flex-col items-center my-8 p-6 bg-white border-2 border-dashed border-gray-300 rounded-lg">
+            <div className="flex flex-col items-center my-8 p-6 bg-white dark:bg-slate-900 border-2 border-dashed border-gray-300 dark:border-slate-800 rounded-lg">
               <QRCodeCanvas value={verifyUrl} size={160} />
-              <p className="mt-3 text-sm font-semibold text-gray-600">
+              <p className="mt-3 text-sm font-semibold text-gray-600 dark:text-slate-400">
                 Scan to verify certificate
               </p>
               <Button
                 size="sm"
                 variant="outline"
-                className="mt-3"
+                className="mt-3 border-gray-300 dark:border-slate-800 text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800"
                 onClick={() => {
                   navigator.clipboard.writeText(verifyUrl);
                   toast({ title: "Verification URL copied!" });
@@ -211,7 +211,7 @@ export default function BatchTokenize() {
 
   // Form screen
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-fuchsia-50">
+    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-fuchsia-50 dark:from-violet-950/20 dark:via-background dark:to-fuchsia-950/20 dark:bg-background text-foreground">
       <Helmet>
         <title>Generate AI Trust Report | AgroDex</title>
       </Helmet>
@@ -219,13 +219,13 @@ export default function BatchTokenize() {
       <div className="max-w-4xl mx-auto space-y-8 p-4 md:p-8">
         {/* Hero Section */}
         <div className="text-center space-y-4">
-          <div className="inline-block p-3 bg-violet-100 rounded-2xl mb-2">
-            <Sparkles className="h-8 w-8 text-violet-600" />
+          <div className="inline-block p-3 bg-violet-100 dark:bg-violet-950/50 rounded-2xl mb-2">
+            <Sparkles className="h-8 w-8 text-violet-600 dark:text-violet-400" />
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">
             Generate AI Trust Report & Certificate
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-lg text-gray-600 dark:text-slate-300 max-w-2xl mx-auto">
             Our AI will analyze your HCS proof, generate a Trust Score, and mint
             it all as a permanent NFT certificate.
           </p>
@@ -242,13 +242,13 @@ export default function BatchTokenize() {
         </div>
 
         {/* Form Card */}
-        <Card className="shadow-xl border-0">
+        <Card className="shadow-xl border-0 bg-card text-card-foreground dark:border dark:border-slate-800">
           <CardHeader className="space-y-1 pb-6">
             <CardTitle className="text-2xl flex items-center gap-2">
-              <Sparkles className="h-6 w-6 text-violet-600" />
+              <Sparkles className="h-6 w-6 text-violet-600 dark:text-violet-400" />
               AI Analysis & NFT Minting
             </CardTitle>
-            <CardDescription className="text-base">
+            <CardDescription className="text-base text-slate-500 dark:text-slate-400">
               Link HCS transaction IDs to generate an AI trust report and create
               a permanent NFT certificate
             </CardDescription>
@@ -258,9 +258,9 @@ export default function BatchTokenize() {
               <div className="space-y-2">
                 <Label
                   htmlFor="txIds"
-                  className="text-sm font-semibold text-gray-700 flex items-center gap-2"
+                  className="text-sm font-semibold text-gray-700 dark:text-slate-300 flex items-center gap-2"
                 >
-                  <Link2 className="h-4 w-4 text-violet-600" />
+                  <Link2 className="h-4 w-4 text-violet-600 dark:text-violet-400" />
                   HCS Transaction IDs
                 </Label>
                 <Textarea
@@ -271,16 +271,16 @@ export default function BatchTokenize() {
                   rows={6}
                   required
                   disabled={mutation.isPending}
-                  className="font-mono text-sm border-gray-300 focus:border-violet-500 focus:ring-violet-500"
+                  className="font-mono text-sm border-gray-300 dark:border-slate-800 dark:bg-slate-900 text-foreground focus:border-violet-500 focus:ring-violet-500"
                 />
-                <p className="text-xs text-gray-600 flex items-start gap-1">
-                  <FileText className="h-3 w-3 mt-0.5 text-gray-500" />
+                <p className="text-xs text-gray-600 dark:text-slate-400 flex items-start gap-1">
+                  <FileText className="h-3 w-3 mt-0.5 text-gray-500 dark:text-slate-500" />
                   Enter transaction IDs from batch registration (one per line or
                   comma-separated)
                 </p>
               </div>
 
-              <div className="flex items-center space-x-2 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+              <div className="flex items-center space-x-2 p-4 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/30 rounded-lg">
                 <Checkbox
                   id="demoMode"
                   checked={isDemoMode}
@@ -291,7 +291,7 @@ export default function BatchTokenize() {
                 />
                 <Label
                   htmlFor="demoMode"
-                  className="text-sm font-medium text-gray-700 cursor-pointer"
+                  className="text-sm font-medium text-gray-700 dark:text-slate-300 cursor-pointer"
                 >
                   Use Demo Mode (No wallet required - guaranteed success for
                   presentations)
@@ -318,9 +318,9 @@ export default function BatchTokenize() {
             </form>
 
             {mutation.isError && (
-              <Alert className="mt-6 border-red-200 bg-red-50 shadow-md">
+              <Alert className="mt-6 border-red-200 bg-red-50 dark:bg-red-950/20 shadow-md">
                 <AlertCircle className="h-5 w-5 text-red-600" />
-                <AlertDescription className="text-red-900 font-semibold">
+                <AlertDescription className="text-red-900 dark:text-red-300 font-semibold">
                   {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                   {(mutation.error as any)?.response?.data?.details ||
                     mutation.error.message}

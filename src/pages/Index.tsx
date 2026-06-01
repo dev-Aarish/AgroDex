@@ -21,14 +21,14 @@ import { DEMO_VERIFY_URL } from "@/lib/demo";
 
 export default function Index() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background text-foreground">
       <Helmet>
         <title>Home | AgroDex</title>
       </Helmet>
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-emerald-50 via-blue-50 to-white">
+      <section className="relative overflow-hidden bg-gradient-to-br from-emerald-50 via-blue-50 to-white dark:from-emerald-950/20 dark:via-blue-950/20 dark:to-background">
         {/* Decorative Elements */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" />
         <div
@@ -54,10 +54,10 @@ export default function Index() {
                 <img
                   src={logoUrl}
                   alt="AgroDex logo"
-                  className="h-16 w-16 sm:h-20 sm:w-20 rounded-xl shadow-lg object-cover bg-white p-2"
+                  className="h-16 w-16 sm:h-20 sm:w-20 rounded-xl shadow-lg object-cover bg-white dark:bg-slate-900 p-2"
                 />
                 <div>
-                  <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
+                  <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">
                     AgroDex
                   </h2>
                   <p className="text-sm sm:text-base text-emerald-600 font-semibold mt-0.5">
@@ -67,7 +67,7 @@ export default function Index() {
               </motion.div>
 
               <motion.div
-                className="inline-flex items-center gap-2 bg-emerald-100 text-emerald-700 px-5 py-2.5 rounded-full text-sm font-bold shadow-sm"
+                className="inline-flex items-center gap-2 bg-emerald-100 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 px-5 py-2.5 rounded-full text-sm font-bold shadow-sm"
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
@@ -76,12 +76,12 @@ export default function Index() {
                 Powered by Hedera + AI
               </motion.div>
 
-              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-gray-900 leading-tight">
+              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-gray-900 dark:text-white leading-tight">
                 Fighting <span className="text-emerald-600">Food Fraud</span> in
                 Indonesia
               </h1>
 
-              <p className="text-xl sm:text-2xl font-body text-gray-600 leading-relaxed">
+              <p className="text-xl sm:text-2xl font-body text-gray-600 dark:text-slate-300 leading-relaxed">
                 Blockchain traceability + Artificial Intelligence to guarantee
                 the authenticity of Indonesian agricultural products.
               </p>
@@ -115,7 +115,7 @@ export default function Index() {
                     <Button
                       size="lg"
                       variant="outline"
-                      className="w-full border-2 border-gray-300 hover:border-emerald-600 font-bold text-lg px-8 py-6 hover:bg-emerald-50 transition-colors"
+                      className="w-full border-2 border-gray-300 dark:border-slate-700 hover:border-emerald-600 font-bold text-lg px-8 py-6 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 text-gray-700 dark:text-slate-300 transition-colors"
                     >
                       Verify Batch
                     </Button>
@@ -142,7 +142,7 @@ export default function Index() {
       </section>
 
       {/* Problem Section */}
-      <section className="py-16 lg:py-24 bg-gradient-to-br from-red-50 to-orange-50 relative overflow-hidden">
+      <section className="py-16 lg:py-24 bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-950/10 dark:to-orange-950/10 dark:bg-background relative overflow-hidden">
         <div className="absolute inset-0 bg-grid-pattern opacity-5" />
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-5xl mx-auto">
@@ -153,14 +153,14 @@ export default function Index() {
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
             >
-              <div className="inline-flex items-center gap-2 bg-red-100 text-red-700 px-5 py-2.5 rounded-full text-sm font-bold mb-6 shadow-sm">
+              <div className="inline-flex items-center gap-2 bg-red-100 dark:bg-red-950/50 text-red-700 dark:text-red-300 px-5 py-2.5 rounded-full text-sm font-bold mb-6 shadow-sm">
                 <AlertTriangle className="h-4 w-4" />
                 The Problem
               </div>
-              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 mb-6">
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 dark:text-white mb-6">
                 Food Fraud Costs <span className="text-red-600">Billions</span>
               </h2>
-              <p className="text-lg sm:text-xl font-body text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              <p className="text-lg sm:text-xl font-body text-gray-600 dark:text-slate-300 max-w-3xl mx-auto leading-relaxed">
                 In Africa, food fraud threatens consumer trust and penalizes
                 honest producers
               </p>
@@ -186,7 +186,7 @@ export default function Index() {
               ].map((item, idx) => (
                 <motion.div
                   key={idx}
-                  className="bg-white p-8 rounded-2xl shadow-xl text-center border border-red-100 hover:shadow-2xl transition-shadow"
+                  className="bg-card text-card-foreground p-8 rounded-2xl shadow-xl text-center border border-red-100 dark:border-red-950/20 hover:shadow-2xl transition-shadow"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -196,7 +196,7 @@ export default function Index() {
                   <div className="text-5xl sm:text-6xl font-extrabold text-red-600 mb-4">
                     {item.stat}
                   </div>
-                  <p className="font-body text-base text-gray-600 leading-relaxed">
+                  <p className="font-body text-base text-gray-600 dark:text-slate-400 leading-relaxed">
                     {item.desc}
                   </p>
                 </motion.div>
@@ -207,7 +207,7 @@ export default function Index() {
       </section>
 
       {/* Solution Section */}
-      <section className="py-16 lg:py-24 bg-white relative">
+      <section className="py-16 lg:py-24 bg-background relative border-t border-b border-gray-100 dark:border-slate-800">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <motion.div
@@ -217,15 +217,15 @@ export default function Index() {
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
             >
-              <div className="inline-flex items-center gap-2 bg-emerald-100 text-emerald-700 px-5 py-2.5 rounded-full text-sm font-bold mb-6 shadow-sm">
+              <div className="inline-flex items-center gap-2 bg-emerald-100 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 px-5 py-2.5 rounded-full text-sm font-bold mb-6 shadow-sm">
                 <CheckCircle2 className="h-4 w-4" />
                 Our Solution
               </div>
-              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 mb-6">
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 dark:text-white mb-6">
                 AgroDex:{" "}
                 <span className="text-emerald-600">Blockchain + AI</span>
               </h2>
-              <p className="text-lg sm:text-xl font-body text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              <p className="text-lg sm:text-xl font-body text-gray-600 dark:text-slate-300 max-w-3xl mx-auto leading-relaxed">
                 A complete platform combining Hedera Hashgraph and Gemini AI for
                 total traceability
               </p>
@@ -264,24 +264,24 @@ export default function Index() {
                 const Icon = item.icon;
                 const colorClasses = {
                   emerald: {
-                    border: "border-emerald-100",
-                    bg: "bg-emerald-100",
-                    text: "text-emerald-600",
+                    border: "border-emerald-100 dark:border-emerald-950/30",
+                    bg: "bg-emerald-100 dark:bg-emerald-950/50",
+                    text: "text-emerald-600 dark:text-emerald-400",
                   },
                   blue: {
-                    border: "border-blue-100",
-                    bg: "bg-blue-100",
-                    text: "text-blue-600",
+                    border: "border-blue-100 dark:border-blue-950/30",
+                    bg: "bg-blue-100 dark:bg-blue-950/50",
+                    text: "text-blue-600 dark:text-blue-400",
                   },
                   purple: {
-                    border: "border-purple-100",
-                    bg: "bg-purple-100",
-                    text: "text-purple-600",
+                    border: "border-purple-100 dark:border-purple-950/30",
+                    bg: "bg-purple-100 dark:bg-purple-950/50",
+                    text: "text-purple-600 dark:text-purple-400",
                   },
                   orange: {
-                    border: "border-orange-100",
-                    bg: "bg-orange-100",
-                    text: "text-orange-600",
+                    border: "border-orange-100 dark:border-orange-950/30",
+                    bg: "bg-orange-100 dark:bg-orange-950/50",
+                    text: "text-orange-600 dark:text-orange-400",
                   },
                 }[item.color as "emerald" | "blue" | "purple" | "orange"]!;
 
@@ -294,20 +294,20 @@ export default function Index() {
                     transition={{ delay: item.delay, duration: 0.5 }}
                   >
                     <Card
-                      className={`border-2 ${colorClasses.border} hover:shadow-xl transition-shadow h-full`}
+                      className={`border-2 ${colorClasses.border} bg-card text-card-foreground hover:shadow-xl transition-shadow h-full`}
                     >
                       <CardHeader>
                         <div className="flex items-center gap-3 mb-2">
                           <div className={`${colorClasses.bg} p-3 rounded-lg`}>
                             <Icon className={`h-6 w-6 ${colorClasses.text}`} />
                           </div>
-                          <CardTitle className="text-lg sm:text-xl">
+                          <CardTitle className="text-lg sm:text-xl text-gray-900 dark:text-white">
                             {item.title}
                           </CardTitle>
                         </div>
                       </CardHeader>
                       <CardContent>
-                        <p className="font-body text-sm sm:text-base text-gray-600">
+                        <p className="font-body text-sm sm:text-base text-gray-600 dark:text-slate-400">
                           {item.desc}
                         </p>
                       </CardContent>
@@ -321,7 +321,7 @@ export default function Index() {
       </section>
 
       {/* Features Section */}
-      <section className="py-16 lg:py-24 bg-gradient-to-br from-gray-50 to-white">
+      <section className="py-16 lg:py-24 bg-gradient-to-br from-gray-50 to-white dark:from-slate-950 dark:to-background border-b border-gray-100 dark:border-slate-800">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <motion.div
@@ -331,10 +331,10 @@ export default function Index() {
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
             >
-              <h2 className="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-6">
+              <h2 className="text-4xl sm:text-5xl font-extrabold text-gray-900 dark:text-white mb-6">
                 How It <span className="text-emerald-600">Works</span>
               </h2>
-              <p className="text-lg sm:text-xl font-body text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              <p className="text-lg sm:text-xl font-body text-gray-600 dark:text-slate-300 max-w-3xl mx-auto leading-relaxed">
                 A simple 3-step process to guarantee the authenticity of your
                 products
               </p>
@@ -378,18 +378,18 @@ export default function Index() {
                       <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-emerald-500 to-blue-500 rounded-2xl shadow-lg">
                         <Icon className="h-10 w-10 text-white" />
                       </div>
-                      <div className="text-6xl font-extrabold text-emerald-100">
+                      <div className="text-6xl font-extrabold text-emerald-100 dark:text-emerald-950/20">
                         {feature.step}
                       </div>
-                      <h3 className="text-2xl font-bold text-gray-900">
+                      <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
                         {feature.title}
                       </h3>
-                      <p className="font-body text-gray-600 leading-relaxed">
+                      <p className="font-body text-gray-600 dark:text-slate-400 leading-relaxed">
                         {feature.desc}
                       </p>
                     </div>
                     {idx < 2 && (
-                      <div className="hidden md:block absolute top-10 -right-6 w-12 h-0.5 bg-gradient-to-r from-emerald-300 to-blue-300" />
+                      <div className="hidden md:block absolute top-10 -right-6 w-12 h-0.5 bg-gradient-to-r from-emerald-300 to-blue-300 dark:from-emerald-900 dark:to-blue-900" />
                     )}
                   </motion.div>
                 );
@@ -400,7 +400,7 @@ export default function Index() {
       </section>
 
       {/* Impact Section */}
-      <section className="py-16 lg:py-24 bg-white">
+      <section className="py-16 lg:py-24 bg-background">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <motion.div
@@ -410,10 +410,10 @@ export default function Index() {
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
             >
-              <h2 className="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-6">
+              <h2 className="text-4xl sm:text-5xl font-extrabold text-gray-900 dark:text-white mb-6">
                 Impact for <span className="text-emerald-600">Everyone</span>
               </h2>
-              <p className="text-lg sm:text-xl font-body text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              <p className="text-lg sm:text-xl font-body text-gray-600 dark:text-slate-300 max-w-3xl mx-auto leading-relaxed">
                 A solution that benefits all actors in the agricultural value
                 chain
               </p>
@@ -458,29 +458,29 @@ export default function Index() {
                 const Icon = stakeholder.icon;
                 const colorClasses = {
                   emerald: {
-                    from: "from-emerald-50",
-                    border: "border-emerald-100",
-                    bg: "bg-emerald-100",
-                    text: "text-emerald-600",
+                    from: "from-emerald-50 dark:from-emerald-950/20",
+                    border: "border-emerald-100 dark:border-emerald-950/30",
+                    bg: "bg-emerald-100 dark:bg-emerald-950/50",
+                    text: "text-emerald-600 dark:text-emerald-400",
                   },
                   blue: {
-                    from: "from-blue-50",
-                    border: "border-blue-100",
-                    bg: "bg-blue-100",
-                    text: "text-blue-600",
+                    from: "from-blue-50 dark:from-blue-950/20",
+                    border: "border-blue-100 dark:border-blue-950/30",
+                    bg: "bg-blue-100 dark:bg-blue-950/50",
+                    text: "text-blue-600 dark:text-blue-400",
                   },
                   purple: {
-                    from: "from-purple-50",
-                    border: "border-purple-100",
-                    bg: "bg-purple-100",
-                    text: "text-purple-600",
+                    from: "from-purple-50 dark:from-purple-950/20",
+                    border: "border-purple-100 dark:border-purple-950/30",
+                    bg: "bg-purple-100 dark:bg-purple-950/50",
+                    text: "text-purple-600 dark:text-purple-400",
                   },
                 }[stakeholder.color as "emerald" | "blue" | "purple"]!;
 
                 return (
                   <motion.div
                     key={idx}
-                    className={`bg-gradient-to-br ${colorClasses.from} to-white p-8 rounded-2xl border-2 ${colorClasses.border} hover:shadow-xl transition-shadow`}
+                    className={`bg-gradient-to-br ${colorClasses.from} to-white dark:to-slate-900/60 p-8 rounded-2xl border-2 ${colorClasses.border} hover:shadow-xl transition-shadow`}
                     initial={{ opacity: 0, scale: 0.9 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
@@ -492,16 +492,16 @@ export default function Index() {
                     >
                       <Icon className={`h-8 w-8 ${colorClasses.text}`} />
                     </div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
                       {stakeholder.title}
                     </h3>
                     <ul className="space-y-3">
                       {stakeholder.benefits.map((benefit, bidx) => (
                         <li key={bidx} className="flex items-start gap-2">
                           <CheckCircle2
-                            className={`h-5 w-5 ${colorClasses.text} mt-0.5 flex-shrink-0`}
+                             className={`h-5 w-5 ${colorClasses.text} mt-0.5 flex-shrink-0`}
                           />
-                          <span className="font-body text-gray-700">
+                          <span className="font-body text-gray-700 dark:text-slate-300">
                             {benefit}
                           </span>
                         </li>

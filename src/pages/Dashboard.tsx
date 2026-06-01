@@ -127,14 +127,14 @@ export default function Dashboard() {
   const aiInsightError = aiInsight?.error;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background text-foreground">
       <Helmet>
         <title>Dashboard | AgroDex</title>
       </Helmet>
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-emerald-50 via-blue-50 to-white">
+      <section className="relative overflow-hidden bg-gradient-to-br from-emerald-50 via-blue-50 to-white dark:from-emerald-950/20 dark:via-blue-950/20 dark:to-background">
         {/* Decorative Elements */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" />
         <div
@@ -160,10 +160,10 @@ export default function Dashboard() {
                 <img
                   src={logoUrl}
                   alt="AgroDex logo"
-                  className="h-16 w-16 sm:h-20 sm:w-20 rounded-xl shadow-lg object-cover bg-white p-2"
+                  className="h-16 w-16 sm:h-20 sm:w-20 rounded-xl shadow-lg object-cover bg-white dark:bg-slate-900 p-2"
                 />
                 <div>
-                  <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
+                  <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">
                     AgroDex
                   </h2>
                   <p className="text-sm sm:text-base text-emerald-600 font-semibold mt-0.5">
@@ -173,7 +173,7 @@ export default function Dashboard() {
               </motion.div>
 
               <motion.div
-                className="inline-flex items-center gap-2 bg-emerald-100 text-emerald-700 px-5 py-2.5 rounded-full text-sm font-bold shadow-sm"
+                className="inline-flex items-center gap-2 bg-emerald-100 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 px-5 py-2.5 rounded-full text-sm font-bold shadow-sm"
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
@@ -182,12 +182,12 @@ export default function Dashboard() {
                 Powered by Hedera + AI
               </motion.div>
 
-              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-gray-900 leading-tight">
+              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-gray-900 dark:text-white leading-tight">
                 Fighting <span className="text-emerald-600">Food Fraud</span> in
                 Indonesia
               </h1>
 
-              <p className="text-xl sm:text-2xl font-body text-gray-600 leading-relaxed">
+              <p className="text-xl sm:text-2xl font-body text-gray-600 dark:text-slate-300 leading-relaxed">
                 Blockchain traceability + Artificial Intelligence to guarantee
                 the authenticity of Indonesian agricultural products.
               </p>
@@ -213,74 +213,74 @@ export default function Dashboard() {
       <div className="container mx-auto px-4 py-8">
         {/* KPIs Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 mb-8">
-          <Card className="border-2 border-emerald-100">
+          <Card className="border-2 border-emerald-100 dark:border-emerald-950/30 bg-card text-card-foreground">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-medium text-gray-600">
+                <CardTitle className="text-sm font-medium text-gray-600 dark:text-slate-400">
                   Registered Batches
                 </CardTitle>
-                <div className="bg-emerald-100 p-2 rounded-lg">
-                  <FileText className="h-5 w-5 text-emerald-600" />
+                <div className="bg-emerald-100 dark:bg-emerald-950/50 p-2 rounded-lg">
+                  <FileText className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
                 </div>
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-gray-900 min-h-[1.5rem] flex items-center">
+              <div className="text-3xl font-bold text-gray-900 dark:text-white min-h-[1.5rem] flex items-center">
                 {statsLoading ? (
                   <Loader2 className="h-6 w-6 animate-spin text-emerald-600" />
                 ) : (
                   kpis.totalBatches.toLocaleString()
                 )}
               </div>
-              <p className="text-xs text-gray-500 mt-1">Total on platform</p>
+              <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">Total on platform</p>
             </CardContent>
           </Card>
 
-          <Card className="border-2 border-blue-100">
+          <Card className="border-2 border-blue-100 dark:border-blue-950/30 bg-card text-card-foreground">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-medium text-gray-600">
+                <CardTitle className="text-sm font-medium text-gray-600 dark:text-slate-400">
                   NFTs Created
                 </CardTitle>
-                <div className="bg-blue-100 p-2 rounded-lg">
-                  <Coins className="h-5 w-5 text-blue-600" />
+                <div className="bg-blue-100 dark:bg-blue-950/50 p-2 rounded-lg">
+                  <Coins className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                 </div>
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-gray-900 min-h-[1.5rem] flex items-center">
+              <div className="text-3xl font-bold text-gray-900 dark:text-white min-h-[1.5rem] flex items-center">
                 {statsLoading ? (
                   <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
                 ) : (
                   kpis.totalNfts.toLocaleString()
                 )}
               </div>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
                 Tokenized certificates
               </p>
             </CardContent>
           </Card>
 
-          <Card className="border-2 border-purple-100">
+          <Card className="border-2 border-purple-100 dark:border-purple-950/30 bg-card text-card-foreground">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-medium text-gray-600">
+                <CardTitle className="text-sm font-medium text-gray-600 dark:text-slate-400">
                   AI Verifications
                 </CardTitle>
-                <div className="bg-purple-100 p-2 rounded-lg">
-                  <ShieldCheck className="h-5 w-5 text-purple-600" />
+                <div className="bg-purple-100 dark:bg-purple-950/50 p-2 rounded-lg">
+                  <ShieldCheck className="h-5 w-5 text-purple-600 dark:text-purple-400" />
                 </div>
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-gray-900 min-h-[1.5rem] flex items-center">
+              <div className="text-3xl font-bold text-gray-900 dark:text-white min-h-[1.5rem] flex items-center">
                 {statsLoading ? (
                   <Loader2 className="h-6 w-6 animate-spin text-purple-600" />
                 ) : (
                   kpis.aiVerified.toLocaleString()
                 )}
               </div>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
                 Batches verified with AI
               </p>
             </CardContent>
@@ -292,55 +292,53 @@ export default function Dashboard() {
             {kpis.totalVerifications.toLocaleString()} verifications IA
             realisees, dont {audit.flaggedLots.length} lot(s) a surveiller.
           </p>
-        )}
-
-        {/* AI Insight Card */}
-        <Card className="mb-8 border-2 border-purple-200 bg-gradient-to-br from-purple-50 to-white">
+        )}        {/* AI Insight Card */}
+        <Card className="mb-8 border-2 border-purple-200 dark:border-purple-950/30 bg-gradient-to-br from-purple-50 via-white to-white dark:from-purple-950/20 dark:via-slate-900/10 dark:to-card bg-card text-card-foreground">
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle className="flex items-center gap-2">
-                <Sparkles className="h-5 w-5 text-purple-600" />
+              <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
+                <Sparkles className="h-5 w-5 text-purple-600 dark:text-purple-400" />
                 AI Analyst Insights
               </CardTitle>
               <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1 bg-gray-100 rounded-full p-1">
+                <div className="flex items-center gap-1 bg-gray-100 dark:bg-slate-800 rounded-full p-1">
                   <button
                     onClick={() => setLang("en")}
                     className={`px-3 py-1 text-xs font-semibold rounded-full transition-colors ${
                       lang === "en"
                         ? "bg-purple-600 text-white"
-                        : "bg-transparent text-gray-600 hover:bg-gray-200"
+                        : "bg-transparent text-gray-600 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-slate-700"
                     }`}
                   >
                     EN
                   </button>
                 </div>
-                <div className="flex items-center gap-1 px-2 py-1 bg-purple-100 text-purple-700 text-xs font-semibold rounded-full">
+                <div className="flex items-center gap-1 px-2 py-1 bg-purple-100 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 text-xs font-semibold rounded-full">
                   <Sparkles className="h-3 w-3" />
                   Generated by Gemini AI
                 </div>
               </div>
             </div>
-            <CardDescription>
+            <CardDescription className="text-gray-500 dark:text-slate-400">
               Intelligent analysis of your activity
             </CardDescription>
           </CardHeader>
           <CardContent>
             {statsLoading ? (
-              <div className="text-center py-4 text-gray-500 flex items-center justify-center gap-2">
+              <div className="text-center py-4 text-gray-500 dark:text-slate-400 flex items-center justify-center gap-2">
                 <Loader2 className="h-5 w-5 animate-spin text-purple-500" />
                 The AI analyst examines the data...
               </div>
             ) : statsError ? (
-              <div className="text-center py-4 text-red-600 font-semibold">
+              <div className="text-center py-4 text-red-600 dark:text-red-400 font-semibold">
                 Error: {statsError}
               </div>
             ) : aiInsightText ? (
               <>
-                <p className="text-base text-gray-800 leading-relaxed italic">
+                <p className="text-base text-gray-800 dark:text-slate-200 leading-relaxed italic">
                   “{aiInsightText}”
                 </p>
-                <p className="text-xs text-gray-500 mt-3">
+                <p className="text-xs text-gray-500 dark:text-slate-400 mt-3">
                   Summary generated on{" "}
                   {new Date(
                     statsData?.generatedAt ?? Date.now(),
@@ -348,13 +346,13 @@ export default function Dashboard() {
                 </p>
               </>
             ) : (
-              <p className="text-base text-gray-600 italic">
+              <p className="text-base text-gray-600 dark:text-slate-400 italic">
                 AI temporarily unavailable. Upcoming verifications will feed the
                 analysis.
               </p>
             )}
             {aiInsightError && !statsLoading && !statsError && (
-              <p className="text-xs text-gray-500 mt-2">
+              <p className="text-xs text-gray-500 dark:text-slate-400 mt-2">
                 AI Note: {aiInsightError}
               </p>
             )}
@@ -364,36 +362,36 @@ export default function Dashboard() {
         {/* Audit Journal & Service Status */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {/* Audit Journal Card */}
-          <Card>
+          <Card className="bg-card text-card-foreground dark:border-slate-800">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Activity className="h-5 w-5 text-emerald-600" />
+              <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
+                <Activity className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
                 AI Audit Log
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="text-gray-500 dark:text-slate-400">
                 Batches approved and flagged by AI
               </CardDescription>
             </CardHeader>
             <CardContent>
               {statsLoading ? (
-                <div className="text-center py-8 text-gray-500 flex items-center justify-center gap-2">
+                <div className="text-center py-8 text-gray-500 dark:text-slate-400 flex items-center justify-center gap-2">
                   <Loader2 className="h-5 w-5 animate-spin text-emerald-500" />
                   Change in the AI log...
                 </div>
               ) : statsError ? (
-                <div className="text-center py-8 text-red-600 font-semibold">
+                <div className="text-center py-8 text-red-600 dark:text-red-400 font-semibold">
                   Error: {statsError}
                 </div>
               ) : (
                 <div className="space-y-6">
                   {/* Approved Lots */}
                   <div>
-                    <h3 className="text-sm font-semibold text-emerald-700 mb-3 flex items-center gap-2">
+                    <h3 className="text-sm font-semibold text-emerald-700 dark:text-emerald-400 mb-3 flex items-center gap-2">
                       <CheckCircle2 className="h-4 w-4" />
                       Approved Lots
                     </h3>
                     {audit.approvedLots.length === 0 ? (
-                      <p className="text-sm text-gray-500 italic">
+                      <p className="text-sm text-gray-500 dark:text-slate-400 italic">
                         No approved lots at the moment.
                       </p>
                     ) : (
@@ -403,22 +401,22 @@ export default function Dashboard() {
                           return (
                             <li
                               key={`${lot.token_id}-${lot.serial_number}-${idx}`}
-                              className="flex items-start gap-2 text-sm p-2 bg-emerald-50 rounded border border-emerald-200"
+                              className="flex items-start gap-2 text-sm p-2 bg-emerald-50 dark:bg-emerald-950/20 rounded border border-emerald-200 dark:border-emerald-900/30"
                             >
-                              <CheckCircle2 className="h-4 w-4 text-emerald-600 mt-0.5 shrink-0" />
-                              <span className="flex-1">
+                              <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400 mt-0.5 shrink-0" />
+                              <span className="flex-1 text-gray-800 dark:text-slate-200">
                                 Lot{" "}
                                 <a
                                   href={`https://hashscan.io/testnet/token/${lot.token_id}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="text-blue-600 hover:underline font-medium"
+                                  className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
                                 >
                                   {lot.token_id}/{lot.serial_number}
                                 </a>{" "}
                                 - Score {score}/100
                                 {lot.trustExplanation && (
-                                  <span className="block text-xs text-gray-500 mt-1">
+                                  <span className="block text-xs text-gray-500 dark:text-slate-400 mt-1">
                                     {lot.trustExplanation}
                                   </span>
                                 )}
@@ -432,12 +430,12 @@ export default function Dashboard() {
 
                   {/* Flagged Lots */}
                   <div>
-                    <h3 className="text-sm font-semibold text-orange-700 mb-3 flex items-center gap-2">
+                    <h3 className="text-sm font-semibold text-orange-700 dark:text-orange-400 mb-3 flex items-center gap-2">
                       <AlertTriangle className="h-4 w-4" />
                       Lots a examiner
                     </h3>
                     {audit.flaggedLots.length === 0 ? (
-                      <p className="text-sm text-gray-500 italic">
+                      <p className="text-sm text-gray-500 dark:text-slate-400 italic">
                         No batch flagged by AI.
                       </p>
                     ) : (
@@ -448,26 +446,26 @@ export default function Dashboard() {
                             return (
                               <li
                                 key={`${lot.token_id}-${lot.serial_number}-${idx}`}
-                                className="flex items-start gap-2 text-sm p-2 bg-orange-50 rounded border border-orange-200"
+                                className="flex items-start gap-2 text-sm p-2 bg-orange-50 dark:bg-orange-950/20 rounded border border-orange-200 dark:border-orange-900/30"
                               >
                                 <Tooltip>
                                   <TooltipTrigger asChild>
-                                    <AlertTriangle className="h-4 w-4 text-orange-600 mt-0.5 shrink-0 cursor-help" />
+                                    <AlertTriangle className="h-4 w-4 text-orange-600 dark:text-orange-400 mt-0.5 shrink-0 cursor-help" />
                                   </TooltipTrigger>
-                                  <TooltipContent className="max-w-xs">
+                                  <TooltipContent className="max-w-xs bg-popover text-popover-foreground border border-border">
                                     <p className="text-xs font-semibold mb-1">
                                       Reason for flagging:
                                     </p>
                                     <p className="text-xs">{lot.rationale}</p>
                                   </TooltipContent>
                                 </Tooltip>
-                                <span className="flex-1">
+                                <span className="flex-1 text-gray-800 dark:text-slate-200">
                                   Lot{" "}
                                   <a
                                     href={`https://hashscan.io/testnet/token/${lot.token_id}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-blue-600 hover:underline font-medium"
+                                    className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
                                   >
                                     {lot.token_id}/{lot.serial_number}
                                   </a>{" "}
@@ -486,40 +484,40 @@ export default function Dashboard() {
           </Card>
 
           {/* Service Status Card */}
-          <Card>
+          <Card className="bg-card text-card-foreground dark:border-slate-800">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Zap className="h-5 w-5 text-emerald-600" />
+              <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
+                <Zap className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
                 Service Status
               </CardTitle>
-              <CardDescription>Backend services health status</CardDescription>
+              <CardDescription className="text-slate-500 dark:text-slate-400">Backend services health status</CardDescription>
             </CardHeader>
             <CardContent>
               {healthLoading ? (
-                <div className="text-center py-8 text-gray-500">
+                <div className="text-center py-8 text-gray-500 dark:text-slate-400">
                   Verification des services...
                 </div>
               ) : healthError ? (
                 <div className="text-center py-8">
-                  <p className="text-red-600 font-semibold mb-2">
+                  <p className="text-red-600 dark:text-red-400 font-semibold mb-2">
                     ⚠️ Connection Error
                   </p>
-                  <p className="text-sm text-gray-600 mb-2">{healthError}</p>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-sm text-gray-600 dark:text-slate-300 mb-2">{healthError}</p>
+                  <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
                     Verifier que le backend est demarre et accessible.
                   </p>
                 </div>
               ) : !healthStatus ? (
                 <div className="text-center py-8">
-                  <p className="text-red-600 font-semibold mb-2">⚠️ No Data</p>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-red-600 dark:text-red-400 font-semibold mb-2">⚠️ No Data</p>
+                  <p className="text-sm text-gray-600 dark:text-slate-300">
                     Unable to retrieve service status.
                   </p>
                 </div>
               ) : (
                 <div className="space-y-4">
                   {/* Hedera Mirror Node */}
-                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200">
+                  <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-900/50 rounded-lg border border-gray-200 dark:border-slate-800">
                     <div className="flex items-center gap-3">
                       <div
                         className={`w-3 h-3 rounded-full ${
@@ -529,29 +527,29 @@ export default function Dashboard() {
                         }`}
                       />
                       <div>
-                        <p className="text-sm font-medium text-gray-900">
+                        <p className="text-sm font-medium text-gray-900 dark:text-white">
                           Hedera Mirror Node
                         </p>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-gray-500 dark:text-slate-400">
                           {healthStatus.hedera.ok ? "Operational" : "Offline"}
                         </p>
                         {!healthStatus.hedera.ok &&
                           healthStatus.hedera.error && (
-                            <p className="text-xs text-red-500 mt-1">
+                            <p className="text-xs text-red-500 dark:text-red-400 mt-1">
                               {healthStatus.hedera.error}
                             </p>
                           )}
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm font-bold text-gray-700">
+                      <p className="text-sm font-bold text-gray-700 dark:text-slate-300">
                         {healthStatus.hedera.ms}ms
                       </p>
                     </div>
                   </div>
 
                   {/* Supabase DB */}
-                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200">
+                  <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-900/50 rounded-lg border border-gray-200 dark:border-slate-800">
                     <div className="flex items-center gap-3">
                       <div
                         className={`w-3 h-3 rounded-full ${
@@ -561,23 +559,23 @@ export default function Dashboard() {
                         }`}
                       />
                       <div>
-                        <p className="text-sm font-medium text-gray-900">
+                        <p className="text-sm font-medium text-gray-900 dark:text-white">
                           Supabase DB
                         </p>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-gray-500 dark:text-slate-400">
                           {healthStatus.supabase.ok ? "Operational" : "Offline"}
                         </p>
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm font-bold text-gray-700">
+                      <p className="text-sm font-bold text-gray-700 dark:text-slate-300">
                         {healthStatus.supabase.ms}ms
                       </p>
                     </div>
                   </div>
 
                   {/* Gemini AI */}
-                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200">
+                  <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-900/50 rounded-lg border border-gray-200 dark:border-slate-800">
                     <div className="flex items-center gap-3">
                       <div
                         className={`w-3 h-3 rounded-full ${
@@ -587,19 +585,19 @@ export default function Dashboard() {
                         }`}
                       />
                       <div>
-                        <p className="text-sm font-medium text-gray-900">
+                        <p className="text-sm font-medium text-gray-900 dark:text-white">
                           Gemini AI{" "}
                           {healthStatus.gemini.model
                             ? `(${healthStatus.gemini.model})`
                             : ""}
                         </p>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-gray-500 dark:text-slate-400">
                           {healthStatus.gemini.ok ? "Operational" : "Offline"}
                         </p>
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm font-bold text-gray-700">
+                      <p className="text-sm font-bold text-gray-700 dark:text-slate-300">
                         {healthStatus.gemini.ms}ms
                       </p>
                     </div>
@@ -611,38 +609,38 @@ export default function Dashboard() {
         </div>
 
         {/* Technology Stack */}
-        <Card>
+        <Card className="bg-card text-card-foreground dark:border-slate-800">
           <CardHeader>
-            <CardTitle>Technology Stack</CardTitle>
-            <CardDescription>
+            <CardTitle className="text-gray-900 dark:text-white">Technology Stack</CardTitle>
+            <CardDescription className="text-slate-500 dark:text-slate-400">
               Technologies used for traceability
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="p-4 bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-lg">
-                <p className="text-sm font-semibold text-emerald-900 mb-1">
+              <div className="p-4 bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-950/30 dark:to-slate-900/30 rounded-lg border border-emerald-100/50 dark:border-emerald-900/20">
+                <p className="text-sm font-semibold text-emerald-900 dark:text-emerald-400 mb-1">
                   Hedera HCS
                 </p>
-                <p className="text-xs text-emerald-700">Immutable consensus</p>
+                <p className="text-xs text-emerald-700 dark:text-emerald-500">Immutable consensus</p>
               </div>
-              <div className="p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg">
-                <p className="text-sm font-semibold text-blue-900 mb-1">
+              <div className="p-4 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950/30 dark:to-slate-900/30 rounded-lg border border-blue-100/50 dark:border-blue-900/20">
+                <p className="text-sm font-semibold text-blue-900 dark:text-blue-400 mb-1">
                   Hedera HTS
                 </p>
-                <p className="text-xs text-blue-700">NFT Tokenization</p>
+                <p className="text-xs text-blue-700 dark:text-blue-500">NFT Tokenization</p>
               </div>
-              <div className="p-4 bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg">
-                <p className="text-sm font-semibold text-purple-900 mb-1">
+              <div className="p-4 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950/30 dark:to-slate-900/30 rounded-lg border border-purple-100/50 dark:border-purple-900/20">
+                <p className="text-sm font-semibold text-purple-900 dark:text-purple-400 mb-1">
                   Gemini AI 2.5
                 </p>
-                <p className="text-xs text-purple-700">Analysis & Provenance</p>
+                <p className="text-xs text-purple-700 dark:text-purple-500">Analysis & Provenance</p>
               </div>
-              <div className="p-4 bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg">
-                <p className="text-sm font-semibold text-orange-900 mb-1">
+              <div className="p-4 bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-950/30 dark:to-slate-900/30 rounded-lg border border-orange-100/50 dark:border-orange-900/20">
+                <p className="text-sm font-semibold text-orange-900 dark:text-orange-400 mb-1">
                   Supabase
                 </p>
-                <p className="text-xs text-orange-700">Database</p>
+                <p className="text-xs text-orange-700 dark:text-orange-500">Database</p>
               </div>
             </div>
           </CardContent>
