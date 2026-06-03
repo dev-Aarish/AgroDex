@@ -17,8 +17,10 @@ import {
   LogOut,
   Menu,
   BarChart3,
+  Wallet,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useWallet } from "@/hooks/useWallet";
 import { useState } from "react";
 import { useServiceStatus } from "@/hooks/useServiceStatus";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -26,6 +28,7 @@ import logoUrl from "@/assets/agritrust-logo.svg";
 
 export default function Navbar() {
   const { user, signOut } = useAuth();
+  const { accountId, isConnected, network, disconnect } = useWallet();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { isSuccess, isError } = useServiceStatus();
@@ -49,6 +52,15 @@ export default function Navbar() {
   ];
 
   const isActive = (path: string) => location.pathname === path;
+
+  // Display name: prefer email if logged in via Supabase, otherwise show wallet account
+  const displayName = user?.email || (isConnected && accountId) || "User";
+
+  // Handle logout: sign out from Supabase AND disconnect wallet
+  const handleLogout = async () => {
+    if (user) await signOut();
+    if (isConnected) await disconnect();
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-100 dark:border-slate-800 bg-white/95 dark:bg-slate-950/95 backdrop-blur supports-[backdrop-filter]:bg-white/80 supports-[backdrop-filter]:dark:bg-slate-950/80">
@@ -93,10 +105,26 @@ export default function Navbar() {
 
           {/* Desktop User Menu */}
           <div className="hidden md:flex items-center gap-3">
+            {/* Wallet indicator (shown when connected via wallet) */}
+            {isConnected && accountId && (
+              <div className="flex items-center gap-1.5 bg-blue-50 dark:bg-blue-950/30 px-3 py-1.5 rounded-lg border border-blue-200 dark:border-blue-800">
+                <Wallet className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" />
+                <span className="text-xs font-mono text-blue-700 dark:text-blue-300">
+                  {accountId}
+                </span>
+                <span
+                  className={`w-1.5 h-1.5 rounded-full ${
+                    network === "testnet" ? "bg-amber-500" : "bg-green-500"
+                  }`}
+                  title={network}
+                />
+              </div>
+            )}
+
             <div className="flex items-center gap-2 bg-gray-50 dark:bg-slate-900 px-3 py-2 rounded-lg border border-gray-100 dark:border-slate-800">
               <User className="h-4 w-4 text-gray-600 dark:text-slate-400" />
               <span className="text-sm font-body text-gray-700 dark:text-slate-300 max-w-[150px] truncate">
-                {user?.email || "Wallet User"}
+                {displayName}
               </span>
             </div>
             <ThemeToggle />
@@ -121,7 +149,7 @@ export default function Navbar() {
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  onClick={signOut}
+                  onClick={handleLogout}
                   className="cursor-pointer text-red-600"
                 >
                   <LogOut className="h-4 w-4 mr-2" />
@@ -146,9 +174,28 @@ export default function Navbar() {
                   <div className="flex items-center gap-3 bg-gray-50 dark:bg-slate-900 px-4 py-3 rounded-lg border border-gray-100 dark:border-slate-800">
                     <User className="h-5 w-5 text-gray-600 dark:text-slate-400" />
                     <span className="text-sm font-body text-gray-700 dark:text-slate-300 truncate">
-                      {user?.email || "Wallet User"}
+                      {displayName}
                     </span>
                   </div>
+
+                  {/* Wallet info (mobile) */}
+                  {isConnected && accountId && (
+                    <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-950/30 px-4 py-2 rounded-lg border border-blue-200 dark:border-blue-800">
+                      <Wallet className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                      <span className="text-xs font-mono text-blue-700 dark:text-blue-300 truncate">
+                        {accountId}
+                      </span>
+                      <span
+                        className={`ml-auto px-2 py-0.5 text-xs rounded-full font-semibold ${
+                          network === "testnet"
+                            ? "bg-amber-100 text-amber-700"
+                            : "bg-green-100 text-green-700"
+                        }`}
+                      >
+                        {network}
+                      </span>
+                    </div>
+                  )}
 
                   {/* Navigation Links */}
                   <nav className="flex flex-col gap-2">
@@ -204,7 +251,7 @@ export default function Navbar() {
                       className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/30"
                       onClick={() => {
                         setMobileMenuOpen(false);
-                        signOut();
+                        handleLogout();
                       }}
                     >
                       <LogOut className="h-4 w-4 mr-2" />

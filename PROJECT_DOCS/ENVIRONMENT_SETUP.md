@@ -33,6 +33,7 @@ VITE_WALLETCONNECT_PROJECT_ID=ac9166dd615752bda362b92887c6a1ad
 
 4. **`VITE_WALLETCONNECT_PROJECT_ID`** - WalletConnect project ID
    - Purpose: Enable wallet connection features
+   - Note: Contributors must obtain their own WalletConnect project ID by registering on [WalletConnect Cloud](https://cloud.walletconnect.com/) and configure it in `.env`.
 
 ## Setup Instructions
 
@@ -44,9 +45,11 @@ VITE_WALLETCONNECT_PROJECT_ID=ac9166dd615752bda362b92887c6a1ad
    cp .env.example .env
    ```
 
-2. The default values in `.env.example` are already configured for the current Supabase project.
+2. Retrieve your own WalletConnect Project ID from the [WalletConnect Cloud Dashboard](https://cloud.walletconnect.com/) and configure it as `VITE_WALLETCONNECT_PROJECT_ID` in your `.env` file.
 
-3. Start the development server:
+3. The default values in `.env.example` are already configured for the current Supabase project.
+
+4. Start the development server:
    ```bash
    pnpm dev
    ```

@@ -48,7 +48,7 @@ function HelpPanel({ network }: { network: string }) {
               className="text-blue-700 dark:text-blue-400 underline hover:text-blue-900 dark:hover:text-blue-300 inline-flex items-center gap-1"
               target="_blank"
               rel="noreferrer"
-              href="https://chromewebstore.google.com/detail/hashpack/heoegjdnijfacjfoebdnlobjekoebcag"
+              href="https://chromewebstore.google.com/detail/hashpack/gjagmgiddbbciopjhllkdnddhcglnemk"
             >
               Chrome Web Store <ExternalLink className="h-3 w-3" />
             </a>
@@ -85,7 +85,7 @@ function HelpPanel({ network }: { network: string }) {
           <a
             target="_blank"
             rel="noreferrer"
-            href="https://chromewebstore.google.com/detail/hashpack/heoegjdnijfacjfoebdnlobjekoebcag"
+            href="https://chromewebstore.google.com/detail/hashpack/gjagmgiddbbciopjhllkdnddhcglnemk"
           >
             <ExternalLink className="h-3 w-3 mr-1" />
             Install HashPack

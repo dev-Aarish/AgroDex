@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useWallet } from "@/hooks/useWallet";
 import { supabase } from "@/lib/supabaseClient";
-import { hashPackService } from "@/lib/hashpack";
 import {
   Card,
   CardContent,
@@ -37,6 +37,7 @@ interface UserProfile {
 export default function Profile() {
   const navigate = useNavigate();
   const { user, linkHederaWallet } = useAuth();
+  const { accountId, isConnected, connect, network } = useWallet();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [linking, setLinking] = useState(false);
@@ -49,7 +50,10 @@ export default function Profile() {
   }, [user]);
 
   const loadProfile = async () => {
-    if (!user) return;
+    if (!user) {
+      setLoading(false);
+      return;
+    }
 
     try {
       const { data, error } = await supabase
@@ -69,18 +73,25 @@ export default function Profile() {
     }
   };
 
+  /**
+   * Link the currently connected HashPack wallet to the user's Supabase profile.
+   * Uses the new useWallet() hook to get the connected account ID.
+   */
   const handleLinkWallet = async () => {
     setError(null);
     setSuccess(null);
     setLinking(true);
 
     try {
-      const accountId = await hashPackService.connectWallet();
-
-      if (!accountId) {
-        throw new Error("No account ID received from wallet");
+      // If wallet is not connected, trigger connection first
+      if (!isConnected || !accountId) {
+        await connect();
+        // Wait for wallet state to update (the connect flow is async via modal)
+        setLinking(false);
+        return;
       }
 
+      // Link the wallet account to the Supabase profile
       await linkHederaWallet(accountId);
       setSuccess(`Successfully linked Hedera wallet: ${accountId}`);
       await loadProfile();
@@ -178,6 +189,7 @@ export default function Profile() {
                 <label className="text-sm font-medium text-gray-700 dark:text-slate-300">
                   Hedera Wallet
                 </label>
+                {/* Show linked wallet from profile DB */}
                 {profile?.hedera_account_id ? (
                   <div className="flex items-center gap-2 mt-1">
                     <Wallet className="h-4 w-4 text-green-600 dark:text-green-400" />
@@ -206,6 +218,30 @@ export default function Profile() {
                       <LinkIcon className="mr-2 h-4 w-4" />
                       {linking ? "Linking..." : "Link Hedera Wallet"}
                     </Button>
+                  </div>
+                )}
+
+                {/* Show currently connected wallet session (live status) */}
+                {isConnected && accountId && (
+                  <div className="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                    <p className="text-xs font-semibold text-blue-700 mb-1">
+                      Active Wallet Session
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <Wallet className="h-3.5 w-3.5 text-blue-600" />
+                      <span className="font-mono text-sm text-blue-800">
+                        {accountId}
+                      </span>
+                      <span
+                        className={`ml-auto px-2 py-0.5 text-xs rounded-full font-semibold ${
+                          network === "testnet"
+                            ? "bg-amber-100 text-amber-700"
+                            : "bg-green-100 text-green-700"
+                        }`}
+                      >
+                        {network}
+                      </span>
+                    </div>
                   </div>
                 )}
               </div>

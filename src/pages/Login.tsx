@@ -1,7 +1,20 @@
+/**
+ * =============================================================================
+ * Login Page — Email + HashPack Wallet Authentication
+ * =============================================================================
+ *
+ * Supports two login methods:
+ *  1. Email/Password via Supabase (existing, unchanged)
+ *  2. HashPack Wallet via HashConnect v3 (updated from old WalletConnect)
+ *
+ * The wallet tab now uses the new WalletButton component with HashConnect v3.
+ */
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/lib/supabaseClient";
 import { useAuth } from "@/contexts/AuthContext";
+import { useWallet } from "@/hooks/useWallet";
 import {
   Card,
   CardContent,
@@ -15,7 +28,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle, Mail, Lock, Shield, Sparkles, Globe } from "lucide-react";
-import WalletLogin from "@/components/WalletLogin";
+import WalletButton from "@/components/WalletButton";
 import { motion } from "framer-motion";
 import { Helmet } from "react-helmet-async";
 import logoUrl from "@/assets/agritrust-logo.svg";
@@ -24,18 +37,21 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 export default function Login() {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
+  const { isConnected } = useWallet();
   const [authError, setAuthError] = useState<string | null>(null);
   const [authLoading, setAuthLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
 
+  // Auto-redirect if authenticated via either method
   useEffect(() => {
-    if (!loading && user) {
+    if (!loading && (user || isConnected)) {
       navigate("/dashboard");
     }
-  }, [user, loading, navigate]);
+  }, [user, loading, isConnected, navigate]);
 
+  // Existing email auth handler — unchanged
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setAuthError(null);
@@ -242,6 +258,7 @@ export default function Login() {
               </TabsTrigger>
             </TabsList>
 
+            {/* ===== EMAIL TAB (unchanged from original) ===== */}
             <TabsContent value="email">
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
@@ -356,6 +373,7 @@ export default function Login() {
               </motion.div>
             </TabsContent>
 
+            {/* ===== WALLET TAB (updated: uses new WalletButton with HashConnect v3) ===== */}
             <TabsContent value="wallet">
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
@@ -368,11 +386,12 @@ export default function Login() {
                       Wallet Login
                     </CardTitle>
                     <CardDescription className="font-body text-base text-gray-600 dark:text-slate-400">
-                      Connect your Hedera wallet to continue
+                      Connect your HashPack wallet to continue
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="pt-8">
-                    <WalletLogin />
+                    {/* New WalletButton replaces the old WalletLogin component */}
+                    <WalletButton />
                   </CardContent>
                 </Card>
               </motion.div>
