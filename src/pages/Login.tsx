@@ -268,10 +268,12 @@ export default function Login() {
                 <Card className="border-2 border-gray-200 dark:border-slate-800 dark:bg-slate-900 shadow-2xl rounded-2xl overflow-hidden">
                   <CardHeader className="bg-gradient-to-br from-emerald-50 to-blue-50 dark:from-emerald-950/20 dark:to-blue-950/20 pb-8">
                     <CardTitle className="text-3xl font-extrabold text-gray-900 dark:text-white">
-                      Sign In
+                      {isSignUp ? "Sign Up" : "Sign In"}
                     </CardTitle>
                     <CardDescription className="font-body text-base text-gray-600 dark:text-slate-400">
-                      Enter your credentials to access your account
+                      {isSignUp 
+                        ? "Create a new account to get started" 
+                        : "Enter your credentials to access your account"}
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="pt-8">
