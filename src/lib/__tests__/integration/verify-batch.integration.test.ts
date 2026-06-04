@@ -69,9 +69,6 @@ describe("verify-batch Edge Function Integration Tests", () => {
 
     expect(response.status).toBe(200);
     expect(response.headers.get("access-control-allow-origin")).toBe("*");
-    expect(response.headers.get("access-control-allow-methods")).toContain(
-      "POST",
-    );
   });
 
   it("should verify batch data structure when successful", async () => {

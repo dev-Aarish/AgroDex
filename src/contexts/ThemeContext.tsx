@@ -18,10 +18,10 @@ export function ThemeProvider({
   children: React.ReactNode;
   defaultTheme?: Theme;
   storageKey?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }) {
   const [theme, setThemeState] = useState<Theme>(
-    () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
+    () => (localStorage.getItem(storageKey) as Theme) || defaultTheme,
   );
 
   useEffect(() => {
