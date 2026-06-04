@@ -1,134 +1,151 @@
-<h3 align="center">Winner of Basic Track Problem Statement in Hello Future Hedera Ascension Hackathon 2025 🏆 </h3>
-<img width="1538" height="674" alt="image" src="https://github.com/user-attachments/assets/81bd6e83-879e-4319-92d8-38229919ffd5" />
-
-<br/>
 <div align="center">
 
-<h3 align="center">AgroDex</h3>
-<p align="center">
-AgroDex fights food fraud in Indonesian by pairing Hedera’s immutable ledger with Gemini AI for auditing in real-time food.
-</p>
-</div>
+<h1>🌾 AgroDex 🌾</h1>
 
-## 🏆 SSOC 2026 Project Selection
+<p align="center">
+  <b>AgroDex fights food fraud in Indonesia by pairing Hedera’s immutable ledger with Gemini AI for real-time food auditing.</b>
+</p>
+
+---
+
+<h3><i>🏆 Winner of Basic Track Problem Statement in Hello Future Hedera Ascension Hackathon 2025 🏆</i></h3>
+
+<img width="700" height=auto alt="AgroDex Dashboard Banner" src="https://github.com/user-attachments/assets/81bd6e83-879e-4319-92d8-38229919ffd5" />
+
+------
+
+<h3><i>🏆 SSOC 2026 Project Selection</i></h3>
 
 We are excited to announce that this project has been officially selected for **Social Summer Of Code (SSOC) 2026**.
 
+</div>
 
-# 🌟 Open Source Participation
+---
+
+## 🌟 Open Source Participation
 
 This project proudly participates in the following open-source programs:
 
 | Program | Program Name | Status |
-|---------|--------------|--------|
-| ♨️ | **Social Summer of Code (SSOC) 2026** | Active |
+| :---: | :--- | :--- |
+| ♨️ | **Social Summer of Code (SSOC) 2026** | 🟢 Active |
 
-> 💡 We warmly welcome contributors from all the above programs.  
-Please check open issues and follow the contribution guidelines before submitting a PR.
-P.S: **Remember that you should be atleast knowing the basic of web3 blockchain using Hedera. If you're not an expert or understand this project, please do not open the issue / PR unless you know it.**
+> [!IMPORTANT]
+> 💡 We warmly welcome contributors from all the above programs. Please check open issues and follow the contribution guidelines before submitting a PR.
 > 
-## About The Project
+> ⚠️ **Prerequisite:** You should at least understand the basics of Web3/Blockchain development using Hedera. If you do not understand this project architecture, please do not open issues or PRs.
 
-The Problem
-<br>
-Food fraud and missing traceability drain billions from Indonesian agricultural sector. Farmers cannot prove premium quality (e.g., organic), and buyers cannot verify authenticity, hurting trust and revenue.
+---
 
-Our Hedera-Based Solution offer AgroDex to creates a digital twin (NFT) for every batch, audited by AI and anchored to Hedera for an immutable trail of evidence.
+## 📖 About The Project
 
-## Hedera Integration Summary (Required)
+### 🛑 The Problem
+Food fraud and missing traceability drain billions from the Indonesian agricultural sector. Farmers cannot prove premium quality (e.g., organic), and buyers cannot verify authenticity, severely hurting industry trust and revenue.
+
+### 🛡️ Our Hedera-Based Solution
+**AgroDex** creates a digital twin (NFT) for every crop batch. Every milestone is audited by AI and securely anchored to Hedera to create an immutable, lifelong trail of evidence.
+
+---
+
+## ⚙️ Tech Stack
+
+| Category | Technology | Badge |
+| :--- | :--- | :--- |
+| **Frontend** | React (Vite) | ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB) ![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white) |
+| **Language** | TypeScript | ![TypeScript](https://img.shields.io/badge/typescript-%23007acc.svg?style=for-the-badge&logo=typescript&logoColor=white) |
+| **Styling** | Tailwind CSS | ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white) |
+| **Backend** | Node.js & Express | ![NodeJS](https://img.shields.io/badge/node.js-%23339933.svg?style=for-the-badge&logo=node.js&logoColor=white) ![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express) |
+| **Database** | Supabase | ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white) |
+| **Blockchain** | Hedera Hashgraph | ![Hedera](https://img.shields.io/badge/Hedera-000000?style=for-the-badge&logo=hedera&logoColor=white) |
+| **Artificial Intelligence** | Google Gemini | ![Gemini](https://img.shields.io/badge/Google%20Gemini-8E75C2?style=for-the-badge&logo=googlegemini&logoColor=white) |
+
+---
+
+## ⛓️ Hedera Integration Summary
+
 We chose Hedera because predictable, low fees are the only sustainable option for low-margin Indonesian logistics.
 
-Hedera Services Utilized
-Hedera Consensus Service (HCS): Every “proof” event (planting, harvest, etc.) is submitted via TopicMessageSubmitTransaction to our topic ID, producing a low-cost (~$0.0001) immutable audit log.
-Hedera Token Service (HTS): We mint the final certificate as a unique NFT using TokenCreateTransaction.HCS transaction IDs are embedded in the NFT metadata, binding the asset to its evidence trail.
-Mirror Nodes: The Verify page queries Mirror Nodes (via the SDK) to replay the HCS history and demonstrate authenticity to judges and buyers.
-Economic Justification
-Adoption in Indonesia demands sub-$1 fees per transaction. Hedera’s fixed, negligible HCS pricing lets us log thousands of events for a few dollars, keeping the business model viable.
+### 🏛️ Hedera Services Utilized
+* **Hedera Consensus Service (HCS):** Every “proof” event (planting, harvest, etc.) is submitted via `TopicMessageSubmitTransaction` to our topic ID, producing a low-cost (~$0.0001) immutable audit log.
+* **Hedera Token Service (HTS):** We mint the final certificate as a unique NFT using `TokenCreateTransaction`. HCS transaction IDs are embedded directly into the NFT metadata, structurally binding the asset to its evidence trail.
+* **Mirror Nodes:** The Verify page queries Mirror Nodes (via the SDK) to replay the HCS history and seamlessly demonstrate authenticity to buyers and judges.
 
-## Key Features
-## Traceability (Hedera)
-- HCS Logging: Capture every lifecycle event on Hedera Consensus Service.
-- HTS Tokenization: Mint NFT certificates that reference the HCS history.
-- Verification: Buyers validate authenticity by reading the full Mirror Node history.
-## Intelligence (Gemini AI)
-- Audit & Trust Score: AI reviews the HCS timeline to produce a 0–100 trust score.
-- Bilingual Summaries: Generates provenance summaries in English.
-- Buyer Q&A Chatbot: Buyers “talk” to the batch history; AI answers with cited HCS transaction IDs.
-- Dashboard Insight: AI provides real-time business insights that surface on the main dashboard.
+### 💰 Economic Justification
+Widespread adoption in Indonesia demands sub-$1 fees per transaction. Hedera’s fixed, negligible HCS pricing lets us log thousands of logistical events for just a few dollars, keeping the business model completely viable.
 
-## Architecture Diagram
+---
+
+## ✨ Key Features
+
+### 🔍 Traceability (Powered by Hedera)
+* **HCS Logging:** Capture every step of the crop lifecycle transparently.
+* **HTS Tokenization:** Mint NFT certificates referencing immutable HCS history.
+* **Verification Engine:** Buyers validate authenticity instantly by fetching real-time Mirror Node history.
+
+### 🤖 Intelligence (Powered by Gemini AI)
+* **Audit & Trust Score:** AI parses the HCS timeline to yield an objective 0–100 trust rating.
+* **Bilingual Summaries:** Automatically generates intuitive provenance summaries in English and Indonesian.
+* **Buyer Q&A Chatbot:** Buyers can interact directly with a batch's history; the AI replies with cited HCS transaction IDs.
+* **Dashboard Insights:** Real-time business intelligence metrics surfacing on the main admin layout.
+
+---
+
+## 📐 Architecture Diagram
+
 ```ascii
 [Farmer]
    |
    v
 [Frontend (React)] ---- API ----> [Backend (Node.js/Express)]
-   |                                    |           |
-   |                                    |           v
-   |                                    |     [Gemini AI] (Audits & Q&A)
-   |                                    |
-   |                                    +---- HCS Submit / HTS Mint ----> [Hedera Network]
+   |                                 |           |
+   |                                 |           v
+   |                                 |     [Gemini AI] (Audits & Q&A)
+   |                                 |
+   |                                 +---- HCS Submit / HTS Mint ----> [Hedera Network]
    |
    |
 [Buyer]
    |
    v
 [Frontend (React)] ---- API ----> [Backend (Node.js/Express)]
-   |                                    |
-   |                                    +---- Reads ----> [Hedera Mirror Node]
+   |                                 |
+   |                                 +---- Reads ----> [Hedera Mirror Node]
    |
    +---- Displays proofs <------------+
 ```
 
+---
 
-## Deployed on Hedera IDs (Testnet)
-- Operator Account: 0.0.7147874
-- Topic ID (HCS): 0.0.7206092
-- Demo Token ID (HTS): 0.0.7245654 (serial #1)
-
-
-### Built With
-
-- [React(Vite)](https://vite.dev/guide/)
-- [Typescript](https://www.typescriptlang.org/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Nodejs](https://nodejs.org/en)
-- [Express](https://expressjs.com/)
-- [Supabase](https://supabase.com/)
-- [Hedera Hashgraph SDK](https://docs.hedera.com/hedera/sdks-and-apis/sdks)
-- [Google Gemini](https://aistudio.google.com/)
-## Getting Started
+## 🚀 Getting Started
 
 This is the instruction about how to get work with this project:
-### Installation
 
-1. Clone the Repository
+### ⬇️ Installation
+
+<b>1.</b> Clone the Repository
 ```sh
    git clone https://github.com/daviddprtma/AgroDex
    cd AgroDex
    ```
-2. Install Dependencies
+<b>2.</b> Install Dependencies
    ```sh
    pnpm install
    ```
-3. Configure Environment Variables
-   
-   - **Frontend**: Copy `.env.example` at the root of the project to `.env`:
-     ```sh
-     cp .env.example .env
-     ```
-     Open `.env` and configure `VITE_WALLETCONNECT_PROJECT_ID`. Contributors need to obtain their own WalletConnect Project ID by registering their dApp on the [WalletConnect Cloud Dashboard](https://cloud.walletconnect.com/).
-     
-   - **Backend**: Copy `backend/.env.example` to `backend/.env`:
-     ```sh
-     cp backend/.env.example backend/.env
-     ```
-     Edit `backend/.env` and fill in: `OPERATOR_ID`, `OPERATOR_KEY`, `GEMINI_API_KEY`, `SUPABASE_URL`, `SUPABASE_SERVICE_KEY`.
-4. Seed the demo data
+<b>3.</b> Configure Environment Variables
+   ```sh
+   cp backend/.env.example backend/.env
+   // edit backend/.env and fill:
+   // OPERATOR_ID, OPERATOR_KEY, GEMINI_API_KEY, SUPABASE_URL, SUPABASE_SERVICE_KEY
+   ```
+<b>4.</b> Seed the demo data
    ```sh
    cd backend
    node scripts/seedDemo.js
    ```
-5. Run the application
+
+### ⚡ Running
+
+<b>5.</b> Run the application
  ```sh
    # Terminal 1 (Backend)
 cd backend
@@ -139,7 +156,9 @@ cd ..
 pnpm run dev
    ```
 
-## 🧭 How to Contribute to this AgroDex?
+---
+
+## 🛠️ How to Contribute to this Repo?
 
 1. **Star ⭐ and Fork 🍴** this repository.  
 
@@ -160,9 +179,8 @@ pnpm run dev
    - Submit your PR under the “maintenance” label.
 
 ---
----
 
-# 🪶 Branch & Commit Conventions
+## 🌳 Branch & Commit Conventions
 
 | Type              | Branch Prefix | Commit Prefix | Description                                 |
 | ----------------- | ------------- | ------------- | ------------------------------------------- |
@@ -186,17 +204,21 @@ design: revamp Community page layout for better clarity
 
 ---
 
-## Roadmap
+## 🗺️ Roadmap
 
 - [v] Q4 2025 - Testnet Prototype
 - [] Q1 2026 - Pilot with Co-ops
 - [] Q2 2026 - HashConnect Wallet Integration
 - [] Q3 2026- Mainnet Launch & Scaling
 
-## Demo Video
+---
+
+## 📹 Demo Video
 Here's the demo video for this project: 
 <br> 
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/8eDvpoJo5As/0.jpg)](https://www.youtube.com/watch?v=8eDvpoJo5As)
 
-## Pitch Deck
+---
+
+## 📄 Pitch Deck
 For the pitch deck, see it in 👉[AgroDex](https://drive.google.com/file/d/11GCPQooNam1s5ia6bG4XmaHjxkOmFLN9/view?usp=sharing).
