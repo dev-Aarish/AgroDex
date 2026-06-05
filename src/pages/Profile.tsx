@@ -24,6 +24,7 @@ import {
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Helmet } from "react-helmet-async";
+import { DeleteProfileModal } from "@/components/DeleteProfileModal";
 
 interface UserProfile {
   username: string | null;
@@ -120,6 +121,7 @@ export default function Profile() {
         <title>Profile | AgroDex</title>
       </Helmet>
       <Navbar />
+      
       <div className="container mx-auto max-w-2xl py-8 px-4">
         <Card className="bg-card text-card-foreground dark:border-slate-800">
           <CardHeader>
@@ -128,6 +130,7 @@ export default function Profile() {
               Manage your account and linked Hedera wallet
             </CardDescription>
           </CardHeader>
+          
           <CardContent className="space-y-6">
             {error && (
               <Alert variant="destructive">
@@ -146,6 +149,7 @@ export default function Profile() {
             )}
 
             <div className="space-y-4">
+              {/* Email */}
               <div>
                 <label className="text-sm font-medium text-gray-700 dark:text-slate-300">
                   Email
@@ -158,6 +162,7 @@ export default function Profile() {
                 </div>
               </div>
 
+              {/* Username */}
               <div>
                 <label className="text-sm font-medium text-gray-700 dark:text-slate-300">
                   Username
@@ -167,6 +172,7 @@ export default function Profile() {
                 </p>
               </div>
 
+              {/* Authentication Method */}
               <div>
                 <label className="text-sm font-medium text-gray-700 dark:text-slate-300">
                   Authentication Method
@@ -184,11 +190,12 @@ export default function Profile() {
                 </div>
               </div>
 
+              {/* Hedera Wallet */}
               <div>
                 <label className="text-sm font-medium text-gray-700 dark:text-slate-300">
                   Hedera Wallet
                 </label>
-                {/* Show linked wallet from profile DB */}
+                
                 {profile?.hedera_account_id ? (
                   <div className="flex items-center gap-2 mt-1">
                     <Wallet className="h-4 w-4 text-green-600 dark:text-green-400" />
@@ -245,6 +252,7 @@ export default function Profile() {
                 )}
               </div>
 
+              {/* Member Since */}
               <div>
                 <label className="text-sm font-medium text-gray-700 dark:text-slate-300">
                   Member Since
@@ -256,17 +264,22 @@ export default function Profile() {
                 </p>
               </div>
 
+              {/* Manage Session / Danger Zone */}
               <div className="pt-4 border-t border-gray-200 dark:border-slate-800">
                 <Button
                   onClick={() => navigate("/session-settings")}
                   variant="outline"
-                  className="w-full border-gray-300 dark:border-slate-800 text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800"
+                  className="w-full border-gray-300 dark:border-slate-800 text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800 mb-4"
                 >
                   <Clock className="mr-2 h-4 w-4" />
                   Manage session duration
                 </Button>
+                
+                <h3 className="text-sm font-medium text-red-600 dark:text-red-400 mb-2">Danger Zone</h3>
+                <DeleteProfileModal />
               </div>
-            </div>
+
+            </div> {/* Closes space-y-4 */}
           </CardContent>
         </Card>
       </div>
