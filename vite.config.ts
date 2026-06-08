@@ -18,24 +18,24 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  build: {
+   build: {
     rollupOptions: {
       output: {
         manualChunks(id) {
           if (id.includes("node_modules")) {
-            if (id.includes("@hashgraph") || id.includes("hashconnect") || id.includes("@walletconnect")) {
+            if (
+              id.includes("@hashgraph") ||
+              id.includes("hashconnect") ||
+              id.includes("@walletconnect")
+            ) {
               return "vendor-hedera";
             }
-            if (id.includes("recharts") || id.includes("d3") || id.includes("victory")) {
+            if (id.includes("recharts")) {
               return "vendor-charts";
             }
             if (id.includes("framer-motion")) {
               return "vendor-motion";
             }
-            if (id.includes("react-dom") || id.includes("react-router")) {
-              return "vendor-react";
-            }
-            return "vendor";
           }
         },
       },

@@ -129,7 +129,7 @@ This is the instruction about how to get work with this project:
    ```
 <b>2.</b> Install Dependencies
    ```sh
-   pnpm install
+   npm install
    ```
 <b>3.</b> Configure Environment Variables
    ```sh
@@ -149,11 +149,11 @@ This is the instruction about how to get work with this project:
  ```sh
    # Terminal 1 (Backend)
 cd backend
-pnpm run dev
+npm run dev
 
 # Terminal 2 (Frontend)
 cd ..
-pnpm run dev
+npm run dev
    ```
 
 ---
