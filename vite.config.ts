@@ -11,6 +11,29 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+   build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes("node_modules")) {
+            if (
+              id.includes("@hashgraph") ||
+              id.includes("hashconnect") ||
+              id.includes("@walletconnect")
+            ) {
+              return "vendor-hedera";
+            }
+            if (id.includes("recharts")) {
+              return "vendor-charts";
+            }
+            if (id.includes("framer-motion")) {
+              return "vendor-motion";
+            }
+          }
+        },
+      },
+    },
+  },
   test: {
     globals: true,
     environment: "jsdom",
