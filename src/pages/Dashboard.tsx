@@ -43,7 +43,8 @@ interface AuditLot {
   serial_number: string;
   score: number;
   rationale?: string;
-  trustExplanation?: string; // <-- utilisé plus bas
+  trustExplanation?: string;
+  verified_at?: string;
 }
 
 interface DashboardAudit {
@@ -99,7 +100,24 @@ export default function Dashboard() {
     approvedLots: statsData?.audit?.approvedLots ?? [],
     flaggedLots: statsData?.audit?.flaggedLots ?? [],
   };
-
+  const recentActivities = [
+    ...audit.approvedLots.map((lot) => ({
+      type: "approved",
+      title: `Lot ${lot.token_id}/${lot.serial_number} approved`,
+      timestamp: lot.verified_at,
+    })),
+    ...audit.flaggedLots.map((lot) => ({
+      type: "flagged",
+      title: `Lot ${lot.token_id}/${lot.serial_number} flagged`,
+      timestamp: lot.verified_at,
+    })),
+  ]
+    .sort(
+      (a, b) =>
+        new Date(b.timestamp || 0).getTime() -
+        new Date(a.timestamp || 0).getTime(),
+    )
+    .slice(0, 10);
   const aiInsight = (statsData?.aiInsight ?? null) as AIInsight | null;
   const aiInsightText = aiInsight
     ? lang === "en"
@@ -304,11 +322,10 @@ export default function Dashboard() {
                 <div className="flex items-center gap-1 bg-gray-100 dark:bg-slate-800 rounded-full p-1">
                   <button
                     onClick={() => setLang("en")}
-                    className={`px-3 py-1 text-xs font-semibold rounded-full transition-colors ${
-                      lang === "en"
-                        ? "bg-purple-600 text-white"
-                        : "bg-transparent text-gray-600 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-slate-700"
-                    }`}
+                    className={`px-3 py-1 text-xs font-semibold rounded-full transition-colors ${lang === "en"
+                      ? "bg-purple-600 text-white"
+                      : "bg-transparent text-gray-600 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-slate-700"
+                      }`}
                   >
                     EN
                   </button>
@@ -520,11 +537,10 @@ export default function Dashboard() {
                   <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-900/50 rounded-lg border border-gray-200 dark:border-slate-800">
                     <div className="flex items-center gap-3">
                       <div
-                        className={`w-3 h-3 rounded-full ${
-                          healthStatus.hedera.ok
-                            ? "bg-emerald-500"
-                            : "bg-red-500"
-                        }`}
+                        className={`w-3 h-3 rounded-full ${healthStatus.hedera.ok
+                          ? "bg-emerald-500"
+                          : "bg-red-500"
+                          }`}
                       />
                       <div>
                         <p className="text-sm font-medium text-gray-900 dark:text-white">
@@ -552,11 +568,10 @@ export default function Dashboard() {
                   <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-900/50 rounded-lg border border-gray-200 dark:border-slate-800">
                     <div className="flex items-center gap-3">
                       <div
-                        className={`w-3 h-3 rounded-full ${
-                          healthStatus.supabase.ok
-                            ? "bg-emerald-500"
-                            : "bg-red-500"
-                        }`}
+                        className={`w-3 h-3 rounded-full ${healthStatus.supabase.ok
+                          ? "bg-emerald-500"
+                          : "bg-red-500"
+                          }`}
                       />
                       <div>
                         <p className="text-sm font-medium text-gray-900 dark:text-white">
@@ -578,11 +593,10 @@ export default function Dashboard() {
                   <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-900/50 rounded-lg border border-gray-200 dark:border-slate-800">
                     <div className="flex items-center gap-3">
                       <div
-                        className={`w-3 h-3 rounded-full ${
-                          healthStatus.gemini.ok
-                            ? "bg-emerald-500"
-                            : "bg-red-500"
-                        }`}
+                        className={`w-3 h-3 rounded-full ${healthStatus.gemini.ok
+                          ? "bg-emerald-500"
+                          : "bg-red-500"
+                          }`}
                       />
                       <div>
                         <p className="text-sm font-medium text-gray-900 dark:text-white">
@@ -607,6 +621,61 @@ export default function Dashboard() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Recent Activities */}
+        <Card className="mb-8 bg-card text-card-foreground dark:border-slate-800">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
+              <Activity className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+              Recent Activities
+            </CardTitle>
+            <CardDescription>
+              Latest actions across the platform
+            </CardDescription>
+          </CardHeader>
+
+          <CardContent>
+            {recentActivities.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-sm text-gray-500 dark:text-slate-400">
+                  No recent activity yet.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {recentActivities.map((activity, index) => (
+                  <div
+                    key={index}
+                    className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 p-3 rounded-lg border border-border"
+                  >
+                    <div>
+                      <p className="text-sm font-medium">
+                        {activity.title}
+                      </p>
+
+                      <p
+                        className={`text-xs mt-1 ${activity.type === "approved"
+                            ? "text-emerald-600"
+                            : "text-orange-600"
+                          }`}
+                      >
+                        {activity.type === "approved"
+                          ? "Approved"
+                          : "Flagged for Review"}
+                      </p>
+                    </div>
+
+                    <p className="text-xs text-muted-foreground">
+                      {activity.timestamp
+                        ? new Date(activity.timestamp).toLocaleString()
+                        : "Unknown time"}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
 
         {/* Technology Stack */}
         <Card className="bg-card text-card-foreground dark:border-slate-800">

@@ -58,6 +58,8 @@
     "embla-carousel-react": "^8.6.0",
     "framer-motion": "^12.23.24",
     "hashconnect": "^3.0.14",
+    "i18next": "^26.3.1",
+    "i18next-browser-languagedetector": "^8.2.1",
     "input-otp": "^1.4.2",
     "jsdom": "^27.0.1",
     "lucide-react": "^0.525.0",
@@ -67,6 +69,7 @@
     "react-dom": "^19.1.0",
     "react-helmet-async": "^2.0.5",
     "react-hook-form": "^7.61.1",
+    "react-i18next": "^17.0.8",
     "react-is": "^19.1.0",
     "react-resizable-panels": "^3.0.3",
     "react-router-dom": "^7.7.1",
@@ -95,11 +98,12 @@
     "magic-string": "^0.30.17",
     "postcss": "^8.5.6",
     "postcss-cli": "^11.0.1",
+    "rollup-plugin-visualizer": "^7.0.1",
     "sharp": "^0.34.4",
     "tailwindcss": "3",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.35.1",
-    "vite": "npm:rolldown-vite@latest"
+    "vite": "^5.4.21"
   },
   "packageManager": "pnpm@10.12.4+sha512.5ea8b0deed94ed68691c9bad4c955492705c5eeb8a87ef86bc62c74a26b037b08ff9570f108b2e4dbd1dd1a9186fea925e527f141c648e85af45631074680184"
 }
