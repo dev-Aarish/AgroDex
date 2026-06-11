@@ -1,10 +1,11 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
-import { withErrorOverlay } from './components/with-error-overlay'
+import './i18n';
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import './index.css';
+import App from './App.tsx';
+import { withErrorOverlay } from './components/with-error-overlay';
 
-const AppWithErrorOverlay = withErrorOverlay(App)
+const AppWithErrorOverlay = withErrorOverlay(App);
 
 // DISABLED: Service Worker was intercepting API calls to Supabase
 // Only enable in production builds after fixing fetch interception

@@ -8,7 +8,10 @@ import aiRoutes from "./routes/ai.js";
 import { getHederaClient } from "./hederaClient.js";
 import { generalLimiter } from "./middleware/rateLimiter.js";
 import { logger } from "./middleware/logger.js";
+import EventEmitter from 'events';
 
+// Fix for EventEmitter memory leak warning
+EventEmitter.defaultMaxListeners = 50;
 const app = express();
 
 app.use(helmet());

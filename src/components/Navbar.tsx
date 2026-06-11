@@ -1,5 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { LanguageSelector } from '@/components/LanguageSelector';
+import { useTranslation } from 'react-i18next';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,6 +30,7 @@ import logoUrl from "@/assets/agritrust-logo.svg";
 
 export default function Navbar() {
   const { user, signOut } = useAuth();
+  const { t } = useTranslation();
   const { accountId, isConnected, network, disconnect } = useWallet();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -45,10 +48,10 @@ export default function Navbar() {
   }
 
   const navLinks = [
-    { to: "/dashboard", label: "Dashboard", icon: BarChart3 },
-    { to: "/register", label: "Register", icon: FileText },
-    { to: "/tokenize", label: "Tokenize", icon: Coins },
-    { to: "/verify", label: "Verify", icon: ShieldCheck },
+    { to: "/dashboard", label: t('nav.dashboard'), icon: BarChart3 },
+    { to: "/register", label: t('nav.register'), icon: FileText },
+    { to: "/tokenize", label: t('nav.tokenize'), icon: Coins },
+    { to: "/verify", label: t('nav.verify'), icon: ShieldCheck },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -120,7 +123,8 @@ export default function Navbar() {
                 />
               </div>
             )}
-
+            <LanguageSelector />
+            <div className="flex items-center gap-2 bg-gray-50 dark:bg-slate-900 px-3 py-2 rounded-lg border border-gray-100 dark:border-slate-800"></div>
             <div className="flex items-center gap-2 bg-gray-50 dark:bg-slate-900 px-3 py-2 rounded-lg border border-gray-100 dark:border-slate-800">
               <User className="h-4 w-4 text-gray-600 dark:text-slate-400" />
               <span className="text-sm font-body text-gray-700 dark:text-slate-300 max-w-[150px] truncate">
@@ -138,13 +142,13 @@ export default function Navbar() {
                 <DropdownMenuItem asChild>
                   <Link to="/profile" className="cursor-pointer">
                     <User className="h-4 w-4 mr-2" />
-                    Profile
+                    {t('nav.profile')}
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link to="/session-settings" className="cursor-pointer">
                     <Settings className="h-4 w-4 mr-2" />
-                    Settings
+                    {t('nav.settings')}
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
@@ -153,7 +157,7 @@ export default function Navbar() {
                   className="cursor-pointer text-red-600"
                 >
                   <LogOut className="h-4 w-4 mr-2" />
-                  Logout
+                  {t('nav.logout')}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -231,7 +235,7 @@ export default function Navbar() {
                         className="w-full justify-start text-gray-700 dark:text-slate-300 hover:bg-emerald-50 dark:hover:bg-emerald-950/30"
                       >
                         <User className="h-4 w-4 mr-2" />
-                        Profile
+                        {t('nav.profile')}
                       </Button>
                     </Link>
                     <Link
@@ -243,7 +247,7 @@ export default function Navbar() {
                         className="w-full justify-start text-gray-700 dark:text-slate-300 hover:bg-emerald-50 dark:hover:bg-emerald-950/30"
                       >
                         <Settings className="h-4 w-4 mr-2" />
-                        Settings
+                        {t('nav.settings')}
                       </Button>
                     </Link>
                     <Button
@@ -255,7 +259,7 @@ export default function Navbar() {
                       }}
                     >
                       <LogOut className="h-4 w-4 mr-2" />
-                      Logout
+                      {t('nav.logout')}
                     </Button>
                   </div>
                 </div>

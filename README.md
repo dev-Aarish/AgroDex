@@ -81,6 +81,7 @@ Widespread adoption in Indonesia demands sub-$1 fees per transaction. Hedera’s
 * **HCS Logging:** Capture every step of the crop lifecycle transparently.
 * **HTS Tokenization:** Mint NFT certificates referencing immutable HCS history.
 * **Verification Engine:** Buyers validate authenticity instantly by fetching real-time Mirror Node history.
+* **QR-Based Verification:** Instantly generate, share, and scan secure QR codes containing JSON batch verification payloads for mobile-friendly buyer auditing.
 
 ### 🤖 Intelligence (Powered by Gemini AI)
 * **Audit & Trust Score:** AI parses the HCS timeline to yield an objective 0–100 trust rating.
@@ -129,7 +130,15 @@ This is the instruction about how to get work with this project:
    ```
 <b>2.</b> Install Dependencies
    ```sh
+   # Install root and frontend dependencies
    npm install
+   npm install html5-qrcode
+
+   # Install backend dependencies
+   cd backend
+   npm install
+   npm install qrcode
+   cd ..
    ```
 <b>3.</b> Configure Environment Variables
    ```sh
@@ -201,6 +210,64 @@ uiux/community-redesign
 # Commit
 design: revamp Community page layout for better clarity
 ```
+
+---
+
+## 📱 QR-Based Batch Verification
+
+AgroDex includes a Indonesia-tuned, production-ready **QR-Based Batch Verification** system allowing buyers to instantly verify agricultural batches by scanning a QR code with their mobile devices.
+
+### 📐 QR Architecture Flow
+
+```ascii
+      Farmer
+        │
+        ▼
+   [Batch Created]
+        │
+        ▼
+   [QR Generated] (Node qrcode library payload: batchId + verificationUrl)
+        │
+        ▼
+  [Stored in Supabase] (Cached as Base64 Data URL)
+        │
+        ▼
+   [Buyer Scans QR] (React html5-qrcode scanner)
+        │
+        ▼
+  [Verification Page] (/verify/:batchId)
+        │
+        ▼
+[Hedera + Gemini Audit Results] (Trust Score, NFT Metadata, HCS Timeline)
+```
+
+### 📊 Supabase Schema & API Updates
+
+#### 1. Database Migrations
+We added `qr_code_url` and `deleted_at` fields to the `batches` table to track the cached QR code data URL and support soft deletion:
+```sql
+ALTER TABLE batches
+  ADD COLUMN qr_code_url TEXT,
+  ADD COLUMN deleted_at TIMESTAMPTZ;
+CREATE INDEX idx_batches_deleted_at ON batches(deleted_at);
+```
+
+#### 2. New Backend Endpoints
+
+* **`GET /api/batches/:batchId`** (Public)
+  - Fetches the batch details (name, harvest date, location, photo) and its complete Hedera/verification status.
+  - Automatically generates the JSON QR code payload and caches it in Supabase if not already present.
+  - Mimics the verification response structure so the UI displays trust scores, NFT metadata, and provenance timelines.
+
+* **`POST /api/tokenize-batch`** (Extended)
+  - Supports linking an existing batch by `batchId` (or resolves it via HCS transaction trail lookup) and updates it with the minted token ID and serial number, returning `batchId` on success.
+
+#### 3. Verification Routing & UX
+- **/verify/:batchId**
+  - Displays the full Indonesia agricultural provenance timeline, trust score, and NFT metadata for the given batch ID.
+  - Handles invalid, soft-deleted, and pending-tokenization batches gracefully with appropriate loading, error, and info cards.
+- **Dynamic QR Canvas & Download**
+  - Success cards on the Registration and Tokenization pages display the generated QR code and feature a local client-side PNG download button.
 
 ---
 

@@ -29,6 +29,7 @@ export const env = cleanEnv(process.env, {
   GEMINI_API_KEY: str(),
   PORT: num({ default: 4000 }),
   NODE_ENV: str({ default: "development" }),
+  FRONTEND_URL: str({ default: "http://localhost:5173" }),
 });
 
 // Clean HEDERA_OPERATOR_KEY: remove 0x prefix if present

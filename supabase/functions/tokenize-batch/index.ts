@@ -86,19 +86,36 @@ serve(async (req) => {
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Fetch batch data if batchId provided
+    // Fetch batch data if batchId provided, or resolve it by HCS Tx IDs
     let batchData = null;
-    if (batchId) {
+    let resolvedBatchId = batchId;
+    
+    if (resolvedBatchId) {
       const { data, error } = await supabase
         .from("batches")
         .select("*")
-        .eq("id", batchId)
+        .eq("id", resolvedBatchId)
         .single();
 
       if (error) {
-        console.error("Error fetching batch:", error);
+        console.error("Error fetching batch by ID:", error);
       } else {
         batchData = data;
+      }
+    } else if (hcsTransactionIds && hcsTransactionIds.length > 0) {
+      // Look up by matching hcs_tx_id with any of the transaction IDs
+      const { data, error } = await supabase
+        .from("batches")
+        .select("*")
+        .in("hcs_tx_id", hcsTransactionIds)
+        .limit(1);
+      
+      if (error) {
+        console.error("Error searching batch by HCS Tx IDs:", error);
+      } else if (data && data.length > 0) {
+        batchData = data[0];
+        resolvedBatchId = batchData.id;
+        console.log(`[tokenize-batch] Resolved batch ID from HCS Tx ID: ${resolvedBatchId}`);
       }
     }
 
@@ -181,22 +198,26 @@ serve(async (req) => {
       full_metadata: fullMetadata,
     });
 
-    // Update batch with token info if batchId provided
-    console.log("[tokenize-batch] Updating batch with token info...");
-    await supabase
-      .from("batches")
-      .update({
-        hedera_token_id: tokenId.toString(),
-        hedera_serial_number: serialNumbers[0]?.toString(),
-        tokenized_at: new Date().toISOString(),
-      })
-      .eq("id", batchId);
+    // Update batch with token info if resolvedBatchId provided
+    if (resolvedBatchId) {
+      console.log(`[tokenize-batch] Updating batch ${resolvedBatchId} with token info...`);
+      await supabase
+        .from("batches")
+        .update({
+          hedera_token_id: tokenId.toString(),
+          hedera_serial_number: serialNumbers[0]?.toString(),
+          tokenized_at: new Date().toISOString(),
+          hcs_transaction_ids: hcsTransactionIds,
+        })
+        .eq("id", resolvedBatchId);
+    }
 
     return new Response(
       JSON.stringify({
         success: true,
         tokenId: tokenId.toString(),
         serialNumber: serialNumbers[0]?.toString(),
+        batchId: resolvedBatchId,
         transactionId: mintSubmit.transactionId.toString(),
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }

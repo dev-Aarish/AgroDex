@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useTranslation } from 'react-i18next';
 import {
   Card,
   CardContent,
@@ -71,7 +71,8 @@ interface AIInsight {
 }
 
 export default function Dashboard() {
-  const [lang, setLang] = useState<"en">("en");
+  
+  const { t, i18n } = useTranslation();
   const statsQuery = useQuery({
     queryKey: ["dashboard-stats"],
     queryFn: getDashboardStats,
@@ -120,7 +121,7 @@ export default function Dashboard() {
     .slice(0, 10);
   const aiInsight = (statsData?.aiInsight ?? null) as AIInsight | null;
   const aiInsightText = aiInsight
-    ? lang === "en"
+    ? i18n.language === "en"
       ? aiInsight.insight_en || null
       : null
     : null;
@@ -185,7 +186,7 @@ export default function Dashboard() {
                     AgroDex
                   </h2>
                   <p className="text-sm sm:text-base text-emerald-600 font-semibold mt-0.5">
-                    AI-Powered Agricultural Traceability
+                    {t('dashboard.hero.subtitle')}
                   </p>
                 </div>
               </motion.div>
@@ -197,17 +198,16 @@ export default function Dashboard() {
                 transition={{ delay: 0.2, duration: 0.5 }}
               >
                 <CheckCircle2 className="h-4 w-4" />
-                Powered by Hedera + AI
+                {t('dashboard.hero.poweredBy')}
               </motion.div>
 
               <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-gray-900 dark:text-white leading-tight">
-                Fighting <span className="text-emerald-600">Food Fraud</span> in
-                Indonesia
+                {t('dashboard.hero.fighting')}<span className="text-emerald-600">{t('dashboard.hero.fraud')}</span> in
+                {t('dashboard.hero.location')}
               </h1>
 
               <p className="text-xl sm:text-2xl font-body text-gray-600 dark:text-slate-300 leading-relaxed">
-                Blockchain traceability + Artificial Intelligence to guarantee
-                the authenticity of Indonesian agricultural products.
+                {t('dashboard.hero.description')}
               </p>
             </motion.div>
 
@@ -235,7 +235,7 @@ export default function Dashboard() {
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-sm font-medium text-gray-600 dark:text-slate-400">
-                  Registered Batches
+                  {t('dashboard.stats.registeredBatches')}
                 </CardTitle>
                 <div className="bg-emerald-100 dark:bg-emerald-950/50 p-2 rounded-lg">
                   <FileText className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
@@ -250,7 +250,7 @@ export default function Dashboard() {
                   kpis.totalBatches.toLocaleString()
                 )}
               </div>
-              <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">Total on platform</p>
+              <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">{t('dashboard.stats.totalOnPlatform')}</p>
             </CardContent>
           </Card>
 
@@ -258,7 +258,7 @@ export default function Dashboard() {
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-sm font-medium text-gray-600 dark:text-slate-400">
-                  NFTs Created
+                  {t('dashboard.stats.nftsCreated')}
                 </CardTitle>
                 <div className="bg-blue-100 dark:bg-blue-950/50 p-2 rounded-lg">
                   <Coins className="h-5 w-5 text-blue-600 dark:text-blue-400" />
@@ -274,7 +274,7 @@ export default function Dashboard() {
                 )}
               </div>
               <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
-                Tokenized certificates
+                {t('dashboard.stats.tokenizedCertificates')}
               </p>
             </CardContent>
           </Card>
@@ -283,7 +283,7 @@ export default function Dashboard() {
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-sm font-medium text-gray-600 dark:text-slate-400">
-                  AI Verifications
+                  {t('dashboard.stats.aiVerifications')}
                 </CardTitle>
                 <div className="bg-purple-100 dark:bg-purple-950/50 p-2 rounded-lg">
                   <ShieldCheck className="h-5 w-5 text-purple-600 dark:text-purple-400" />
@@ -299,7 +299,7 @@ export default function Dashboard() {
                 )}
               </div>
               <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
-                Batches verified with AI
+                {t('dashboard.stats.verifiedBatches')}
               </p>
             </CardContent>
           </Card>
@@ -316,20 +316,10 @@ export default function Dashboard() {
             <div className="flex items-center justify-between">
               <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
                 <Sparkles className="h-5 w-5 text-purple-600 dark:text-purple-400" />
-                AI Analyst Insights
+                {t('dashboard.aiInsight.title')}
               </CardTitle>
               <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1 bg-gray-100 dark:bg-slate-800 rounded-full p-1">
-                  <button
-                    onClick={() => setLang("en")}
-                    className={`px-3 py-1 text-xs font-semibold rounded-full transition-colors ${lang === "en"
-                      ? "bg-purple-600 text-white"
-                      : "bg-transparent text-gray-600 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-slate-700"
-                      }`}
-                  >
-                    EN
-                  </button>
-                </div>
+                
                 <div className="flex items-center gap-1 px-2 py-1 bg-purple-100 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 text-xs font-semibold rounded-full">
                   <Sparkles className="h-3 w-3" />
                   Generated by Gemini AI
@@ -337,14 +327,14 @@ export default function Dashboard() {
               </div>
             </div>
             <CardDescription className="text-gray-500 dark:text-slate-400">
-              Intelligent analysis of your activity
+              {t('dashboard.aiInsight.description')}
             </CardDescription>
           </CardHeader>
           <CardContent>
             {statsLoading ? (
               <div className="text-center py-4 text-gray-500 dark:text-slate-400 flex items-center justify-center gap-2">
                 <Loader2 className="h-5 w-5 animate-spin text-purple-500" />
-                The AI analyst examines the data...
+                {t('dashboard.aiInsight.loading')}
               </div>
             ) : statsError ? (
               <div className="text-center py-4 text-red-600 dark:text-red-400 font-semibold">
@@ -356,7 +346,7 @@ export default function Dashboard() {
                   “{aiInsightText}”
                 </p>
                 <p className="text-xs text-gray-500 dark:text-slate-400 mt-3">
-                  Summary generated on{" "}
+                  {t('dashboard.aiInsight.generatedOn')}{" "}
                   {new Date(
                     statsData?.generatedAt ?? Date.now(),
                   ).toLocaleString()}
@@ -364,8 +354,7 @@ export default function Dashboard() {
               </>
             ) : (
               <p className="text-base text-gray-600 dark:text-slate-400 italic">
-                AI temporarily unavailable. Upcoming verifications will feed the
-                analysis.
+                {t('dashboard.aiInsight.unavailable')}
               </p>
             )}
             {aiInsightError && !statsLoading && !statsError && (
@@ -383,10 +372,10 @@ export default function Dashboard() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
                 <Activity className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-                AI Audit Log
+                {t('dashboard.audit.title')}
               </CardTitle>
               <CardDescription className="text-gray-500 dark:text-slate-400">
-                Batches approved and flagged by AI
+                {t('dashboard.audit.description')}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -405,11 +394,11 @@ export default function Dashboard() {
                   <div>
                     <h3 className="text-sm font-semibold text-emerald-700 dark:text-emerald-400 mb-3 flex items-center gap-2">
                       <CheckCircle2 className="h-4 w-4" />
-                      Approved Lots
+                      {t('dashboard.audit.approved')}
                     </h3>
                     {audit.approvedLots.length === 0 ? (
                       <p className="text-sm text-gray-500 dark:text-slate-400 italic">
-                        No approved lots at the moment.
+                        {t('dashboard.audit.noApproved')}
                       </p>
                     ) : (
                       <ul className="space-y-2">
@@ -449,11 +438,11 @@ export default function Dashboard() {
                   <div>
                     <h3 className="text-sm font-semibold text-orange-700 dark:text-orange-400 mb-3 flex items-center gap-2">
                       <AlertTriangle className="h-4 w-4" />
-                      Lots a examiner
+                      {t('dashboard.audit.flagged')}
                     </h3>
                     {audit.flaggedLots.length === 0 ? (
                       <p className="text-sm text-gray-500 dark:text-slate-400 italic">
-                        No batch flagged by AI.
+                        {t('dashboard.audit.noFlagged')}
                       </p>
                     ) : (
                       <TooltipProvider>
@@ -505,9 +494,9 @@ export default function Dashboard() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
                 <Zap className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-                Service Status
+                {t('dashboard.status.title')}
               </CardTitle>
-              <CardDescription className="text-slate-500 dark:text-slate-400">Backend services health status</CardDescription>
+              <CardDescription className="text-slate-500 dark:text-slate-400">{t('dashboard.status.description')}</CardDescription>
             </CardHeader>
             <CardContent>
               {healthLoading ? (

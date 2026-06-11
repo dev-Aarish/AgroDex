@@ -27,6 +27,7 @@ import {
   FileText,
   Link2,
   ArrowRight,
+  Download,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Navbar from "@/components/Navbar";
@@ -44,8 +45,12 @@ export default function BatchTokenize() {
       hcsTransactionIds: string[];
       isDemoMode: boolean;
     }) => {
+      const lastBatchId = localStorage.getItem("last_registered_batch_id") || undefined;
       const result = await tokenizeBatch(
-        { hcsTransactionIds: data.hcsTransactionIds },
+        { 
+          hcsTransactionIds: data.hcsTransactionIds,
+          batchId: lastBatchId
+        },
         data.isDemoMode,
       );
       return { ...result, hcsTransactionIds: data.hcsTransactionIds };
@@ -88,8 +93,10 @@ export default function BatchTokenize() {
 
   // Success screen
   if (mutation.isSuccess && mutation.data) {
-    const { tokenId, serialNumber, ai_summary } = mutation.data;
-    const verifyUrl = `${window.location.origin}/verify/${tokenId}/${serialNumber}`;
+    const { tokenId, serialNumber, batchId, ai_summary } = mutation.data;
+    const verifyUrl = batchId
+      ? `${window.location.origin}/verify/${batchId}`
+      : `${window.location.origin}/verify/${tokenId}/${serialNumber}`;
 
     return (
       <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-fuchsia-50 dark:from-violet-950/20 dark:via-background dark:to-fuchsia-950/20 dark:bg-background text-foreground">
@@ -165,6 +172,16 @@ export default function BatchTokenize() {
                   {serialNumber}
                 </span>
               </div>
+              {batchId && (
+                <div className="flex items-center justify-between">
+                  <span className="font-semibold text-gray-700 dark:text-slate-400">
+                    Batch ID:
+                  </span>
+                  <span className="font-mono text-sm text-gray-900 dark:text-slate-200 text-right max-w-[180px] truncate" title={batchId}>
+                    {batchId}
+                  </span>
+                </div>
+              )}
               <a
                 href={`https://hashscan.io/testnet/token/${tokenId}`}
                 target="_blank"
@@ -177,26 +194,63 @@ export default function BatchTokenize() {
             </div>
 
             <div className="flex flex-col items-center my-8 p-6 bg-white dark:bg-slate-900 border-2 border-dashed border-gray-300 dark:border-slate-800 rounded-lg">
-              <QRCodeCanvas value={verifyUrl} size={160} />
+              <QRCodeCanvas
+                id="tokenize-qr-canvas"
+                value={JSON.stringify({
+                  batchId: batchId || "",
+                  verificationUrl: verifyUrl
+                })}
+                size={160}
+                level="H"
+                includeMargin={true}
+                className="border border-gray-150 dark:border-slate-800 rounded shadow-sm"
+              />
               <p className="mt-3 text-sm font-semibold text-gray-600 dark:text-slate-400">
                 Scan to verify certificate
               </p>
-              <Button
-                size="sm"
-                variant="outline"
-                className="mt-3 border-gray-300 dark:border-slate-800 text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800"
-                onClick={() => {
-                  navigator.clipboard.writeText(verifyUrl);
-                  toast({ title: "Verification URL copied!" });
-                }}
-              >
-                <Copy className="h-4 w-4 mr-2" />
-                Copy Verification Link
-              </Button>
+              
+              <div className="flex gap-2 mt-4 w-full max-w-xs justify-center">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="flex-1 border-gray-300 dark:border-slate-800 text-gray-700 dark:text-slate-350 hover:bg-gray-100 dark:hover:bg-slate-800 font-semibold"
+                  onClick={() => {
+                    const canvas = document.getElementById("tokenize-qr-canvas") as HTMLCanvasElement;
+                    if (canvas) {
+                      const url = canvas.toDataURL("image/png");
+                      const link = document.createElement("a");
+                      link.download = `agrodex-certificate-${tokenId || batchId}.png`;
+                      link.href = url;
+                      link.click();
+                    }
+                  }}
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Download
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="flex-1 border-gray-300 dark:border-slate-800 text-gray-700 dark:text-slate-355 hover:bg-gray-100 dark:hover:bg-slate-800 font-semibold"
+                  onClick={() => {
+                    navigator.clipboard.writeText(verifyUrl);
+                    toast({ title: "Verification URL copied!" });
+                  }}
+                >
+                  <Copy className="h-4 w-4 mr-2" />
+                  Copy Link
+                </Button>
+              </div>
             </div>
 
             <Button
-              onClick={() => navigate(`/verify/${tokenId}/${serialNumber}`)}
+              onClick={() => {
+                if (batchId) {
+                  navigate(`/verify/${batchId}`);
+                } else {
+                  navigate(`/verify/${tokenId}/${serialNumber}`);
+                }
+              }}
               className="w-full text-lg px-6 py-4 font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-lg hover:shadow-xl transition-all"
             >
               View Full Verification Page

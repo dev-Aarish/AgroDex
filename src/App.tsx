@@ -51,6 +51,7 @@ const App = () => (
                     <Route path="/register" element={<ProtectedRoute><BatchRegistration /></ProtectedRoute>} />
                     <Route path="/tokenize" element={<ProtectedRoute><BatchTokenize /></ProtectedRoute>} />
                     <Route path="/verify" element={<BatchVerify />} />
+                    <Route path="/verify/:batchId" element={<BatchVerify />} />
                     <Route path="/verify/:tokenId/:serialNumber" element={<BatchVerify />} />
                     <Route path="/demo" element={<Navigate to={DEMO_VERIFY_URL} replace />} />
                     <Route path="/test-hedera" element={<ProtectedRoute><TestHedera /></ProtectedRoute>} />

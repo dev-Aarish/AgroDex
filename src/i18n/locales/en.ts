@@ -1,0 +1,85 @@
+const en = {
+  nav: {
+    dashboard: "Dashboard",
+    register: "Register",
+    tokenize: "Tokenize",
+    verify: "Verify",
+    profile: "Profile",
+    settings: "Settings",
+    logout: "Logout",
+  },
+  auth: {
+    signIn: "Sign In",
+    signUp: "Sign Up",
+    email: "Email",
+    password: "Password",
+    welcomeBack: "Welcome back",
+    createAccount: "Create your account",
+    signInDesc: "Sign in to access your account",
+    noAccount: "Don't have an account? Sign Up",
+    hasAccount: "Already have an account? Sign In",
+    connectWallet: "Wallet Login",
+  },
+  dashboard: {
+    title: "Dashboard",
+    totalBatches: "Total Batches",
+    tokenized: "Tokenized",
+    verified: "Verified",
+    trustScore: "Avg. Trust Score",
+    recentBatches: "Recent Batches",
+    noBatches: "No batches registered yet.",
+    viewAll: "View All",
+    hero: {
+      subtitle: "Blockchain-powered food traceability",
+      poweredBy: "Powered by Hedera & Gemini AI",
+      fighting: "Fighting ",
+      fraud: "Food Fraud",
+      location: " in Indonesia",
+      description: "Every crop batch is audited by AI and anchored to Hedera.",
+    },
+    stats: {
+      registeredBatches: "Registered Batches",
+      totalOnPlatform: "Total on platform",
+      nftsCreated: "NFTs Created",
+      tokenizedCertificates: "Tokenized certificates",
+      aiVerifications: "AI Verifications",
+      verifiedBatches: "Verified batches",
+    },
+    aiInsight: {
+      title: "AI Insight",
+      description: "Generated analysis of your batches",
+      loading: "Loading AI insight...",
+      unavailable: "No AI insight available.",
+      generatedOn: "Generated on",
+    },
+    audit: {
+      title: "Audit Journal",
+      description: "Recent AI audit results",
+      approved: "Approved Lots",
+      flagged: "Flagged Lots",
+      noApproved: "No approved lots.",
+      noFlagged: "No flagged lots.",
+    },
+    status: {
+      title: "Service Status",
+      description: "Real-time status of all services",
+    },
+  },
+  general: {
+
+    loading: "Loading...",
+    error: "Something went wrong.",
+    retry: "Try again",
+    back: "Back",
+    cancel: "Cancel",
+    confirm: "Confirm",
+    save: "Save",
+  },
+  footer: {
+    rights: "All rights reserved.",
+    tagline: "Blockchain-powered food traceability for Indonesia.",
+  },
+  
+};
+
+export default en;

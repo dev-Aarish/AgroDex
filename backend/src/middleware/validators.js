@@ -40,9 +40,12 @@ export const validateRegisterBatch = [
 
 export const validateTokenizeBatch = [
   body("batchId")
+    .optional()
     .trim()
-    .notEmpty().withMessage("Batch ID is required")
     .isUUID().withMessage("Batch ID must be a valid UUID"),
+  body("hcsTransactionIds")
+    .optional()
+    .isArray().withMessage("hcsTransactionIds must be an array"),
   validate,
 ];
 

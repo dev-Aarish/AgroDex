@@ -15,6 +15,8 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/lib/supabaseClient";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWallet } from "@/hooks/useWallet";
+import { useTranslation } from 'react-i18next';
+import { LanguageSelector } from '@/components/LanguageSelector';
 import {
   Card,
   CardContent,
@@ -44,6 +46,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
+  const { t } = useTranslation();
 
   // Auto-redirect if authenticated via either method
   useEffect(() => {
@@ -110,7 +113,8 @@ export default function Login() {
         <title>Login | AgroDex</title>
       </Helmet>
       {/* Theme Toggle in top-right */}
-      <div className="absolute top-4 right-4 z-50">
+      <div className="absolute top-4 right-4 z-50 flex items-center gap-2">
+        <LanguageSelector />
         <ThemeToggle />
       </div>
       {/* Decorative Background Elements */}
@@ -249,10 +253,10 @@ export default function Login() {
                 className="h-16 w-auto mx-auto mb-4 lg:hidden bg-white dark:bg-slate-800 p-2 rounded-xl"
               />
               <h2 className="text-3xl font-extrabold text-gray-900 dark:text-white mb-2">
-                Welcome to AgroDex
+                {t('auth.welcomeBack')}
               </h2>
               <p className="text-gray-600 dark:text-slate-400 font-body">
-                Sign in to access your account.
+                {t('auth.signInDesc')}.
               </p>
             </motion.div>
           </div>
@@ -263,13 +267,13 @@ export default function Login() {
                 value="email"
                 className="text-base font-bold rounded-lg data-[state=active]:bg-white dark:data-[state=active]:bg-slate-950 dark:data-[state=active]:text-white dark:text-slate-400 data-[state=active]:shadow-md transition-all"
               >
-                Email Login
+                {t('auth.signIn')}
               </TabsTrigger>
               <TabsTrigger
                 value="wallet"
                 className="text-base font-bold rounded-lg data-[state=active]:bg-white dark:data-[state=active]:bg-slate-950 dark:data-[state=active]:text-white dark:text-slate-400 data-[state=active]:shadow-md transition-all"
               >
-                Wallet Login
+                {t('auth.connectWallet')}
               </TabsTrigger>
             </TabsList>
 
@@ -283,7 +287,7 @@ export default function Login() {
                 <Card className="border-2 border-gray-200 dark:border-slate-800 dark:bg-slate-900 shadow-2xl rounded-2xl overflow-hidden">
                   <CardHeader className="bg-gradient-to-br from-emerald-50 to-blue-50 dark:from-emerald-950/20 dark:to-blue-950/20 pb-8">
                     <CardTitle className="text-3xl font-extrabold text-gray-900 dark:text-white">
-                      {isSignUp ? "Create Account" : "Sign In"}
+                      {isSignUp ? t('auth.createAccount') : t('auth.signIn')}
                     </CardTitle>
                     <CardDescription className="font-body text-base text-gray-600 dark:text-slate-400">
                       {isSignUp
@@ -298,7 +302,7 @@ export default function Login() {
                           htmlFor="email"
                           className="text-sm font-bold text-gray-700 dark:text-slate-300"
                         >
-                          Email
+                          {t('auth.email')}
                         </Label>
                         <div className="relative">
                           <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -318,7 +322,7 @@ export default function Login() {
                           htmlFor="password"
                           className="text-sm font-bold text-gray-700 dark:text-slate-300"
                         >
-                          Password
+                          {t('auth.password')}
                         </Label>
                         <div className="relative">
                           <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -379,10 +383,10 @@ export default function Login() {
                           {authLoading ? (
                             <div className="flex items-center gap-2">
                               <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
-                              <span>Loading...</span>
+                              <span>{t('general.loading')}</span>
                             </div>
                           ) : isSignUp ? (
-                            "Sign Up"
+                            "{t('auth.signUp')}"
                           ) : (
                             "Sign In"
                           )}
@@ -396,8 +400,8 @@ export default function Login() {
                           className="text-sm text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 font-bold font-body hover:underline transition-all"
                         >
                           {isSignUp
-                            ? "Already have an account? Sign In"
-                            : "Don't have an account? Sign Up"}
+                            ? t('auth.hasAccount')
+                            : t('auth.noAccount')}
                         </button>
                       </div>
                     </form>

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { registerBatch } from "@/lib/api";
+import { QRCodeCanvas } from "qrcode.react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,6 +25,8 @@ import {
   MapPin,
   Calendar,
   Hash,
+  Download,
+  Copy,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Navbar from "@/components/Navbar";
@@ -47,6 +50,9 @@ export default function BatchRegistration() {
         title: "Batch Registered Successfully",
         description: `HCS Transaction ID: ${data.hcsTransactionId}`,
       });
+      if (data.batchId) {
+        localStorage.setItem("last_registered_batch_id", data.batchId);
+      }
       // Reset form
       setProductName("");
       setQuantity("");
@@ -288,6 +294,62 @@ export default function BatchRegistration() {
                         <span className="text-sm text-gray-900 dark:text-slate-200 font-mono">
                           {mutation.data.batchId}
                         </span>
+                      </div>
+                    </div>
+
+                    {/* QR Code Section */}
+                    <div className="flex flex-col items-center p-6 bg-white dark:bg-slate-900 border border-emerald-200 dark:border-slate-800 rounded-lg space-y-3">
+                      <div className="text-sm font-bold text-emerald-800 dark:text-emerald-400">
+                        Indonesia AgroDex Batch QR Code
+                      </div>
+                      <QRCodeCanvas
+                        id="registration-qr-canvas"
+                        value={JSON.stringify({
+                          batchId: mutation.data.batchId,
+                          verificationUrl: `${window.location.origin}/verify/${mutation.data.batchId}`
+                        })}
+                        size={160}
+                        level="H"
+                        includeMargin={true}
+                        className="border border-gray-150 dark:border-slate-800 rounded shadow-sm"
+                      />
+                      <div className="text-[11px] text-gray-500 font-mono select-all text-center max-w-xs break-all">
+                        {window.location.origin}/verify/{mutation.data.batchId}
+                      </div>
+                      <div className="flex gap-2 w-full max-w-xs justify-center pt-2">
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="outline"
+                          onClick={() => {
+                            const canvas = document.getElementById("registration-qr-canvas") as HTMLCanvasElement;
+                            if (canvas) {
+                              const url = canvas.toDataURL("image/png");
+                              const link = document.createElement("a");
+                              link.download = `agrodex-batch-${mutation.data.batchId}.png`;
+                              link.href = url;
+                              link.click();
+                            }
+                          }}
+                          className="flex-1 text-xs border-emerald-250 dark:border-slate-800 text-gray-700 dark:text-slate-300 hover:bg-emerald-50 dark:hover:bg-slate-800 font-semibold"
+                        >
+                          <Download className="h-3.5 w-3.5 mr-1" />
+                          Download
+                        </Button>
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="outline"
+                          onClick={() => {
+                            const verifyUrl = `${window.location.origin}/verify/${mutation.data.batchId}`;
+                            navigator.clipboard.writeText(verifyUrl);
+                            toast({ title: "Verification URL copied!" });
+                          }}
+                          className="flex-1 text-xs border-emerald-250 dark:border-slate-800 text-gray-700 dark:text-slate-300 hover:bg-emerald-50 dark:hover:bg-slate-800 font-semibold"
+                        >
+                          <Copy className="h-3.5 w-3.5 mr-1" />
+                          Copy Link
+                        </Button>
                       </div>
                     </div>
 

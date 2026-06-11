@@ -22,11 +22,14 @@ export function normalizeDate(input: string): string {
 
     // Validate ranges to reject ambiguous US format (MM-DD-YYYY)
     if (dayNum < 1 || dayNum > 31) {
-      throw new Error(`Invalid day: ${dd}. Expected DD-MM-YYYY or YYYY-MM-DD`);
+      throw new Error(
+        `Invalid date format: Invalid day: ${dd}. Expected DD-MM-YYYY or YYYY-MM-DD`,
+      );
     }
+
     if (monthNum < 1 || monthNum > 12) {
       throw new Error(
-        `Invalid month: ${mm}. Expected DD-MM-YYYY or YYYY-MM-DD`,
+        `Invalid date format: Invalid month: ${mm}. Expected DD-MM-YYYY or YYYY-MM-DD`,
       );
     }
 
@@ -64,12 +67,14 @@ export interface RegisterBatchResponse {
 
 export interface TokenizeBatchRequest {
   hcsTransactionIds: string[];
+  batchId?: string;
 }
 
 export interface TokenizeBatchResponse {
   success: boolean;
   tokenId: string;
   serialNumber: string;
+  batchId?: string;
   hcsTransactionIds: string[];
   ai_summary?: {
     summary_en: string;
@@ -112,6 +117,22 @@ export interface VerifyBatchResponse {
   };
   verifiedAt: string;
   status: string;
+  batch?: {
+    id: string;
+    batch_name: string;
+    product_type: string;
+    quantity: string;
+    location: string;
+    harvest_date: string;
+    photo_url: string;
+    hcs_tx_id: string;
+    created_at: string;
+    hedera_token_id?: string;
+    hedera_serial_number?: string;
+    tokenized_at?: string;
+    qr_code_url?: string;
+    deleted_at?: string;
+  };
 }
 
 export interface VerifyBatchNotFoundResult {
@@ -121,7 +142,14 @@ export interface VerifyBatchNotFoundResult {
   [key: string]: unknown;
 }
 
-export type VerifyBatchResult = VerifyBatchResponse | VerifyBatchNotFoundResult;
+export interface VerifyBatchDeletedResult {
+  verified: false;
+  reason: "deleted";
+  details?: Record<string, unknown>;
+  [key: string]: unknown;
+}
+
+export type VerifyBatchResult = VerifyBatchResponse | VerifyBatchNotFoundResult | VerifyBatchDeletedResult;
 
 export const registerBatch = async (
   data: RegisterBatchRequest,
@@ -258,6 +286,38 @@ export const verifyBatch = async (
   if (!res.ok) {
     const msg = json?.error ?? json?.message ?? `HTTP ${res.status}`;
     throw new Error(`verify-batch failed: ${msg}`);
+  }
+
+  return json as VerifyBatchResponse;
+};
+
+export const verifyBatchById = async (
+  batchId: string,
+): Promise<VerifyBatchResult> => {
+  const res = await fetch(`${API_BASE_URL}/api/batches/${batchId}`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let json: any = null;
+  try {
+    json = await res.json();
+  } catch {
+    // Ignore JSON parse errors
+  }
+
+  if (res.status === 404) {
+    return { verified: false, reason: "not_found", details: json };
+  }
+
+  if (res.status === 410) {
+    return { verified: false, reason: "deleted", details: json };
+  }
+
+  if (!res.ok) {
+    const msg = json?.error ?? json?.message ?? `HTTP ${res.status}`;
+    throw new Error(`verifyBatchById failed: ${msg}`);
   }
 
   return json as VerifyBatchResponse;
