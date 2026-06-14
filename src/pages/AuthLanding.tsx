@@ -10,6 +10,8 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle, Mail, Lock, CheckCircle } from "lucide-react";
 import WalletButton from "@/components/WalletButton";
+import MetaMaskButton from "@/components/MetaMaskButton";
+import ErrorBoundary from "@/components/ErrorBoundary";
 import { Helmet } from "react-helmet-async";
 import logoUrl from "@/assets/agritrust-logo.png";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -247,9 +249,28 @@ export default function AuthLanding() {
                             </span>
                           </div>
                         </div>
+                        <h3 className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider text-center">
+                          EVM Wallet
+                        </h3>
+                        <ErrorBoundary>
+                          <MetaMaskButton />
+                        </ErrorBoundary>
+                        <div className="relative">
+                          <div className="absolute inset-0 flex items-center">
+                            <div className="w-full border-t border-gray-200 dark:border-slate-800"></div>
+                          </div>
+                          <div className="relative flex justify-center text-xs">
+                            <span className="bg-white dark:bg-slate-900 px-2 text-gray-500 dark:text-slate-400">
+                              or
+                            </span>
+                          </div>
+                        </div>
+                        <h3 className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider text-center">
+                          Hedera Native
+                        </h3>
                         <WalletButton />
                         <p className="mt-2 text-xs text-gray-500 dark:text-slate-400 text-center">
-                          Your identity stays secure — HashPack Wallet.
+                          Your identity stays secure with either wallet.
                         </p>
                       </div>
                     ) : (

@@ -20,6 +20,7 @@ import {
   AlertCircle,
   CheckCircle,
   Clock,
+  Globe,
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -36,7 +37,7 @@ interface UserProfile {
 
 export default function Profile() {
   const navigate = useNavigate();
-  const { user, linkHederaWallet } = useAuth();
+  const { user, linkHederaWallet, isMetaMaskConnected, metaMaskAddress } = useAuth();
   const { accountId, isConnected, connect, network } = useWallet();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
@@ -249,6 +250,28 @@ export default function Profile() {
                       </span>
                     </div>
                   </div>
+                )}
+              </div>
+
+              {/* MetaMask Wallet (Web3 Auth) */}
+              <div>
+                <label className="text-sm font-medium text-gray-700 dark:text-slate-300">
+                  MetaMask Wallet
+                </label>
+                {isMetaMaskConnected && metaMaskAddress ? (
+                  <div className="flex items-center gap-2 mt-1">
+                    <Globe className="h-4 w-4 text-orange-600 dark:text-orange-400" />
+                    <span className="text-gray-900 dark:text-white font-mono text-sm">
+                      {metaMaskAddress}
+                    </span>
+                    <Badge variant="outline" className="text-orange-600 border-orange-600 dark:text-orange-400 dark:border-orange-400">
+                      Authenticated
+                    </Badge>
+                  </div>
+                ) : (
+                  <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">
+                    No MetaMask wallet connected.
+                  </p>
                 )}
               </div>
 
