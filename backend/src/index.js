@@ -5,6 +5,7 @@ import { env } from "./utils/config.js";
 import apiRoutes from "./routes/api.js";
 import healthRoutes from "./routes/health.js";
 import aiRoutes from "./routes/ai.js";
+import fraudRoutes from "./routes/fraud.js";
 import { getHederaClient } from "./hederaClient.js";
 import { generalLimiter } from "./middleware/rateLimiter.js";
 import { logger } from "./middleware/logger.js";
@@ -34,6 +35,7 @@ app.use("/api", generalLimiter);
 app.use("/api", healthRoutes);
 app.use("/api", apiRoutes);
 app.use("/api/ai", aiRoutes);
+app.use("/api/fraud", fraudRoutes);
 
 app.get("/", (req, res) => {
   res.json({
@@ -53,6 +55,11 @@ app.get("/", (req, res) => {
         buyerQA: "POST /api/ai/buyer-qa",
         translateMarketing: "POST /api/ai/translate-marketing",
         priceSuggestion: "POST /api/ai/price-suggestion",
+      },
+      fraud: {
+        analyzeBatch: "GET /api/fraud/batch/:batchId",
+        farmerScores: "GET /api/fraud/farmer/:farmerId",
+        overview: "GET /api/fraud/overview",
       },
     },
   });

@@ -14,6 +14,7 @@ import {
   FileText,
   Coins,
   ShieldCheck,
+  ShieldAlert,
   User,
   Settings,
   LogOut,
@@ -52,6 +53,7 @@ export default function Navbar() {
     { to: "/register", label: t('nav.register'), icon: FileText },
     { to: "/tokenize", label: t('nav.tokenize'), icon: Coins },
     { to: "/verify", label: t('nav.verify'), icon: ShieldCheck },
+    { to: "/risk-intelligence", label: "Risk Intelligence", icon: ShieldAlert },
   ];
 
   const isActive = (path: string) => location.pathname === path;

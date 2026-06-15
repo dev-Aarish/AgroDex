@@ -404,3 +404,167 @@ export const getDashboardHealth = async () => {
 
   return payload;
 };
+
+// ─────────────────────────────────────────────────────────────
+// Fraud Detection API
+// ─────────────────────────────────────────────────────────────
+
+export type RiskLevel = 'SAFE' | 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+
+export interface FraudSignal {
+  signal: string;
+  detected: boolean;
+  weight: number;
+  description: string;
+}
+
+export interface FraudScore {
+  id?: string;
+  batchId: string;
+  farmerId: string | null;
+  batchName: string | null;
+  location: string | null;
+  productType?: string | null;
+  quantity?: string | null;
+  riskScore: number;
+  riskLevel: RiskLevel;
+  riskColor: string;
+  reasons: FraudSignal[];
+  triggeredSignals?: FraudSignal[];
+  triggeredCount?: number;
+  aiExplanation: string | null;
+  generatedAt: string;
+  createdAt?: string;
+  cached?: boolean;
+}
+
+export interface FraudLevelCounts {
+  SAFE: number;
+  LOW: number;
+  MEDIUM: number;
+  HIGH: number;
+  CRITICAL: number;
+}
+
+export interface FraudTrendPoint {
+  date: string;
+  SAFE: number;
+  LOW: number;
+  MEDIUM: number;
+  HIGH: number;
+  CRITICAL: number;
+  avgScore: number;
+}
+
+export interface RegionalAnalyticsPoint {
+  region: string;
+  displayName: string;
+  totalBatches: number;
+  flaggedBatches: number;
+  avgScore: number;
+}
+
+export interface FarmerRankingEntry {
+  farmerId: string;
+  batchCount: number;
+  maxScore: number;
+  worstLevel: RiskLevel;
+  avgScore: number;
+}
+
+export interface FraudOverview {
+  summary: {
+    totalAnalyzed: number;
+    safeCount: number;
+    lowCount: number;
+    mediumCount: number;
+    highCount: number;
+    criticalCount: number;
+    flaggedCount: number;
+    safeRate: number;
+  };
+  levelCounts: FraudLevelCounts;
+  topRiskyBatches: FraudScore[];
+  farmerRanking: FarmerRankingEntry[];
+  trend: FraudTrendPoint[];
+  regionalAnalytics: RegionalAnalyticsPoint[];
+  generatedAt: string;
+}
+
+/**
+ * Helper to build auth headers for fraud API calls.
+ */
+async function buildAuthHeaders(): Promise<Record<string, string>> {
+  const { data: { session } } = await supabase.auth.getSession();
+  const headers: Record<string, string> = { Accept: 'application/json' };
+  if (session?.access_token) {
+    headers['Authorization'] = `Bearer ${session.access_token}`;
+  }
+  return headers;
+}
+
+/**
+ * Analyze a single batch for fraud signals.
+ * Results are cached server-side for 1 hour.
+ */
+export const getFraudByBatch = async (
+  batchId: string,
+  forceRefresh = false,
+): Promise<{ ok: boolean; data: FraudScore }> => {
+  const headers = await buildAuthHeaders();
+  const url = `${API_BASE_URL}/api/fraud/batch/${batchId}${forceRefresh ? '?refresh=true' : ''}`;
+  const response = await fetch(url, { method: 'GET', headers });
+
+  let payload: { ok: boolean; data: FraudScore; error?: string } | null = null;
+  try { payload = await response.json(); } catch { /* ignore */ }
+
+  if (!response.ok) {
+    throw new Error(payload?.error ?? `getFraudByBatch failed: HTTP ${response.status}`);
+  }
+  return payload!;
+};
+
+/**
+ * Get all fraud scores for a specific farmer (by Supabase user UUID).
+ * Requires authentication.
+ */
+export const getFraudByFarmer = async (
+  farmerId: string,
+  limit = 20,
+): Promise<{ ok: boolean; farmerId: string; count: number; data: FraudScore[] }> => {
+  const headers = await buildAuthHeaders();
+  const response = await fetch(
+    `${API_BASE_URL}/api/fraud/farmer/${farmerId}?limit=${limit}`,
+    { method: 'GET', headers },
+  );
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let payload: any = null;
+  try { payload = await response.json(); } catch { /* ignore */ }
+
+  if (!response.ok) {
+    throw new Error(payload?.error ?? `getFraudByFarmer failed: HTTP ${response.status}`);
+  }
+  return payload;
+};
+
+/**
+ * Get aggregated fraud overview stats for the Risk Intelligence dashboard.
+ * Public endpoint — no authentication required.
+ */
+export const getFraudOverview = async (): Promise<{ ok: boolean; data: FraudOverview }> => {
+  const headers = await buildAuthHeaders();
+  const response = await fetch(`${API_BASE_URL}/api/fraud/overview`, {
+    method: 'GET',
+    headers,
+  });
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let payload: any = null;
+  try { payload = await response.json(); } catch { /* ignore */ }
+
+  if (!response.ok) {
+    throw new Error(payload?.error ?? `getFraudOverview failed: HTTP ${response.status}`);
+  }
+  return payload;
+};
