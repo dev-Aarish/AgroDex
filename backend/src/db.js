@@ -84,14 +84,15 @@ export async function getVerification(tokenId, serialNumber) {
     .from('verifications')
     .select('*')
     .eq('token_id', tokenId)
-    .eq('serial_number', serialNumber)
-    .single();
+    .eq('serial_number', serialNumber);
 
-  if (error && error.code !== 'PGRST116') {
+  console.log("VERIFICATION ROWS:", data?.length);
+
+  if (error) {
     throw new Error(`Database query failed: ${error.message}`);
   }
 
-  return data;
+  return data?.[0] || null;
 }
 
 /**
@@ -105,12 +106,13 @@ export async function getToken(tokenId, serialNumber) {
     .from('tokens')
     .select('*')
     .eq('token_id', tokenId)
-    .eq('serial_number', serialNumber)
-    .single();
+    .eq('serial_number', serialNumber);
 
-  if (error && error.code !== 'PGRST116') {
+  console.log("TOKEN ROWS:", data?.length);
+
+  if (error) {
     throw new Error(`Database query failed: ${error.message}`);
   }
 
-  return data;
+  return data?.[0] || null;
 }

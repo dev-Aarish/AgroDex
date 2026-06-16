@@ -20,9 +20,9 @@ function json(status: number, body: any) {
   });
 }
 
-serve(async (req) => {
+serve(async (req: Request) => {
   // Log request (filter sensitive headers)
-  const headers = Object.fromEntries(req.headers.entries());
+  const headers = Object.fromEntries([...req.headers]);
   const safeHeaders = { ...headers };
   if (safeHeaders.authorization) safeHeaders.authorization = "Bearer ***";
   if (safeHeaders.apikey) safeHeaders.apikey = "***";
@@ -77,21 +77,26 @@ serve(async (req) => {
 
     // Query batches table with maybeSingle() to handle no-row case
     console.log(`→ Querying batches: ${tokenId} #${serialNumber}`);
-    const { data: nftMetadata, error: metadataError } = await supabase
-      .from("nft_metadata")
-      .select("*")
-      .eq("token_id", tokenId)
-      .eq("serial_number", serialNumber)
-      .maybeSingle();
+    const { data, error: metadataError } = await supabase
+  .from("nft_metadata")
+  .select("*")
+  .eq("token_id", tokenId)
+  .eq("serial_number", serialNumber)
+  .limit(1);
+
+const nftMetadata = data?.[0] || null;
 
     if (metadataError) {
-      console.error("→ Database error:", metadataError.message);
-      return json(500, {
-        stage: "database_query",
-        error: "Database query failed",
-        details: metadataError.message,
-      });
-    }
+  console.error("FULL ERROR:", metadataError);
+
+  return json(500, {
+    stage: "database_query",
+    error: "Database query failed",
+    details: metadataError.message,
+    code: metadataError.code,
+    hint: metadataError.hint,
+  });
+}
 
     if (!nftMetadata) {
       console.log("→ NFT not found (404)");
@@ -171,8 +176,13 @@ const { error: verificationError } = await supabase
 
 if (verificationError) {
   console.error("Failed to save verification:", verificationError);
-}
 
+  return json(500, {
+    stage: "verification_save",
+    error: "Failed to persist verification record",
+    details: verificationError.message,
+  });
+}
 
     return json(200, response);
   } catch (error: any) {
