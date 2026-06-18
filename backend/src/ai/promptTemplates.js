@@ -171,6 +171,51 @@ export const PROMPT_DASHBOARD_INSIGHT = (stats) => {
   `;
 };
 
+export const VERIFY_REGISTRATION_PROMPT = `You are an AI agricultural supply chain inspector. Verify the following batch registration details before they are written to the Hedera blockchain ledger.
+
+Registration Details:
+- Product Name: {PRODUCT_NAME}
+- Harvest Batch: {HARVEST_BATCH}
+- Quantity: {QUANTITY} {UNIT}
+- Location: {LOCATION}
+- Harvest Date: {HARVEST_DATE}
+- Additional Metadata: {METADATA}
+- Today's Date: {TODAY}
+
+Analyze the details above and return ONLY a valid JSON object in this exact format:
+{
+  "productSummary": "A concise, user-friendly 1-sentence summary of what they are registering.",
+  "verificationSummary": {
+    "quantity": "Verification status of the quantity field (e.g. Verified, Vague, Missing)",
+    "harvestBatch": "Verification status of the harvest batch field (e.g. Verified, Vague, Missing)",
+    "location": "Verification status of the location field (e.g. Verified, Vague, Missing)",
+    "harvestDate": "Verification status of the harvest date field (e.g. Verified, Vague, Future Date)"
+  },
+  "warnings": [
+    "List of warning messages regarding missing or vague fields (e.g., location missing, quantity not specified), or empty array if none."
+  ],
+  "consistencyChecks": [
+    "List of consistency issues (e.g., future harvest date, quantity too large, location-product mismatch), or empty array if none."
+  ],
+  "cooperativeReadiness": {
+    "status": "Ready | Review Required",
+    "notes": [
+      "List of cooperative readiness observations (e.g., harvest batch details complete, quantity verified, location provided, etc.)"
+    ]
+  },
+  "statistics": {
+    "batchNumber": "The batch number/identifier provided or inferred (e.g. #150 or HB-2026-150)",
+    "quantity": "The formatted quantity with unit (e.g. 500 KG)",
+    "location": "The parsed location name (e.g. Maharashtra)",
+    "harvestDate": "The formatted harvest date (e.g. 2026-06-20)"
+  }
+}
+
+Rules:
+- For warnings: If any critical field is missing or vague, add a detailed warning message.
+- For consistencyChecks: If the harvest date is after today's date ({TODAY}), include the exact string "Future harvest date detected". If the quantity is unrealistically large for a typical batch (>1,000,000 kg), include the exact string "Quantity appears unusually large".
+- Return ONLY the JSON object. Do NOT wrap in markdown code blocks or add any other text.`;
+
 /**
  * Helper to inject variables into prompt templates
  */

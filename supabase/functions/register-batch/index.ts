@@ -97,7 +97,8 @@ const RegisterBatchSchema = z.object({
   quantity: z.union([z.string(), z.number()]).transform(val => String(val)),
   location: z.string().min(1, 'Location is required'),
   imageData: z.string().optional().default(''),
-  harvestDate: z.string().min(1, 'Harvest date is required')
+  harvestDate: z.string().min(1, 'Harvest date is required'),
+  aiVerification: z.any().optional()
 })
 
 /**
@@ -295,7 +296,7 @@ async function analyzeBatch(
   const startTime = Date.now()
   const genAI = new GoogleGenerativeAI(apiKey)
   const model = genAI.getGenerativeModel({
-    model: Deno.env.get('GEMINI_MODEL') || 'gemini-2.0-flash-lite',
+    model: Deno.env.get('GEMINI_MODEL') || 'gemini-3.1-flash-lite',
     generationConfig: {
       temperature: 0.2,
       topP: 0.8,
@@ -434,7 +435,7 @@ Deno.serve(async (req) => {
       )
     }
 
-    const { productType, quantity, location, imageData, harvestDate } = parseResult.data
+    const { productType, quantity, location, imageData, harvestDate, aiVerification } = parseResult.data
 
     // Normalize and validate date
     let harvestDateISO: string
@@ -488,29 +489,30 @@ Deno.serve(async (req) => {
     console.log(`[${requestId}] 📦 Registering batch: ${productType} (${quantity} units) - Harvest: ${harvestDateISO}`)
 
     // AI batch metadata analysis via Gemini Flash Lite (optional, non-blocking)
-    // Note: imageData is not used — the registration form does not capture image uploads.
-    // Analysis is performed on structured text fields: productType, quantity, location, harvestDate.
-    let aiAnalysis = null
-    try {
-      const geminiResult = await withTimeout(
-        async (signal) => await analyzeBatch({ productType, quantity, location, harvestDate: harvestDateISO }, signal),
-        20000,
-        'Gemini Flash Lite batch analysis'
-      )
+    // If pre-computed AI verification is passed from frontend, use it. Otherwise call Gemini.
+    let aiAnalysis = aiVerification || null
+    if (!aiAnalysis) {
+      try {
+        const geminiResult = await withTimeout(
+          async (signal) => await analyzeBatch({ productType, quantity, location, harvestDate: harvestDateISO }, signal),
+          20000,
+          'Gemini Flash Lite batch analysis'
+        )
 
-      if (!geminiResult.error) {
-        aiAnalysis = {
-          caption: geminiResult.caption,
-          anomalies: geminiResult.anomalies,
-          confidence: geminiResult.confidence,
-          tags: geminiResult.tags,
-          generatedAt: new Date().toISOString(),
-          ms: geminiResult.ms
+        if (!geminiResult.error) {
+          aiAnalysis = {
+            caption: geminiResult.caption,
+            anomalies: geminiResult.anomalies,
+            confidence: geminiResult.confidence,
+            tags: geminiResult.tags,
+            generatedAt: new Date().toISOString(),
+            ms: geminiResult.ms
+          }
         }
+      } catch (error) {
+        console.warn(`[${requestId}] AI batch analysis failed, continuing without it:`, error.message)
+        // AI failure is non-critical — registration proceeds regardless
       }
-    } catch (error) {
-      console.warn(`[${requestId}] AI batch analysis failed, continuing without it:`, error.message)
-      // AI failure is non-critical — registration proceeds regardless
     }
 
     // Submit to Hedera Consensus Service with timeout handling

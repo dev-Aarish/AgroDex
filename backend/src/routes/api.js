@@ -112,20 +112,22 @@ router.post("/register-batch", requireAuth, strictLimiter, validateRegisterBatch
     }
 
     // AI batch metadata analysis using Gemini Flash Lite (optional, non-blocking)
-    // AI failures must never stop registration — wrapped in try/catch.
-    let aiAnalysis = null;
-    try {
-      const geminiResult = await analyzeBatch({
-        productType: batchName,
-        quantity: req.body.quantity || '0',
-        location,
-        harvestDate: req.body.harvestDate || new Date().toISOString().split('T')[0],
-      });
-      if (!geminiResult.error) {
-        aiAnalysis = { caption: geminiResult.caption, anomalies: geminiResult.anomalies, confidence: geminiResult.confidence, tags: geminiResult.tags, generatedAt: new Date().toISOString(), ms: geminiResult.ms };
+    // If pre-computed AI verification is passed from frontend, use it. Otherwise call Gemini.
+    let aiAnalysis = req.body.aiVerification || null;
+    if (!aiAnalysis) {
+      try {
+        const geminiResult = await analyzeBatch({
+          productType: batchName,
+          quantity: req.body.quantity || '0',
+          location,
+          harvestDate: req.body.harvestDate || new Date().toISOString().split('T')[0],
+        });
+        if (!geminiResult.error) {
+          aiAnalysis = { caption: geminiResult.caption, anomalies: geminiResult.anomalies, confidence: geminiResult.confidence, tags: geminiResult.tags, generatedAt: new Date().toISOString(), ms: geminiResult.ms };
+        }
+      } catch (error) {
+        console.warn("AI batch analysis failed, continuing without it:", error.message);
       }
-    } catch (error) {
-      console.warn("AI batch analysis failed, continuing without it:", error.message);
     }
     const hcsResult = await submitBatchData({ batchName, location, photoUrl, aiAnalysis });
     const batchRecord = await insertBatch({ batch_name: batchName, location, photo_url: photoUrl, hcs_tx_id: hcsResult.transactionId, ai_analysis: aiAnalysis });

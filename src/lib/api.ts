@@ -46,6 +46,46 @@ export interface RegisterBatchRequest {
   location: string;
   imageData: string;
   harvestDate: string;
+  aiVerification?: unknown;
+}
+
+export interface VerifyRegistrationRequest {
+  productName: string;
+  harvestBatch: string;
+  quantity: string;
+  unit: string;
+  location: string;
+  harvestDate: string;
+  metadata?: string;
+}
+
+export interface VerifyRegistrationResponse {
+  ok: boolean;
+  data: {
+    productSummary: string;
+    verificationSummary: {
+      quantity: string;
+      harvestBatch: string;
+      location: string;
+      harvestDate: string;
+    };
+    warnings: string[];
+    consistencyChecks: string[];
+    cooperativeReadiness: {
+      status: string;
+      notes: string[];
+    };
+    statistics: {
+      batchNumber: string;
+      quantity: string;
+      location: string;
+      harvestDate: string;
+    };
+    fallback?: boolean;
+    warningMessage?: string;
+    ms?: number;
+    error?: string;
+  };
 }
 
 export interface RegisterBatchResponse {
@@ -202,6 +242,22 @@ export const registerBatch = async (
     throw new Error(`${errorMessage}${requestId}${hint}`);
   }
 
+  return result;
+};
+
+export const verifyRegistration = async (
+  data: VerifyRegistrationRequest,
+): Promise<VerifyRegistrationResponse> => {
+  const response = await fetch(`${API_BASE_URL}/api/ai/verify-registration`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+
+  const result = await response.json();
+  if (!response.ok) {
+    throw new Error(`Verification failed: ${result?.error || 'HTTP ' + response.status}`);
+  }
   return result;
 };
 
