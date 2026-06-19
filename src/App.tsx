@@ -21,6 +21,7 @@ const BatchVerify       = lazy(() => import('./pages/BatchVerify'));
 const TestHedera        = lazy(() => import('./pages/TestHedera'));
 const Dashboard         = lazy(() => import('./pages/Dashboard'));
 const RiskIntelligence  = lazy(() => import('./pages/RiskIntelligence'));
+const BatchJourney      = lazy(() => import('./pages/BatchJourney'));
 
 const queryClient = new QueryClient();
 
@@ -57,6 +58,7 @@ const App = () => (
                     <Route path="/demo" element={<Navigate to={DEMO_VERIFY_URL} replace />} />
                     <Route path="/test-hedera" element={<ProtectedRoute><TestHedera /></ProtectedRoute>} />
                     <Route path="/risk-intelligence" element={<ProtectedRoute><RiskIntelligence /></ProtectedRoute>} />
+                    <Route path="/journey/:batchId" element={<BatchJourney />} />
                   </Routes>
                 </Suspense>
               </WalletProvider>

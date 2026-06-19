@@ -27,10 +27,11 @@ const fetchHealth = async (): Promise<HealthCheckResponse> => {
   return { ok: data.ok, status: data.services };
 };
 
-export const useServiceStatus = () => {
+export const useServiceStatus = (enabled = true) => {
   return useQuery({
     queryKey: ["serviceHealth"],
     queryFn: fetchHealth,
+    enabled,
     // Ping toutes les 60 secondes en arrière-plan
     refetchInterval: 60000,
     // Ne pas réessayer en cas d'erreur (pour que le point reste rouge)
