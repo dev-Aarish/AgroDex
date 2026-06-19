@@ -1,29 +1,91 @@
 import { useState } from 'react';
-import { useChat } from '@ai-sdk/react';
-import { MessageCircle, X, Send } from 'lucide-react';
+import { MessageCircle, X, Send, Bot } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useAuth } from '@/contexts/AuthContext';
 
+interface ChatMessage {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+}
+
 export function ChatbotWidget() {
   const [isOpen, setIsOpen] = useState(false);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const { session } = useAuth();
-  
-  const functionUrl = import.meta.env.VITE_SUPABASE_URL 
-    ? `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`
-    : 'https://vtzlzzlzvzlz.supabase.co/functions/v1/ai-chat'; // Fallback if env var missing during dev
 
-  const { messages, input, handleInputChange, handleSubmit, isLoading, error } = useChat({
-    api: functionUrl,
-    headers: {
-      Authorization: `Bearer ${session?.access_token || ''}`
-    },
-    onError: (err) => {
+  const functionUrl = import.meta.env.VITE_SUPABASE_URL
+    ? `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`
+    : '';
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim() || isLoading) return;
+
+    const userMessage: ChatMessage = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: input.trim(),
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setInput('');
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      if (!functionUrl) {
+        throw new Error('Chat service is not configured. Please set VITE_SUPABASE_URL.');
+      }
+
+      const response = await fetch(functionUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {}),
+        },
+        body: JSON.stringify({
+          messages: [...messages, userMessage].map(m => ({
+            role: m.role,
+            content: m.content,
+          })),
+        }),
+      });
+
+      if (!response.ok) {
+        const errData = await response.json().catch(() => null);
+        throw new Error(errData?.error || `Request failed with status ${response.status}`);
+      }
+
+      const data = await response.json();
+      const assistantContent = typeof data === 'string'
+        ? data
+        : data?.choices?.[0]?.message?.content
+          || data?.content
+          || data?.message
+          || data?.response
+          || 'Sorry, I could not generate a response.';
+
+      const assistantMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: assistantContent,
+      };
+
+      setMessages(prev => [...prev, assistantMessage]);
+    } catch (err) {
       console.error('Chat error:', err);
+      setError(err instanceof Error ? err.message : 'An error occurred. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
-  });
+  };
 
   if (!session) return null; // Only show chat to logged-in users
 
@@ -42,7 +104,10 @@ export function ChatbotWidget() {
       {isOpen && (
         <Card className="fixed bottom-6 right-6 w-80 sm:w-96 h-[500px] shadow-xl flex flex-col z-50 animate-in slide-in-from-bottom-5">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 border-b">
-            <CardTitle className="text-lg font-bold">AgroDex AI</CardTitle>
+            <div className="flex items-center gap-2">
+              <Bot className="h-5 w-5 text-emerald-500" />
+              <CardTitle className="text-lg font-bold">AgroDex AI</CardTitle>
+            </div>
             <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)} className="h-8 w-8">
               <X className="h-4 w-4" />
             </Button>
@@ -71,7 +136,7 @@ export function ChatbotWidget() {
               )}
               {error && (
                 <div className="text-destructive text-sm text-center my-2">
-                  {error.message || 'An error occurred. Make sure you are logged in.'}
+                  {error}
                 </div>
               )}
             </ScrollArea>
@@ -79,7 +144,7 @@ export function ChatbotWidget() {
             <form onSubmit={handleSubmit} className="flex gap-2 items-center">
               <Input
                 value={input}
-                onChange={handleInputChange}
+                onChange={(e) => setInput(e.target.value)}
                 placeholder="Ask something..."
                 className="flex-1"
               />
