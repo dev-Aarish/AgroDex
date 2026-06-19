@@ -12,6 +12,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ai-sdk/react": "^3.0.210",
     "@google/generative-ai": "^0.24.1",
     "@hashgraph/sdk": "^2.75.0",
     "@hookform/resolvers": "^5.1.1",
