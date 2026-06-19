@@ -386,9 +386,9 @@ export default function Login() {
                               <span>{t('general.loading')}</span>
                             </div>
                           ) : isSignUp ? (
-                            "{t('auth.signUp')}"
+                            t('auth.signUp')
                           ) : (
-                            "Sign In"
+                            t('auth.signIn')
                           )}
                         </Button>
                       </motion.div>
