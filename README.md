@@ -210,6 +210,18 @@ cd ..
 npm run dev
    ```
 
+<b>6.</b> End-to-End Testing (Playwright)
+   ```sh
+   # Install Playwright browsers (first time only)
+   npx playwright install --with-deps
+
+   # Run the E2E test suite (ensure dev server is NOT running, Playwright will start it)
+   npx playwright test
+
+   # Run tests in UI mode for interactive debugging
+   npx playwright test --ui
+   ```
+
 ---
 
 ## 🛠️ How to Contribute to this Repo?
