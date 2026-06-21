@@ -29,7 +29,7 @@
 **Technology Stack:**
 - **Hedera HCS** → Immutable event logging (planting, maintenance, harvest)
 - **Hedera HTS** → NFT certificates for batch ownership
-- **Gemini 2.5 Flash** → AI-powered provenance analysis in <2 seconds
+- **Gemini 3.1 Flash Lite** → AI-powered provenance analysis in <2 seconds
 - **Supabase** → Real-time data caching and user management
 
 **Key Features:**
@@ -83,7 +83,7 @@ Verify → Buyer Q&A + Evidence Links
 
 ### 🎯 Competitive Advantages
 
-1. **Speed**: Gemini 2.5 Flash delivers AI insights in <2 seconds
+1. **Speed**: Gemini 3.1 Flash Lite delivers AI insights in <2 seconds
 2. **Cost**: Hedera's low fees ($0.0001/transaction) enable mass adoption
 3. **Intelligence**: AI transforms raw blockchain data into actionable insights
 4. **Multilingual**: Automatic translation breaks language barriers
@@ -125,7 +125,7 @@ Verify → Buyer Q&A + Evidence Links
 
 1. **Health Check** (verify AI is working)
    - Visit: http://localhost:4000/api/health/full
-   - Look for: `gemini: { ok: true, model: "gemini-2.0-flash-exp", ms: <number> }`
+   - Look for: `gemini: { ok: true, model: "gemini-3.1-flash-lite", ms: <number> }`
 
 2. **Register a Batch**
    - Go to: http://localhost:5173/register
@@ -178,7 +178,7 @@ Verify → Buyer Q&A + Evidence Links
 - **Finality**: 3-5 seconds vs Ethereum's 12+ minutes
 - **Sustainability**: Carbon-negative network
 
-### Why Gemini 2.5 Flash?
+### Why Gemini 3.1 Flash Lite?
 - **Speed**: 2x faster than GPT-4 for structured outputs
 - **Cost**: 10x cheaper than GPT-4
 - **Reliability**: Consistent JSON responses for parsing
@@ -202,7 +202,7 @@ Verify → Buyer Q&A + Evidence Links
 
 **Built With:**
 - Hedera Hashgraph (HCS + HTS)
-- Google Gemini 2.5 Flash
+- Google Gemini 3.1 Flash Lite
 - Supabase
 - React + TypeScript
 - Node.js + Express

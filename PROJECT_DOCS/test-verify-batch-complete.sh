@@ -7,65 +7,65 @@ set -e
 
 SUPABASE_URL="https://udnpbqtvbnepicwyubnm.supabase.co"
 FUNCTION_URL="${SUPABASE_URL}/functions/v1/verify-batch"
-ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVkbnBicXR2Ym5lcGljd3l1Ym5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIyMjAxMjUsImV4cCI6MjA3Nzc5NjEyNX0.TAA7bxPqhDuO-8O6DHNazHo67n0kh7PmyH6aiyepUmQ"
+ANON_KEY="your_supabase_anon_key"
 
-echo "🧪 Test complet verify-batch Edge Function"
+echo "ðŸ§ª Test complet verify-batch Edge Function"
 echo "=========================================="
 echo ""
 
 # Test 1: OPTIONS (preflight CORS)
-echo "📋 Test 1: OPTIONS (preflight CORS)"
+echo "ðŸ“‹ Test 1: OPTIONS (preflight CORS)"
 echo "-----------------------------------"
 curl -i -X OPTIONS "$FUNCTION_URL" 2>&1 | grep -E "(HTTP|access-control)"
 echo ""
-echo "✅ Attendu: HTTP/2 200 + access-control-allow-origin: *"
+echo "âœ… Attendu: HTTP/2 200 + access-control-allow-origin: *"
 echo ""
 sleep 2
 
 # Test 2: POST sans Authorization (payload invalide)
-echo "📋 Test 2: POST sans payload (validation error)"
+echo "ðŸ“‹ Test 2: POST sans payload (validation error)"
 echo "-----------------------------------------------"
 curl -i -X POST "$FUNCTION_URL" \
   -H 'Content-Type: application/json' \
   -d '{}' 2>&1 | head -20
 echo ""
-echo "✅ Attendu: HTTP/2 400 + { stage: 'validation', error: '...' }"
+echo "âœ… Attendu: HTTP/2 400 + { stage: 'validation', error: '...' }"
 echo ""
 sleep 2
 
 # Test 3: POST avec payload valide, sans Authorization
-echo "📋 Test 3: POST avec payload valide (sans auth)"
+echo "ðŸ“‹ Test 3: POST avec payload valide (sans auth)"
 echo "-----------------------------------------------"
 curl -i -X POST "$FUNCTION_URL" \
   -H 'Content-Type: application/json' \
   -d '{"tokenId":"0.0.7160982","serialNumber":"1"}' 2>&1 | head -30
 echo ""
-echo "✅ Attendu: HTTP/2 200 ou 404 (NFT not found) - PAS 404 (route not found)"
+echo "âœ… Attendu: HTTP/2 200 ou 404 (NFT not found) - PAS 404 (route not found)"
 echo ""
 sleep 2
 
 # Test 4: POST avec Authorization header
-echo "📋 Test 4: POST avec Authorization (Bearer anon key)"
+echo "ðŸ“‹ Test 4: POST avec Authorization (Bearer anon key)"
 echo "----------------------------------------------------"
 curl -i -X POST "$FUNCTION_URL" \
   -H 'Content-Type: application/json' \
   -H "Authorization: Bearer $ANON_KEY" \
   -d '{"tokenId":"0.0.7160982","serialNumber":"1"}' 2>&1 | head -30
 echo ""
-echo "✅ Attendu: HTTP/2 200 (si NFT existe) ou 404 (si NFT n'existe pas en DB)"
+echo "âœ… Attendu: HTTP/2 200 (si NFT existe) ou 404 (si NFT n'existe pas en DB)"
 echo ""
 
 echo ""
-echo "🎯 Résumé des tests"
+echo "ðŸŽ¯ RÃ©sumÃ© des tests"
 echo "==================="
 echo ""
 echo "Si vous voyez 404 sur TOUS les tests POST:"
-echo "  → La fonction n'est PAS déployée"
-echo "  → Solution: supabase functions deploy verify-batch --project-ref mrbfrwtymikayrbrzgmp"
+echo "  â†’ La fonction n'est PAS dÃ©ployÃ©e"
+echo "  â†’ Solution: supabase functions deploy verify-batch --project-ref mrbfrwtymikayrbrzgmp"
 echo ""
 echo "Si vous voyez 200/400/404 (avec body JSON):"
-echo "  → La fonction EST déployée et fonctionne"
-echo "  → Vérifier les logs: supabase functions logs verify-batch --follow"
+echo "  â†’ La fonction EST dÃ©ployÃ©e et fonctionne"
+echo "  â†’ VÃ©rifier les logs: supabase functions logs verify-batch --follow"
 echo ""
 echo "Logs attendus dans Supabase Dashboard:"
 echo "  ==> VERIFY-BATCH REQUEST RECEIVED <=="

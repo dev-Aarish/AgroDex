@@ -27,12 +27,16 @@ export default defineConfig({
             ) {
               return "vendor-hedera";
             }
-            if (id.includes("recharts")) {
+            if (id.includes("recharts") || id.includes("d3") || id.includes("victory")) {
               return "vendor-charts";
             }
             if (id.includes("framer-motion")) {
               return "vendor-motion";
             }
+            if (id.includes("react-dom") || id.includes("react-router")) {
+              return "vendor-react";
+            }
+            return "vendor";
           }
         },
       },
@@ -42,7 +46,7 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
     setupFiles: "./src/lib/__tests__/setup.ts",
-    exclude: ["node_modules/**", "e2e/**"],
+    exclude: ["**/node_modules/**", "backend/**", "e2e/**"],
     coverage: {
       provider: "v8",
       reporter: ["text", "json", "html"],

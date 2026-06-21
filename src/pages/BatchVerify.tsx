@@ -391,20 +391,9 @@ export default function BatchVerify() {
                             No batch matches this identifier in AgroDex at the moment.
                           </p>
                           <div className="bg-white/50 dark:bg-slate-900/50 p-3 rounded border border-amber-200 dark:border-slate-800 mt-3 max-w-md">
-                            {params.batchId ? (
-                              <p className="text-xs font-semibold text-amber-850 dark:text-amber-400 font-mono break-all">
-                                Batch ID: {params.batchId}
-                              </p>
-                            ) : (
-                              <>
-                                <p className="text-xs font-semibold text-amber-850 dark:text-amber-400">
-                                  Token ID: {params.tokenId}
-                                </p>
-                                <p className="text-xs font-semibold text-amber-850 dark:text-amber-400">
-                                  Serial Number: {params.serialNumber}
-                                </p>
-                              </>
-                            )}
+                            <p className="text-xs font-semibold text-amber-850 dark:text-amber-400 font-mono break-all">
+                              Batch ID: {params.batchId || `${params.tokenId}/${params.serialNumber}`}
+                            </p>
                           </div>
                         </div>
                       </AlertDescription>
@@ -422,7 +411,7 @@ export default function BatchVerify() {
                           </p>
                           <div className="bg-white/50 dark:bg-slate-900/50 p-3 rounded border border-red-200 dark:border-slate-800 mt-3 max-w-md">
                             <p className="text-xs font-semibold text-red-850 dark:text-red-400 font-mono break-all">
-                              Batch ID: {params.batchId}
+                              Batch ID: {params.batchId || `${params.tokenId}/${params.serialNumber}`}
                             </p>
                           </div>
                         </div>
@@ -466,86 +455,82 @@ export default function BatchVerify() {
                         </CardTitle>
                       </CardHeader>
                       <CardContent className="space-y-6">
-                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                          <div className="lg:col-span-2 space-y-4">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              <div className="bg-gray-50 dark:bg-slate-900 p-4 rounded-lg border border-gray-200 dark:border-slate-800">
-                                <p className="text-xs font-semibold text-gray-600 dark:text-slate-400 mb-1">
-                                  Token ID
-                                </p>
-                                <p className="font-mono font-bold text-gray-900 dark:text-white truncate" title={verifiedResult.tokenId || ""}>
-                                  {verifiedResult.tokenId || "Pending Tokenization (Registered)"}
-                                </p>
-                              </div>
-                              <div className="bg-gray-50 dark:bg-slate-900 p-4 rounded-lg border border-gray-200 dark:border-slate-800">
-                                <p className="text-xs font-semibold text-gray-600 dark:text-slate-400 mb-1">
-                                  Serial Number
-                                </p>
-                                <p className="font-mono font-bold text-gray-900 dark:text-white">
-                                  {verifiedResult.serialNumber || "N/A"}
-                                </p>
-                              </div>
-                              <div className="bg-gray-50 dark:bg-slate-900 p-4 rounded-lg border border-gray-200 dark:border-slate-800">
-                                <p className="text-xs font-semibold text-gray-600 dark:text-slate-400 mb-1">
-                                  Status
-                                </p>
-                                <Badge className={verifiedResult.status === "verified" ? "bg-emerald-600 text-white font-semibold" : "bg-blue-600 text-white font-semibold"}>
-                                  {verifiedResult.status || "Registered"}
-                                </Badge>
-                              </div>
-                              <div className="bg-gray-50 dark:bg-slate-900 p-4 rounded-lg border border-gray-200 dark:border-slate-800">
-                                <p className="text-xs font-semibold text-gray-600 dark:text-slate-400 mb-1 flex items-center gap-1">
-                                  <Calendar className="h-3 w-3" />
-                                  {verifiedResult.status === "verified" ? "Verified on" : "Registered on"}
-                                </p>
-                                <p className="text-sm font-semibold text-gray-900 dark:text-white">
-                                  {new Date(
-                                    verifiedResult.verifiedAt,
-                                  ).toLocaleString()}
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* QR code display */}
-                          <div className="flex flex-col items-center justify-center p-6 bg-gray-50 dark:bg-slate-900/50 rounded-xl border border-gray-200 dark:border-slate-800 shadow-sm">
-                            <QRCodeCanvas
-                              id="verify-qr-canvas"
-                              value={JSON.stringify({
-                                batchId: verifiedResult.batch?.id || params.batchId || "",
-                                verificationUrl: verifiedResult.batch?.id 
-                                  ? `${window.location.origin}/verify/${verifiedResult.batch.id}`
-                                  : `${window.location.origin}/verify/${verifiedResult.tokenId}/${verifiedResult.serialNumber}`
-                              })}
-                              size={130}
-                              level="H"
-                              includeMargin={true}
-                              className="border border-gray-150 dark:border-slate-805 rounded bg-white"
-                            />
-                            <p className="mt-2 text-xs font-bold text-gray-600 dark:text-slate-400 text-center">
-                              Batch Verification QR
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                          <div className="bg-gray-50 dark:bg-slate-900 p-4 rounded-lg border border-gray-200 dark:border-slate-800">
+                            <p className="text-xs font-semibold text-gray-600 dark:text-slate-400 mb-1">
+                              Token ID
                             </p>
-                            <Button
-                              type="button"
-                              size="sm"
-                              variant="outline"
-                              onClick={() => {
-                                const canvas = document.getElementById("verify-qr-canvas") as HTMLCanvasElement;
-                                if (canvas) {
-                                  const url = canvas.toDataURL("image/png");
-                                  const link = document.createElement("a");
-                                  const id = verifiedResult.batch?.id || params.batchId || `${verifiedResult.tokenId}_${verifiedResult.serialNumber}`;
-                                  link.download = `agrodex-verify-${id}.png`;
-                                  link.href = url;
-                                  link.click();
-                                }
-                              }}
-                              className="mt-3 w-full text-xs font-semibold border-gray-300 dark:border-slate-800 hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-700 dark:text-slate-300"
-                            >
-                              <Download className="h-3.5 w-3.5 mr-1" />
-                              Download QR
-                            </Button>
+                            <p className="font-mono font-bold text-gray-900 dark:text-white truncate" title={verifiedResult.tokenId || ""}>
+                              {verifiedResult.tokenId || "Pending Tokenization (Registered)"}
+                            </p>
                           </div>
+                          <div className="bg-gray-50 dark:bg-slate-900 p-4 rounded-lg border border-gray-200 dark:border-slate-800">
+                            <p className="text-xs font-semibold text-gray-600 dark:text-slate-400 mb-1">
+                              Serial Number
+                            </p>
+                            <p className="font-mono font-bold text-gray-900 dark:text-white">
+                              {verifiedResult.serialNumber || "N/A"}
+                            </p>
+                          </div>
+                          <div className="bg-gray-50 dark:bg-slate-900 p-4 rounded-lg border border-gray-200 dark:border-slate-800">
+                            <p className="text-xs font-semibold text-gray-600 dark:text-slate-400 mb-1">
+                              Status
+                            </p>
+                            <Badge className={verifiedResult.status === "verified" ? "bg-emerald-600 text-white font-semibold" : "bg-blue-600 text-white font-semibold"}>
+                              {verifiedResult.status || "Registered"}
+                            </Badge>
+                          </div>
+                          <div className="bg-gray-50 dark:bg-slate-900 p-4 rounded-lg border border-gray-200 dark:border-slate-800">
+                            <p className="text-xs font-semibold text-gray-600 dark:text-slate-400 mb-1 flex items-center gap-1">
+                              <Calendar className="h-3 w-3" />
+                              {verifiedResult.status === "verified" ? "Verified on" : "Registered on"}
+                            </p>
+                            <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                              {new Date(
+                                verifiedResult.verifiedAt,
+                              ).toLocaleString()}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* QR code display */}
+                        <div className="flex flex-col items-center justify-center p-6 bg-gray-50 dark:bg-slate-900/50 rounded-xl border border-gray-200 dark:border-slate-800 shadow-sm">
+                          <QRCodeCanvas
+                            id="verify-qr-canvas"
+                            value={JSON.stringify({
+                              batchId: verifiedResult.batch?.id || params.batchId || "",
+                              verificationUrl: verifiedResult.batch?.id 
+                                ? `${window.location.origin}/verify/${verifiedResult.batch.id}`
+                                : `${window.location.origin}/verify/${verifiedResult.tokenId}/${verifiedResult.serialNumber}`
+                            })}
+                            size={130}
+                            level="H"
+                            includeMargin={true}
+                            className="border border-gray-150 dark:border-slate-805 rounded bg-white"
+                          />
+                          <p className="mt-2 text-xs font-bold text-gray-600 dark:text-slate-400 text-center">
+                            Batch Verification QR
+                          </p>
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="outline"
+                            onClick={() => {
+                              const canvas = document.getElementById("verify-qr-canvas") as HTMLCanvasElement;
+                              if (canvas) {
+                                const url = canvas.toDataURL("image/png");
+                                const link = document.createElement("a");
+                                const id = verifiedResult.batch?.id || params.batchId || `${verifiedResult.tokenId}_${verifiedResult.serialNumber}`;
+                                link.download = `agrodex-verify-${id}.png`;
+                                link.href = url;
+                                link.click();
+                              }
+                            }}
+                            className="mt-3 w-full text-xs font-semibold border-gray-300 dark:border-slate-800 hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-700 dark:text-slate-300"
+                          >
+                            <Download className="h-3.5 w-3.5 mr-1" />
+                            Download QR
+                          </Button>
                         </div>
 
                         <div className="border-t border-gray-200 dark:border-slate-800 pt-4">

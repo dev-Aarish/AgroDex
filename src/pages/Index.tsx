@@ -249,7 +249,7 @@ export default function Index() {
                 {
                   icon: TrendingUp,
                   color: "purple",
-                  title: "Gemini 2.5 Flash AI Analysis",
+                  title: "Gemini 3.1 Flash Lite Analysis",
                   desc: "Automatic product quality validation through image analysis and provenance summary generation",
                   delay: 0.3,
                 },

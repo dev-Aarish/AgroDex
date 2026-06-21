@@ -22,9 +22,7 @@ export function normalizeDate(input: string): string {
 
     // Validate ranges to reject ambiguous US format (MM-DD-YYYY)
     if (dayNum < 1 || dayNum > 31) {
-      throw new Error(
-        `Invalid date format: Invalid day: ${dd}. Expected DD-MM-YYYY or YYYY-MM-DD`,
-      );
+      throw new Error(`Invalid date format: Invalid day: ${dd}. Expected DD-MM-YYYY or YYYY-MM-DD`);
     }
 
     if (monthNum < 1 || monthNum > 12) {
@@ -48,6 +46,46 @@ export interface RegisterBatchRequest {
   location: string;
   imageData: string;
   harvestDate: string;
+  aiVerification?: unknown;
+}
+
+export interface VerifyRegistrationRequest {
+  productName: string;
+  harvestBatch: string;
+  quantity: string;
+  unit: string;
+  location: string;
+  harvestDate: string;
+  metadata?: string;
+}
+
+export interface VerifyRegistrationResponse {
+  ok: boolean;
+  data: {
+    productSummary: string;
+    verificationSummary: {
+      quantity: string;
+      harvestBatch: string;
+      location: string;
+      harvestDate: string;
+    };
+    warnings: string[];
+    consistencyChecks: string[];
+    cooperativeReadiness: {
+      status: string;
+      notes: string[];
+    };
+    statistics: {
+      batchNumber: string;
+      quantity: string;
+      location: string;
+      harvestDate: string;
+    };
+    fallback?: boolean;
+    warningMessage?: string;
+    ms?: number;
+    error?: string;
+  };
 }
 
 export interface RegisterBatchResponse {
@@ -205,6 +243,129 @@ export const registerBatch = async (
   }
 
   return result;
+};
+
+export function generateLocalFallbackVerification(data: VerifyRegistrationRequest) {
+  const { productName, harvestBatch, quantity, unit, location, harvestDate } = data;
+  const cleanQty = quantity ? String(quantity).trim() : '';
+  const cleanUnit = unit ? String(unit).trim() : '';
+  const qtyStr = cleanQty ? `${cleanQty} ${cleanUnit}` : '';
+  
+  const productSummary = `You are about to register ${qtyStr || 'an unspecified quantity of'} ${productName || 'product'} from ${location || 'an unspecified location'} under Harvest Batch ${harvestBatch || 'N/A'} harvested on ${harvestDate || 'an unspecified date'}.`;
+  
+  const warnings: string[] = [];
+  const consistencyChecks: string[] = [];
+  const notes: string[] = [];
+  
+  if (!productName || productName.trim().length < 3) {
+    warnings.push("Product name is missing or too short");
+    notes.push("Product name verification failed");
+  } else {
+    notes.push("Product name verified locally");
+  }
+
+  if (!harvestBatch || harvestBatch.trim() === '') {
+    warnings.push("Harvest batch not specified");
+    notes.push("Harvest batch missing");
+  } else {
+    notes.push("Harvest batch info complete");
+  }
+
+  if (!cleanQty) {
+    warnings.push("Quantity not specified");
+    notes.push("Quantity verification failed");
+  } else {
+    const parsedQty = parseFloat(cleanQty);
+    if (isNaN(parsedQty) || parsedQty <= 0) {
+      warnings.push("Quantity must be a positive number");
+      notes.push("Quantity invalid");
+    } else if (parsedQty > 1000000) {
+      consistencyChecks.push("Quantity appears unusually large");
+      notes.push("Quantity is unusually large");
+    } else {
+      notes.push("Quantity verified");
+    }
+  }
+
+  if (!location || location.trim().length < 3) {
+    warnings.push("Harvest location missing or too vague");
+    notes.push("Location verification failed");
+  } else {
+    notes.push("Location provided");
+  }
+
+  if (!harvestDate) {
+    warnings.push("Harvest date not specified");
+    notes.push("Harvest date missing");
+  } else {
+    try {
+      const todayISO = new Date().toISOString().split('T')[0];
+      if (harvestDate > todayISO) {
+        consistencyChecks.push("Future harvest date detected");
+        notes.push("Harvest date is in the future");
+      } else {
+        notes.push("Harvest date verified");
+      }
+    } catch {
+      notes.push("Harvest date checked");
+    }
+  }
+
+  const status = warnings.length > 0 || consistencyChecks.length > 0 ? "Review Required" : "Ready";
+
+  return {
+    productSummary,
+    verificationSummary: {
+      quantity: cleanQty ? `Provided: ${qtyStr}` : "Quantity not specified",
+      harvestBatch: harvestBatch ? `Provided: ${harvestBatch}` : "Harvest batch not specified",
+      location: location ? `Provided: ${location}` : "Location not specified",
+      harvestDate: harvestDate ? `Provided: ${harvestDate}` : "Harvest date not specified"
+    },
+    warnings,
+    consistencyChecks,
+    cooperativeReadiness: {
+      status,
+      notes
+    },
+    statistics: {
+      batchNumber: harvestBatch || "N/A",
+      quantity: qtyStr || "N/A",
+      location: location || "N/A",
+      harvestDate: harvestDate || "N/A"
+    },
+    fallback: true,
+    warningMessage: "AI verification unavailable. Manual review recommended."
+  };
+}
+
+export const verifyRegistration = async (
+  data: VerifyRegistrationRequest,
+): Promise<VerifyRegistrationResponse> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/ai/verify-registration`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const contentType = response.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      throw new Error("Response was not JSON");
+    }
+
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.warn("Express AI verification unavailable, falling back to local verification:", error);
+    return {
+      ok: true,
+      data: generateLocalFallbackVerification(data)
+    };
+  }
 };
 
 export const tokenizeBatch = async (

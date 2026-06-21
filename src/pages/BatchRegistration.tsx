@@ -1,11 +1,20 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
-import { registerBatch } from "@/lib/api";
+import { registerBatch, verifyRegistration } from "@/lib/api";
 import { QRCodeCanvas } from "qrcode.react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import {
   Card,
   CardContent,
@@ -27,6 +36,12 @@ import {
   Hash,
   Download,
   Copy,
+  Check,
+  RefreshCw,
+  Edit2,
+  FileText,
+  CheckCircle,
+  ShieldAlert,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Navbar from "@/components/Navbar";
@@ -39,7 +54,15 @@ export default function BatchRegistration() {
   const [unit, setUnit] = useState("");
   const [origin, setOrigin] = useState("");
   const [harvestDate, setHarvestDate] = useState("");
+  const [harvestBatch, setHarvestBatch] = useState("");
+  const [metadata, setMetadata] = useState("");
   const [isCopied, setIsCopied] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [verificationResult, setVerificationResult] = useState<any>(null);
+  const [isAiLoading, setIsAiLoading] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
+
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -59,6 +82,9 @@ export default function BatchRegistration() {
       setUnit("");
       setOrigin("");
       setHarvestDate("");
+      setHarvestBatch("");
+      setMetadata("");
+      setVerificationResult(null);
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
@@ -83,16 +109,59 @@ export default function BatchRegistration() {
     },
   });
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleVerifyAndShowModal = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsModalOpen(true);
+    setIsAiLoading(true);
+    setAiError(null);
+    setVerificationResult(null);
+    
+    try {
+      await runAiVerification();
+    } catch (err: unknown) {
+      const error = err as Error;
+      setAiError(error.message || "An unexpected error occurred during AI verification.");
+    } finally {
+      setIsAiLoading(false);
+    }
+  };
 
-    // Date normalization is handled in api.ts registerBatch function
+  const runAiVerification = async () => {
+    setAiError(null);
+    setIsAiLoading(true);
+    try {
+      const res = await verifyRegistration({
+        productName,
+        harvestBatch,
+        quantity,
+        unit,
+        location: origin,
+        harvestDate,
+        metadata
+      });
+      if (res.ok && res.data) {
+        setVerificationResult(res.data);
+      } else {
+        throw new Error(res.data?.error || "Failed to analyze crop details");
+      }
+    } catch (err: unknown) {
+      const error = err as Error;
+      console.error("AI verify error:", error);
+      setAiError(error.message || "Gemini verification service is temporarily unavailable.");
+    } finally {
+      setIsAiLoading(false);
+    }
+  };
+
+  const handleConfirmRegistration = () => {
+    setIsModalOpen(false);
     mutation.mutate({
       productType: productName,
       quantity: quantity,
       location: origin,
       imageData: "", // Empty image for now to bypass the bug
       harvestDate: harvestDate, // Will be normalized to YYYY-MM-DD in api.ts
+      aiVerification: verificationResult // Save audit trail
     });
   };
 
@@ -136,7 +205,7 @@ export default function BatchRegistration() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleVerifyAndShowModal} className="space-y-6">
               <div className="space-y-2">
                 <Label
                   htmlFor="productName"
@@ -150,6 +219,24 @@ export default function BatchRegistration() {
                   placeholder="e.g., Organic Arabica Coffee"
                   value={productName}
                   onChange={(e) => setProductName(e.target.value)}
+                  className="h-11 border-gray-300 dark:border-slate-800 dark:bg-slate-900 focus:border-emerald-500 focus:ring-emerald-500 text-foreground"
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label
+                  htmlFor="harvestBatch"
+                  className="text-sm font-semibold text-gray-700 dark:text-slate-300 flex items-center gap-2"
+                >
+                  <Hash className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                  Harvest Batch Identifier
+                </Label>
+                <Input
+                  id="harvestBatch"
+                  placeholder="e.g., Batch #150 or HB-2026-150"
+                  value={harvestBatch}
+                  onChange={(e) => setHarvestBatch(e.target.value)}
                   className="h-11 border-gray-300 dark:border-slate-800 dark:bg-slate-900 focus:border-emerald-500 focus:ring-emerald-500 text-foreground"
                   required
                 />
@@ -177,13 +264,14 @@ export default function BatchRegistration() {
                 <div className="space-y-2">
                   <Label
                     htmlFor="unit"
-                    className="text-sm font-semibold text-gray-700 dark:text-slate-300"
+                    className="text-sm font-semibold text-gray-700 dark:text-slate-300 flex items-center gap-2"
                   >
+                    <Package className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
                     Unit
                   </Label>
                   <Input
                     id="unit"
-                    placeholder="kg"
+                    placeholder="kg, bags, tons"
                     value={unit}
                     onChange={(e) => setUnit(e.target.value)}
                     className="h-11 border-gray-300 dark:border-slate-800 dark:bg-slate-900 focus:border-emerald-500 focus:ring-emerald-500 text-foreground"
@@ -228,6 +316,23 @@ export default function BatchRegistration() {
                 />
               </div>
 
+              <div className="space-y-2">
+                <Label
+                  htmlFor="metadata"
+                  className="text-sm font-semibold text-gray-700 dark:text-slate-300 flex items-center gap-2"
+                >
+                  <FileText className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                  Additional Product Metadata
+                </Label>
+                <Textarea
+                  id="metadata"
+                  placeholder="e.g., Certified Fair Trade, Moisture content 12%, Shade-grown, etc."
+                  value={metadata}
+                  onChange={(e) => setMetadata(e.target.value)}
+                  className="min-h-20 border-gray-300 dark:border-slate-800 dark:bg-slate-900 focus:border-emerald-500 focus:ring-emerald-500 text-foreground"
+                />
+              </div>
+
               <Button
                 type="submit"
                 className="w-full h-12 text-base font-semibold bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg hover:shadow-xl transition-all"
@@ -240,8 +345,8 @@ export default function BatchRegistration() {
                   </>
                 ) : (
                   <>
-                    <CheckCircle2 className="mr-2 h-5 w-5" />
-                    Register Batch on Hedera
+                    <Sparkles className="mr-2 h-5 w-5" />
+                    Verify and Register Batch
                   </>
                 )}
               </Button>
@@ -353,6 +458,7 @@ export default function BatchRegistration() {
                       </div>
                     </div>
 
+
                     <div className="mt-4 pt-4 border-t border-emerald-300 dark:border-emerald-900/30">
                       <p className="text-sm text-emerald-800 dark:text-emerald-400">
                         Your proof is saved. Copy the Transaction ID and proceed
@@ -447,6 +553,229 @@ export default function BatchRegistration() {
           </CardContent>
         </Card>
       </div>
+
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="max-w-2xl bg-card text-card-foreground border dark:border-slate-800 shadow-2xl rounded-2xl overflow-y-auto max-h-[90vh]">
+          <DialogHeader className="pb-4 border-b dark:border-slate-850">
+            <DialogTitle className="text-2xl font-bold flex items-center gap-2 text-gray-900 dark:text-white">
+              <Sparkles className="h-6 w-6 text-emerald-600 dark:text-emerald-400 animate-pulse" />
+              Pre-Registration AI Verification
+            </DialogTitle>
+            <DialogDescription className="text-sm text-slate-500 dark:text-slate-400">
+              Verify your batch metadata using Gemini 3.1 Flash Lite before saving to blockchain
+            </DialogDescription>
+          </DialogHeader>
+
+          {isAiLoading && (
+            <div className="py-12 flex flex-col items-center justify-center space-y-4">
+              <div className="relative flex items-center justify-center">
+                <div className="animate-spin rounded-full h-16 w-16 border-4 border-emerald-500 border-t-transparent" />
+                <Sparkles className="absolute h-6 w-6 text-emerald-500 animate-bounce" />
+              </div>
+              <div className="text-center space-y-1">
+                <p className="text-lg font-bold text-gray-800 dark:text-slate-200">Analyzing crop metadata...</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400">Running verification & checks with Gemini 3.1 Flash Lite</p>
+              </div>
+            </div>
+          )}
+
+          {aiError && (
+            <div className="py-6 space-y-6">
+              <Alert variant="destructive" className="border-red-200 dark:border-red-900/30 bg-red-50 dark:bg-red-950/20">
+                <ShieldAlert className="h-5 w-5 text-red-600 dark:text-red-400" />
+                <AlertDescription className="text-red-900 dark:text-red-300 font-medium">
+                  {aiError}
+                </AlertDescription>
+              </Alert>
+              <div className="flex gap-4">
+                <Button variant="outline" className="flex-1" onClick={() => setIsModalOpen(false)}>
+                  <Edit2 className="h-4 w-4 mr-2" />
+                  Edit Information
+                </Button>
+                <Button className="flex-1 bg-red-600 hover:bg-red-700 text-white" onClick={runAiVerification}>
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                  Retry Verification
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {!isAiLoading && !aiError && verificationResult && (
+            <div className="space-y-6 pt-4">
+              {/* Fallback Warning Alert */}
+              {verificationResult.fallback && (
+                <Alert className="border-yellow-200 dark:border-yellow-900/30 bg-yellow-50 dark:bg-yellow-950/20">
+                  <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
+                  <AlertDescription className="text-yellow-800 dark:text-yellow-350 font-bold text-sm">
+                    {verificationResult.warningMessage || "AI verification unavailable. Manual review recommended."}
+                  </AlertDescription>
+                </Alert>
+              )}
+
+              {/* Product Summary */}
+              <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 shadow-sm space-y-2">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-400">Product Summary</h4>
+                <p className="text-base text-gray-800 dark:text-slate-100 font-medium">
+                  {verificationResult.productSummary}
+                </p>
+              </div>
+
+              {/* Submitted Metadata Review */}
+              <div className="p-4 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/20 space-y-3">
+                <h4 className="text-sm font-bold text-gray-800 dark:text-slate-200">Batch Details Review</h4>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-xs">
+                  <div className="space-y-1">
+                    <span className="text-slate-500 font-medium">Product Name</span>
+                    <p className="font-semibold text-gray-800 dark:text-slate-200 truncate">{productName}</p>
+                  </div>
+                  <div className="space-y-1">
+                    <span className="text-slate-500 font-medium">Harvest Batch</span>
+                    <p className="font-semibold text-gray-800 dark:text-slate-200 truncate">{harvestBatch}</p>
+                  </div>
+                  <div className="space-y-1">
+                    <span className="text-slate-500 font-medium">Quantity</span>
+                    <p className="font-semibold text-gray-800 dark:text-slate-200 truncate">{quantity} {unit}</p>
+                  </div>
+                  <div className="space-y-1">
+                    <span className="text-slate-500 font-medium">Location</span>
+                    <p className="font-semibold text-gray-800 dark:text-slate-200 truncate">{origin}</p>
+                  </div>
+                  <div className="space-y-1">
+                    <span className="text-slate-500 font-medium">Harvest Date</span>
+                    <p className="font-semibold text-gray-800 dark:text-slate-200 truncate">{harvestDate}</p>
+                  </div>
+                  {metadata && (
+                    <div className="space-y-1 col-span-2 md:col-span-1">
+                      <span className="text-slate-500 font-medium">Additional Metadata</span>
+                      <p className="font-semibold text-gray-800 dark:text-slate-200 truncate">{metadata}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Cooperative Readiness */}
+                <div className="p-4 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/20 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-sm font-bold text-gray-800 dark:text-slate-200">Cooperative Readiness</h4>
+                    <Badge className={
+                      verificationResult.cooperativeReadiness?.status === "Ready"
+                        ? "bg-emerald-100 text-emerald-800 hover:bg-emerald-100 dark:bg-emerald-950/55 dark:text-emerald-300 font-bold"
+                        : "bg-amber-100 text-amber-800 hover:bg-amber-100 dark:bg-amber-950/55 dark:text-amber-300 font-bold"
+                    }>
+                      {verificationResult.cooperativeReadiness?.status || "Pending"}
+                    </Badge>
+                  </div>
+                  <ul className="text-xs space-y-1.5 text-slate-600 dark:text-slate-400">
+                    {verificationResult.cooperativeReadiness?.notes?.map((note: string, idx: number) => (
+                      <li key={idx} className="flex items-start gap-2">
+                        <Check className="h-3.5 w-3.5 text-emerald-500 mt-0.5 shrink-0" />
+                        <span>{note}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Verification Summary */}
+                <div className="p-4 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/20 space-y-3">
+                  <h4 className="text-sm font-bold text-gray-800 dark:text-slate-200">AI Checks Status</h4>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div className="space-y-1">
+                      <span className="text-slate-500">Quantity</span>
+                      <p className="font-semibold text-gray-800 dark:text-slate-250 truncate">{verificationResult.verificationSummary?.quantity}</p>
+                    </div>
+                    <div className="space-y-1">
+                      <span className="text-slate-500">Harvest Batch</span>
+                      <p className="font-semibold text-gray-800 dark:text-slate-250 truncate">{verificationResult.verificationSummary?.harvestBatch}</p>
+                    </div>
+                    <div className="space-y-1">
+                      <span className="text-slate-500">Location</span>
+                      <p className="font-semibold text-gray-800 dark:text-slate-250 truncate">{verificationResult.verificationSummary?.location}</p>
+                    </div>
+                    <div className="space-y-1">
+                      <span className="text-slate-500">Harvest Date</span>
+                      <p className="font-semibold text-gray-800 dark:text-slate-250 truncate">{verificationResult.verificationSummary?.harvestDate}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Statistics Grid */}
+              <div className="p-4 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/20 space-y-3">
+                <h4 className="text-sm font-bold text-gray-800 dark:text-slate-200">Harvest Statistics</h4>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="flex items-center gap-2">
+                    <Hash className="h-4 w-4 text-emerald-500 shrink-0" />
+                    <div>
+                      <span className="text-[10px] text-slate-500 uppercase font-semibold">Batch Number</span>
+                      <p className="text-xs font-bold text-gray-800 dark:text-slate-205">{verificationResult.statistics?.batchNumber}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Package className="h-4 w-4 text-emerald-500 shrink-0" />
+                    <div>
+                      <span className="text-[10px] text-slate-500 uppercase font-semibold">Quantity</span>
+                      <p className="text-xs font-bold text-gray-800 dark:text-slate-205">{verificationResult.statistics?.quantity}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <MapPin className="h-4 w-4 text-emerald-500 shrink-0" />
+                    <div>
+                      <span className="text-[10px] text-slate-500 uppercase font-semibold">Location</span>
+                      <p className="text-xs font-bold text-gray-800 dark:text-slate-205">{verificationResult.statistics?.location}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Calendar className="h-4 w-4 text-emerald-500 shrink-0" />
+                    <div>
+                      <span className="text-[10px] text-slate-500 uppercase font-semibold">Harvest Date</span>
+                      <p className="text-xs font-bold text-gray-800 dark:text-slate-205">{verificationResult.statistics?.harvestDate}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Warnings */}
+              {verificationResult.warnings && verificationResult.warnings.length > 0 && (
+                <div className="p-3 bg-amber-50 dark:bg-amber-950/10 border border-amber-200 dark:border-amber-900/30 rounded-xl space-y-1">
+                  <h4 className="text-xs font-bold text-amber-800 dark:text-amber-400 flex items-center gap-1.5">
+                    <AlertTriangle className="h-4 w-4 shrink-0" />
+                    Missing Information Warnings
+                  </h4>
+                  <ul className="list-disc list-inside text-xs text-amber-700 dark:text-amber-300 pl-1 space-y-0.5">
+                    {verificationResult.warnings.map((w: string, idx: number) => <li key={idx}>{w}</li>)}
+                  </ul>
+                </div>
+              )}
+
+              {/* Consistency Checks */}
+              {verificationResult.consistencyChecks && verificationResult.consistencyChecks.length > 0 && (
+                <div className="p-3 bg-red-50 dark:bg-red-950/10 border border-red-200 dark:border-red-900/30 rounded-xl space-y-1">
+                  <h4 className="text-xs font-bold text-red-800 dark:text-red-400 flex items-center gap-1.5">
+                    <AlertTriangle className="h-4 w-4 shrink-0" />
+                    Consistency Warning Detected
+                  </h4>
+                  <ul className="list-disc list-inside text-xs text-red-700 dark:text-red-300 pl-1 space-y-0.5">
+                    {verificationResult.consistencyChecks.map((c: string, idx: number) => <li key={idx}>{c}</li>)}
+                  </ul>
+                </div>
+              )}
+
+              {/* Footer Actions */}
+              <div className="flex gap-4 pt-4 border-t dark:border-slate-850">
+                <Button type="button" variant="outline" className="flex-1 h-12 text-sm font-semibold" onClick={() => setIsModalOpen(false)}>
+                  <Edit2 className="h-4 w-4 mr-2" />
+                  Edit Information
+                </Button>
+                <Button type="button" className="flex-1 h-12 text-sm font-semibold bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg hover:shadow-xl transition-all" onClick={handleConfirmRegistration}>
+                  <CheckCircle className="h-4 w-4 mr-2" />
+                  Confirm & Register
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
       <Footer />
     </div>
   );

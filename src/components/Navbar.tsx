@@ -117,7 +117,7 @@ export default function Navbar() {
           <div className="hidden lg:flex items-center gap-3">
             {/* Wallet indicator (shown when connected via wallet) */}
             {isConnected && accountId && (
-              <div className="flex items-center gap-1.5 bg-blue-50 dark:bg-blue-950/30 px-3 py-1.5 rounded-lg border border-blue-200 dark:border-blue-800">
+              <div className="flex items-center gap-1.5 bg-blue-50 dark:bg-blue-950/30 px-3 py-1.5 rounded-lg border border-blue-200 dark:border-blue-800/50">
                 <Wallet className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" />
                 <span className="text-xs font-mono text-blue-700 dark:text-blue-300">
                   {accountId}
@@ -193,7 +193,7 @@ export default function Navbar() {
 
                   {/* Wallet info (mobile) */}
                   {isConnected && accountId && (
-                    <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-950/30 px-4 py-2 rounded-lg border border-blue-200 dark:border-blue-800">
+                    <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-950/30 px-4 py-2 rounded-lg border border-blue-200 dark:border-blue-800/50">
                       <Wallet className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                       <span className="text-xs font-mono text-blue-700 dark:text-blue-300 truncate">
                         {accountId}
@@ -201,8 +201,8 @@ export default function Navbar() {
                       <span
                         className={`ml-auto px-2 py-0.5 text-xs rounded-full font-semibold ${
                           network === "testnet"
-                            ? "bg-amber-100 text-amber-700"
-                            : "bg-green-100 text-green-700"
+                            ? "bg-amber-100 text-amber-700 dark:bg-amber-950/50 dark:text-amber-300"
+                            : "bg-green-100 text-green-700 dark:bg-green-950/50 dark:text-green-300"
                         }`}
                       >
                         {network}

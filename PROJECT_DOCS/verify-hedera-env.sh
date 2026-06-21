@@ -4,8 +4,8 @@ echo "=== Checking Hedera environment variables ==="
 echo ""
 
 # Function call test-hedera-simple
-SUPABASE_URL="https://mrbfrwtymikayrbrzgmp.supabase.co"
-SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1yYmZyd3R5bWlrYXlyYnJ6Z2 "
+SUPABASE_URL="https://udnpbqtvbnepicwyubnm.supabase.co"
+SUPABASE_ANON_KEY="your_supabase_anon_key"
 
 echo "Testing Hedera credentials via Edge Function..."
 

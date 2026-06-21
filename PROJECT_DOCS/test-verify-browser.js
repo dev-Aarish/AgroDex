@@ -3,24 +3,24 @@
 
 async function testVerifyBatch() {
   const SUPABASE_URL = 'https://udnpbqtvbnepicwyubnm.supabase.co';
-  const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVkbnBicXR2Ym5lcGljd3l1Ym5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIyMjAxMjUsImV4cCI6MjA3Nzc5NjEyNX0.TAA7bxPqhDuO-8O6DHNazHo67n0kh7PmyH6aiyepUmQ';
+  const ANON_KEY = 'your_supabase_anon_key';
 
-  console.log('🧪 Testing verify-batch Edge Function...\n');
+  console.log('ðŸ§ª Testing verify-batch Edge Function...\n');
 
   // Test 1: OPTIONS (CORS preflight)
-  console.log('1️⃣ Testing OPTIONS (CORS)...');
+  console.log('1ï¸âƒ£ Testing OPTIONS (CORS)...');
   try {
     const optionsRes = await fetch(`${SUPABASE_URL}/functions/v1/verify-batch`, {
       method: 'OPTIONS',
       headers: { 'apikey': ANON_KEY }
     });
-    console.log(`✅ OPTIONS: ${optionsRes.status} ${optionsRes.statusText}`);
+    console.log(`âœ… OPTIONS: ${optionsRes.status} ${optionsRes.statusText}`);
   } catch (err) {
-    console.error('❌ OPTIONS failed:', err.message);
+    console.error('âŒ OPTIONS failed:', err.message);
   }
 
   // Test 2: Valid NFT (should exist in DB)
-  console.log('\n2️⃣ Testing POST with valid NFT...');
+  console.log('\n2ï¸âƒ£ Testing POST with valid NFT...');
   try {
     const validRes = await fetch(`${SUPABASE_URL}/functions/v1/verify-batch`, {
       method: 'POST',
@@ -38,18 +38,18 @@ async function testVerifyBatch() {
     console.log('Response:', validData);
     
     if (validRes.ok) {
-      console.log('✅ Valid NFT verified successfully');
+      console.log('âœ… Valid NFT verified successfully');
     } else if (validRes.status === 404 && validData.stage === 'database_query') {
-      console.log('⚠️ NFT not found (404 business logic - expected if not in DB)');
+      console.log('âš ï¸ NFT not found (404 business logic - expected if not in DB)');
     } else {
-      console.error('❌ Unexpected response');
+      console.error('âŒ Unexpected response');
     }
   } catch (err) {
-    console.error('❌ Valid NFT test failed:', err.message);
+    console.error('âŒ Valid NFT test failed:', err.message);
   }
 
   // Test 3: Invalid payload
-  console.log('\n3️⃣ Testing POST with invalid payload...');
+  console.log('\n3ï¸âƒ£ Testing POST with invalid payload...');
   try {
     const invalidRes = await fetch(`${SUPABASE_URL}/functions/v1/verify-batch`, {
       method: 'POST',
@@ -64,16 +64,16 @@ async function testVerifyBatch() {
     console.log('Response:', invalidData);
     
     if (invalidRes.status === 400 && invalidData.stage === 'validation') {
-      console.log('✅ Invalid payload rejected correctly');
+      console.log('âœ… Invalid payload rejected correctly');
     } else {
-      console.error('❌ Expected 400 validation error');
+      console.error('âŒ Expected 400 validation error');
     }
   } catch (err) {
-    console.error('❌ Invalid payload test failed:', err.message);
+    console.error('âŒ Invalid payload test failed:', err.message);
   }
 
   // Test 4: Missing apikey header
-  console.log('\n4️⃣ Testing POST without apikey header...');
+  console.log('\n4ï¸âƒ£ Testing POST without apikey header...');
   try {
     const noKeyRes = await fetch(`${SUPABASE_URL}/functions/v1/verify-batch`, {
       method: 'POST',
@@ -90,15 +90,15 @@ async function testVerifyBatch() {
     console.log('Response:', noKeyData);
     
     if (noKeyRes.status === 401) {
-      console.log('✅ Missing apikey rejected correctly (401)');
+      console.log('âœ… Missing apikey rejected correctly (401)');
     } else {
-      console.error('❌ Expected 401 unauthorized');
+      console.error('âŒ Expected 401 unauthorized');
     }
   } catch (err) {
-    console.error('❌ No apikey test failed:', err.message);
+    console.error('âŒ No apikey test failed:', err.message);
   }
 
-  console.log('\n✅ All tests completed!');
+  console.log('\nâœ… All tests completed!');
 }
 
 // Run tests

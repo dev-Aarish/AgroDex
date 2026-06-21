@@ -1,5 +1,5 @@
 import express from "express";
-import { analyzeImage, summarizeProvenance, buyerQA, translateMarketing, priceSuggestion } from "../ai/gemini.js";
+import { analyzeImage, summarizeProvenance, buyerQA, translateMarketing, priceSuggestion, verifyRegistration } from "../ai/gemini.js";
 import { supabase } from "../db.js";
 import { aiLimiter } from "../middleware/rateLimiter.js";
 import { body, validationResult } from "express-validator";
@@ -95,6 +95,26 @@ router.post("/price-suggestion", aiLimiter, [
     res.json({ ok: true, data: result });
   } catch (error) {
     console.error("AI price-suggestion error:", error);
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
+router.post("/verify-registration", aiLimiter, [
+  body("productName").trim().notEmpty().withMessage("productName is required"),
+  body("quantity").optional().trim(),
+  body("unit").optional().trim(),
+  body("location").trim().notEmpty().withMessage("location is required"),
+  body("harvestDate").trim().notEmpty().withMessage("harvestDate is required"),
+  body("harvestBatch").optional().trim(),
+  body("metadata").optional().trim(),
+  validate,
+], async (req, res) => {
+  try {
+    const { productName, harvestBatch, quantity, unit, location, harvestDate, metadata } = req.body;
+    const result = await verifyRegistration({ productName, harvestBatch, quantity, unit, location, harvestDate, metadata });
+    res.json({ ok: true, data: result });
+  } catch (error) {
+    console.error("AI verify-registration error:", error);
     res.status(500).json({ ok: false, error: error.message });
   }
 });
