@@ -195,7 +195,7 @@ export default function Login() {
                 <Sparkles className="h-7 w-7 text-blue-200" />
               </div>
               <div className="text-sm text-blue-100 font-semibold">
-                Gemini AI 2.5
+                Gemini 3.1 Flash Lite
               </div>
             </motion.div>
 

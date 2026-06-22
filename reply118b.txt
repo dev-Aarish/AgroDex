@@ -1,0 +1,1 @@
+﻿Done! I have deleted the pnpm-lock.yaml file from this branch. The commit has been pushed. Thank you for pointing it out!

@@ -19,7 +19,7 @@ if [ -f .env ]; then
 else
     # Use hardcoded values from .env.example
     export SUPABASE_URL="https://udnpbqtvbnepicwyubnm.supabase.co"
-    export SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVkbnBicXR2Ym5lcGljd3l1Ym5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIyMjAxMjUsImV4cCI6MjA3Nzc5NjEyNX0.TAA7bxPqhDuO-8O6DHNazHo67n0kh7PmyH6aiyepUmQ"
+    export SUPABASE_ANON_KEY="your_supabase_anon_key"
 fi
 
 # Check required environment variables
@@ -39,9 +39,9 @@ echo ""
 
 # Test payload matching frontend format
 PAYLOAD='{
-  "productType": "Café Arabica",
+  "productType": "CafÃ© Arabica",
   "quantity": "500",
-  "location": "Région de Dschang, Cameroun",
+  "location": "RÃ©gion de Dschang, Cameroun",
   "imageData": "https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=800",
   "harvestDate": "15-01-2025"
 }'
@@ -55,9 +55,9 @@ test_request() {
   local test_name="$1"
   local auth_header="$2"
   
-  echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+  echo -e "${BLUE}â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”${NC}"
   echo -e "${YELLOW}Test: $test_name${NC}"
-  echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+  echo -e "${BLUE}â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”${NC}"
   
   if [ -n "$auth_header" ]; then
     echo -e "${BLUE}Headers: apikey + Authorization${NC}"
@@ -90,22 +90,22 @@ test_request() {
   echo ""
   
   if [ "$HTTP_CODE" -ge 200 ] && [ "$HTTP_CODE" -lt 300 ]; then
-    echo -e "${GREEN}✓ Success!${NC}"
+    echo -e "${GREEN}âœ“ Success!${NC}"
     echo ""
     echo -e "${YELLOW}Response:${NC}"
     echo "$BODY" | jq '.'
     return 0
   else
-    echo -e "${RED}✗ Error (HTTP $HTTP_CODE)${NC}"
+    echo -e "${RED}âœ— Error (HTTP $HTTP_CODE)${NC}"
     echo ""
     echo -e "${YELLOW}Error Response:${NC}"
     echo "$BODY" | jq '.' 2>/dev/null || echo "$BODY"
     
     if [ "$HTTP_CODE" = "401" ]; then
       echo ""
-      echo -e "${YELLOW}💡 Solution:${NC}"
-      echo "1. Désactiver JWT: Supabase Dashboard → Edge Functions → register-batch → Désactiver 'Verify JWT'"
-      echo "2. OU redéployer: supabase functions deploy register-batch --no-verify-jwt"
+      echo -e "${YELLOW}ðŸ’¡ Solution:${NC}"
+      echo "1. DÃ©sactiver JWT: Supabase Dashboard â†’ Edge Functions â†’ register-batch â†’ DÃ©sactiver 'Verify JWT'"
+      echo "2. OU redÃ©ployer: supabase functions deploy register-batch --no-verify-jwt"
       echo "3. OU tester avec Authorization header (voir mode 'jwt')"
     fi
     return 1
@@ -128,21 +128,21 @@ if [ "$MODE" = "no-jwt" ] || [ "$MODE" = "both" ]; then
 fi
 
 echo ""
-echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo -e "${BLUE}â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”${NC}"
 echo -e "${YELLOW}Summary${NC}"
-echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo -e "${BLUE}â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”${NC}"
 
 if [ "$MODE" = "both" ]; then
   if [ $JWT_RESULT -eq 0 ]; then
-    echo -e "${GREEN}✓ JWT mode: Working${NC}"
+    echo -e "${GREEN}âœ“ JWT mode: Working${NC}"
   else
-    echo -e "${RED}✗ JWT mode: Failed${NC}"
+    echo -e "${RED}âœ— JWT mode: Failed${NC}"
   fi
   
   if [ $NO_JWT_RESULT -eq 0 ]; then
-    echo -e "${GREEN}✓ No-JWT mode: Working (verify_jwt = false is active)${NC}"
+    echo -e "${GREEN}âœ“ No-JWT mode: Working (verify_jwt = false is active)${NC}"
   else
-    echo -e "${RED}✗ No-JWT mode: Failed (verify_jwt may still be true)${NC}"
+    echo -e "${RED}âœ— No-JWT mode: Failed (verify_jwt may still be true)${NC}"
   fi
 fi
 

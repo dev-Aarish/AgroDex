@@ -1,0 +1,16 @@
+﻿### Feature Description
+Currently, agricultural batches are displayed in table formats, which makes it difficult to visually track the provenance and distribution of crops. To enhance the transparency of the supply chain, we should add an interactive, geo-spatial map using eact-leaflet.
+
+This map will visually plot all registered agricultural batches across Indonesia. Buyers and administrators will be able to explore the map, click on location pins, and instantly view the batch details, farmer ID, and a direct link to the Hedera verification transaction.
+
+### Proposed Solution
+1. Install eact-leaflet and its dependencies.
+2. Build a new <SupplyChainMap> component that accepts real-time batch data from Supabase.
+3. Implement a lightweight frontend mapping utility to plot the existing string-based locations (e.g., "Lampung, Indonesia") to approximate geographical coordinates with randomized jitter to prevent marker overlap.
+4. Create a new /map route with a full-screen interactive view.
+5. Add navigation links to the main Navbar.
+
+### Impact
+This will provide a massive improvement to the User Experience by allowing buyers to visually trace the origin of their crops.
+
+Can you please assign this to me for SSoC'26?

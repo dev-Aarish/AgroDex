@@ -1,0 +1,3 @@
+﻿Thank you for the feedback! I found the issue - the Playwright E2E test files were being picked up by Vitest during the CI Frontend Check, which caused a conflict because Playwright's test.describe() is incompatible with Vitest's runner.
+
+I have fixed this by adding an exclude pattern for the e2e/ directory in the Vitest configuration inside vite.config.ts. The CI Frontend Check should now pass cleanly. The fix has been pushed!

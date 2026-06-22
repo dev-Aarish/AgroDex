@@ -4,6 +4,7 @@ const zh = {
     register: "注册",
     tokenize: "代币化",
     verify: "验证",
+    about: "关于",
     profile: "个人资料",
     settings: "设置",
     logout: "登出",
@@ -77,6 +78,17 @@ const zh = {
   footer: {
     rights: "版权所有。",
     tagline: "印度尼西亚基于区块链的食品可追溯性。",
+  },
+  about: {
+    meta: { title: "关于 AgroDex | 区块链食品追溯", description: "了解 AgroDex 如何结合 Hedera 区块链和 AI，让食品供应链更加透明、可信且可验证。" },
+    hero: { badge: "可信食品追溯", title: "用区块链和 AI 构建<highlight>透明的食品供应链</highlight>", description: "AgroDex 通过锚定在 Hedera 上的共享数字记录，帮助生产者、分销商和消费者验证作物来源、认证和流转。", primaryCta: "注册批次", secondaryCta: "验证产品" },
+    heroCard: { logoAlt: "AgroDex 标志", kicker: "AgroDex 平台", title: "从农场记录到消费者信任", signals: { originRecords: "来源记录", fraudSignals: "欺诈信号", aiSummaries: "AI 摘要", stakeholderTrust: "相关方信任" } },
+    overview: { eyebrow: "平台概览", title: "农业产品的数字信任层", description: "AgroDex 为每个批次提供可验证时间线，结合生产者提交的数据、AI 分析和 Hedera 支持的证明，让供应链伙伴更有信心地行动。", cards: { mission: { title: "我们的使命", text: "为农民和买家提供实用工具来记录、验证和共享可信产品数据，使农业贸易更加透明。" }, goals: { title: "我们的愿景", text: "打造一个食品生态，让每个产品都能从农场到餐桌携带可信的来源、质量和处理证明。" } } },
+    problem: { badge: "为何重要", title: "食品欺诈和不透明记录削弱信任", description: "纸质证书、分散数据库和无法验证的声明，使确认产品来源及其是否符合质量预期变得困难。" },
+    howItWorks: { title: "AgroDex 如何运作", description: "平台将批次活动转化为透明流程，供生产者、分销商和消费者查看。", steps: { register: { title: "注册作物批次", description: "生产者在结构化产品记录中录入来源、收获信息、认证和支持文件。" }, anchor: { title: "在 Hedera 上锚定证明", description: "重要批次事件和验证信号以区块链支持的完整性记录，增强问责。" }, verify: { title: "放心验证", description: "相关方可扫描或搜索批次，查看其来源、AI 评估和可信供应链历史。" } } },
+    technology: { title: "平台背后的技术", description: "AgroDex 将去中心化基础设施与智能分析结合，使真实供应链中的验证更实用。", cards: { hcs: { title: "Hedera Consensus Service", description: "批次事件可打上时间戳并锚定到 Hedera，实现透明且防篡改的追溯。" }, hts: { title: "代币化证书", description: "数字证书和批次凭证可表示为与产品记录绑定的可信资产。" }, ai: { title: "AI 辅助审计", description: "Gemini 驱动的分析帮助总结批次数据、标记不一致并支持更快的验证决策。" } } },
+    benefits: { title: "食品供应链收益", description: "AgroDex 以更清晰的记录和更快的验证支持种植、运输、销售和购买农业产品的人。", cards: { producers: { title: "面向生产者", description: "用随每个批次流转的可验证记录展示产品质量。", items: ["记录来源和收获详情", "数字化共享认证", "与买家建立信任"] }, consumers: { title: "面向消费者", description: "了解食品来自哪里，以及其声明是否可核验。", items: ["快速验证来源", "查看透明产品历史", "选择可信产品"] }, distributors: { title: "面向分销商", description: "用减少争议和人工检查的记录协调产品流转。", items: ["跟踪批次状态", "减少文书工作", "提升供应链问责"] } } },
+    missionVision: { title: "准备让食品追溯可验证了吗？", description: "加入 AgroDex，创建可信产品记录，加强供应链透明度，并帮助买家验证他们购买的内容。", primaryCta: "开始注册", secondaryCta: "打开仪表盘" },
   },
 };
 

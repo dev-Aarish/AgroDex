@@ -1,0 +1,27 @@
+name: Verify PR Assignee
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, assigned, unassigned]
+
+jobs:
+  check-assignee:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if PR creator is assigned
+        env:
+          PR_CREATOR: ${{ github.event.pull_request.user.login }}
+          ASSIGNEES: ${{ toJson(github.event.pull_request.assignees) }}
+        run: |
+          echo "PR Creator: $PR_CREATOR"
+          
+          # Check if the creator's username exists in the assignees array
+          IS_ASSIGNED=$(echo "$ASSIGNEES" | jq --arg user "$PR_CREATOR" '.[] | select(.login == $user)')
+          
+          if [ -z "$IS_ASSIGNED" ]; then
+            echo "❌ Error: You cannot merge this pull request because you are not assigned to it."
+            echo "Please ask a maintainer to assign this PR to you before continuing."
+            exit 1
+          else
+            echo "✅ Success: PR creator is an authorized assignee."
+          fi

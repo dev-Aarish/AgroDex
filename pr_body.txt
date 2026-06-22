@@ -1,0 +1,19 @@
+﻿Fixes #130
+
+Hi @daviddprtma! Here is the complete implementation for the Interactive Supply Chain Map feature.
+
+### Changes Made
+- **New Component: SupplyChainMap.tsx** - A fully interactive map built with eact-leaflet and OpenStreetMap tiles, centered on Indonesia. Each registered batch is plotted as a pin on the map. Clicking a pin shows a popup with batch name, location, quantity, harvest date, risk level, and a direct link to view the Hedera transaction on HashScan.
+- **New Page: MapExplore.tsx** - A dedicated /map route that fetches all batch data from Supabase and renders them on the interactive map.
+- **Geocoding Utility** - A lightweight frontend geocoder that maps common Indonesian agricultural region strings (e.g., Lampung, Sulawesi, Java) to approximate lat/lng coordinates with randomized jitter to prevent marker overlap.
+- **Updated Navbar.tsx** - Added an "Explore Map" navigation link with a MapPin icon.
+- **Updated App.tsx** - Added the /map route with lazy loading and authentication protection.
+- **Updated pi.ts** - Added getBatches() function to fetch batch records from Supabase.
+
+### Testing
+- TypeScript compiles with zero errors.
+- All existing routes and components remain unaffected.
+
+This feature significantly improves supply chain transparency by giving buyers a visual, geo-spatial view of crop origins across Indonesia.
+
+I would really appreciate it if you could review this and add the SSoC'26 labels. Thank you!

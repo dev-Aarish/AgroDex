@@ -5,7 +5,7 @@ echo ""
 
 # Get Supabase URL from .env or use default
 SUPABASE_URL="https://udnpbqtvbnepicwyubnm.supabase.co"
-SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVkbnBicXR2Ym5lcGljd3l1Ym5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIyMjAxMjUsImV4cCI6MjA3Nzc5NjEyNX0.TAA7bxPqhDuO-8O6DHNazHo67n0kh7PmyH6aiyepUmQ"
+SUPABASE_ANON_KEY="your_supabase_anon_key"
 
 echo "Calling test-hedera-simple Edge Function..."
 echo ""

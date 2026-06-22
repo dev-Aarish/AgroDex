@@ -19,7 +19,7 @@ SUPABASE_ANON_KEY=YOUR_ANON_KEY
 
 # Gemini AI Configuration
 GEMINI_API_KEY=YOUR_GEMINI_API_KEY
-GEMINI_MODEL=gemini-2.0-flash-exp
+GEMINI_MODEL=gemini-3.1-flash-lite
 GEMINI_TIMEOUT_MS=6000
 
 # Server Configuration
@@ -93,7 +93,7 @@ pnpm run dev
 ### 6. Test the Application
 
 1. **Health Check**: Visit http://localhost:4000/api/health/full
-   - Should show `gemini: { ok: true, model: "gemini-2.0-flash-exp", ms: <number> }`
+   - Should show `gemini: { ok: true, model: "gemini-3.1-flash-lite", ms: <number> }`
 
 2. **Register Batch**: 
    - Go to http://localhost:5173/register

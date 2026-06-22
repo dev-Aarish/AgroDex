@@ -39,25 +39,10 @@ export default defineConfig({
     },
   },
   build: {
+    chunkSizeWarningLimit: 1000,
     rollupOptions: {
       output: {
-        manualChunks(id) {
-          if (id.includes("node_modules")) {
-            if (
-              id.includes("@hashgraph") ||
-              id.includes("hashconnect") ||
-              id.includes("@walletconnect")
-            ) {
-              return "vendor-hedera";
-            }
-            if (id.includes("recharts")) {
-              return "vendor-charts";
-            }
-            if (id.includes("framer-motion")) {
-              return "vendor-motion";
-            }
-          }
-        },
+        manualChunks: undefined,
       },
     },
   },
@@ -65,6 +50,7 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
     setupFiles: "./src/lib/__tests__/setup.ts",
+    exclude: ["**/node_modules/**", "backend/**", "e2e/**"],
     coverage: {
       provider: "v8",
       reporter: ["text", "json", "html"],

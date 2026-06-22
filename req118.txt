@@ -1,0 +1,1 @@
+﻿Hi @daviddprtma! I have deleted the pnpm-lock.yaml file as you requested in your last comment. The PR should be clean and ready for review now. Could you please take a look when you have some free time? Thank you so much!

@@ -22,7 +22,6 @@ import {
   AlertCircle,
   Sparkles,
   Award,
-  Copy,
   ExternalLink,
   FileText,
   Link2,
@@ -33,6 +32,7 @@ import { useToast } from "@/hooks/use-toast";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Helmet } from "react-helmet-async";
+import { CopyButton } from "@/components/CopyButton";
 
 export default function BatchTokenize() {
   const navigate = useNavigate();
@@ -160,9 +160,12 @@ export default function BatchTokenize() {
             <div className="my-6 space-y-3 p-4 bg-gray-50 dark:bg-slate-900 rounded-lg border border-gray-100 dark:border-slate-800">
               <div className="flex items-center justify-between">
                 <span className="font-semibold text-gray-700 dark:text-slate-400">Token ID:</span>
-                <span className="font-mono text-sm text-gray-900 dark:text-slate-200">
-                  {tokenId}
-                </span>
+                <div className="flex items-center space-x-2">
+                  <span className="font-mono text-sm text-gray-900 dark:text-slate-200">
+                    {tokenId}
+                  </span>
+                  <CopyButton value={tokenId} successMessage="Token ID copied!" />
+                </div>
               </div>
               <div className="flex items-center justify-between">
                 <span className="font-semibold text-gray-700 dark:text-slate-400">
@@ -177,9 +180,12 @@ export default function BatchTokenize() {
                   <span className="font-semibold text-gray-700 dark:text-slate-400">
                     Batch ID:
                   </span>
-                  <span className="font-mono text-sm text-gray-900 dark:text-slate-200 text-right max-w-[180px] truncate" title={batchId}>
-                    {batchId}
-                  </span>
+                  <div className="flex items-center space-x-2">
+                    <span className="font-mono text-sm text-gray-900 dark:text-slate-200 text-right max-w-[180px] truncate" title={batchId}>
+                      {batchId}
+                    </span>
+                    <CopyButton value={batchId} successMessage="Batch ID copied!" />
+                  </div>
                 </div>
               )}
               <a
@@ -228,19 +234,17 @@ export default function BatchTokenize() {
                   <Download className="h-4 w-4 mr-2" />
                   Download
                 </Button>
-                <Button
-                  size="sm"
+                <CopyButton
+                  value={verifyUrl}
+                  successMessage="Verification URL copied!"
                   variant="outline"
+                  size="sm"
                   className="flex-1 border-gray-300 dark:border-slate-800 text-gray-700 dark:text-slate-355 hover:bg-gray-100 dark:hover:bg-slate-800 font-semibold"
-                  onClick={() => {
-                    navigator.clipboard.writeText(verifyUrl);
-                    toast({ title: "Verification URL copied!" });
-                  }}
                 >
-                  <Copy className="h-4 w-4 mr-2" />
                   Copy Link
-                </Button>
+                </CopyButton>
               </div>
+
             </div>
 
             <Button

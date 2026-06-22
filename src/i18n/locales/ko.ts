@@ -4,6 +4,7 @@ const ko = {
     register: "등록",
     tokenize: "토큰화",
     verify: "검증",
+    about: "소개",
     profile: "프로필",
     settings: "설정",
     logout: "로그아웃",
@@ -77,6 +78,17 @@ const ko = {
   footer: {
     rights: "All rights reserved.",
     tagline: "인도네시아를 위한 블록체인 기반 식품 추적성.",
+  },
+  about: {
+    meta: { title: "AgroDex 소개 | 블록체인 식품 추적성", description: "AgroDex가 Hedera 블록체인과 AI를 결합해 식품 공급망을 더 투명하고 신뢰할 수 있으며 검증 가능하게 만드는 방법을 알아보세요." },
+    hero: { badge: "신뢰할 수 있는 식품 추적성", title: "블록체인과 AI로 <highlight>투명한 식품 공급망</highlight> 구축", description: "AgroDex는 Hedera에 고정된 공유 디지털 기록을 통해 생산자, 유통업자, 소비자가 작물 원산지, 인증, 이동을 검증하도록 돕습니다.", primaryCta: "배치 등록", secondaryCta: "제품 검증" },
+    heroCard: { logoAlt: "AgroDex 로고", kicker: "AgroDex 플랫폼", title: "농장 기록에서 소비자 신뢰까지", signals: { originRecords: "원산지 기록", fraudSignals: "사기 신호", aiSummaries: "AI 요약", stakeholderTrust: "이해관계자 신뢰" } },
+    overview: { eyebrow: "플랫폼 개요", title: "농산물을 위한 디지털 신뢰 계층", description: "AgroDex는 생산자 제출 데이터, AI 분석, Hedera 기반 증명을 결합해 각 배치에 검증 가능한 타임라인을 제공하고 공급망 파트너가 확신 있게 행동하도록 돕습니다.", cards: { mission: { title: "우리의 미션", text: "농부와 구매자가 신뢰할 수 있는 제품 데이터를 기록, 검증, 공유할 실용적 도구를 제공해 농산물 거래를 더 투명하게 만듭니다." }, goals: { title: "우리의 비전", text: "모든 제품이 농장에서 식탁까지 원산지, 품질, 취급에 대한 신뢰할 수 있는 증명을 지닐 수 있는 식품 생태계를 만듭니다." } } },
+    problem: { badge: "중요한 이유", title: "식품 사기와 불투명한 기록은 신뢰를 약화합니다", description: "종이 인증서, 분산된 데이터베이스, 검증할 수 없는 주장은 제품 출처와 품질 기대 충족 여부를 확인하기 어렵게 만듭니다." },
+    howItWorks: { title: "AgroDex 작동 방식", description: "플랫폼은 배치 활동을 생산자, 유통업자, 소비자가 확인할 수 있는 투명한 워크플로로 바꿉니다.", steps: { register: { title: "작물 배치 등록", description: "생산자는 원산지, 수확 정보, 인증, 지원 문서를 구조화된 제품 기록에 입력합니다." }, anchor: { title: "Hedera에 증명 고정", description: "중요한 배치 이벤트와 검증 신호는 더 강한 책임성을 위해 블록체인 기반 무결성으로 기록됩니다." }, verify: { title: "확신 있게 검증", description: "이해관계자는 배치를 스캔하거나 검색해 출처, AI 평가, 신뢰할 수 있는 공급망 이력을 검토할 수 있습니다." } } },
+    technology: { title: "플랫폼 기반 기술", description: "AgroDex는 탈중앙 인프라와 지능형 분석을 결합해 실제 공급망에서 검증을 실용적으로 만듭니다.", cards: { hcs: { title: "Hedera Consensus Service", description: "배치 이벤트는 투명하고 변조에 강한 추적성을 위해 타임스탬프 처리되어 Hedera에 고정될 수 있습니다." }, hts: { title: "토큰화된 인증서", description: "디지털 인증서와 배치 자격 증명은 제품 기록에 연결된 신뢰 자산으로 표현될 수 있습니다." }, ai: { title: "AI 지원 감사", description: "Gemini 기반 분석은 배치 데이터를 요약하고 불일치를 표시하며 더 빠른 검증 결정을 지원합니다." } } },
+    benefits: { title: "식품 공급망을 위한 이점", description: "AgroDex는 농산물을 재배, 이동, 판매, 구매하는 사람들에게 더 명확한 기록과 빠른 검증을 제공합니다.", cards: { producers: { title: "생산자용", description: "각 배치와 함께 이동하는 검증 가능한 기록으로 제품 품질을 보여주세요.", items: ["원산지와 수확 세부 정보 문서화", "인증서를 디지털로 공유", "구매자와 신뢰 구축"] }, consumers: { title: "소비자용", description: "식품이 어디서 왔고 그 주장을 확인할 수 있는지 이해하세요.", items: ["출처를 빠르게 검증", "투명한 제품 이력 검토", "신뢰할 수 있는 제품 선택"] }, distributors: { title: "유통업자용", description: "분쟁과 수동 확인을 줄이는 기록으로 제품 이동을 조정하세요.", items: ["배치 상태 추적", "서류 작업 감소", "공급망 책임성 향상"] } } },
+    missionVision: { title: "식품 추적성을 검증 가능하게 만들 준비가 되셨나요?", description: "AgroDex에 참여해 신뢰할 수 있는 제품 기록을 만들고 공급망 투명성을 강화하며 구매자가 구매한 것을 검증하도록 도우세요.", primaryCta: "등록 시작", secondaryCta: "대시보드 열기" },
   },
 };
 

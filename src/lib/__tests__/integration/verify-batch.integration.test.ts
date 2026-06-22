@@ -1,15 +1,23 @@
 import { describe, it, expect, beforeAll } from "vitest";
 import { createClient } from "@supabase/supabase-js";
 
-const supabaseUrl = "https://udnpbqtvbnepicwyubnm.supabase.co";
-const supabaseAnonKey =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVkbnBicXR2Ym5lcGljd3l1Ym5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIyMjAxMjUsImV4cCI6MjA3Nzc5NjEyNX0.TAA7bxPqhDuO-8O6DHNazHo67n0kh7PmyH6aiyepUmQ";
+const supabaseUrl = process.env.VITE_SUPABASE_URL || "https://udnpbqtvbnepicwyubnm.supabase.co";
+const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY;
 
-describe("verify-batch Edge Function Integration Tests", () => {
+const hasSupabaseConfig =
+  !!supabaseUrl &&
+  !!supabaseAnonKey &&
+  supabaseAnonKey !== "your_supabase_anon_key";
+
+const describeIf = hasSupabaseConfig ? describe : describe.skip;
+
+describeIf("verify-batch Edge Function Integration Tests", () => {
   let supabase: ReturnType<typeof createClient>;
 
   beforeAll(() => {
-    supabase = createClient(supabaseUrl, supabaseAnonKey);
+    if (supabaseUrl && supabaseAnonKey) {
+      supabase = createClient(supabaseUrl, supabaseAnonKey);
+    }
   });
 
   it("should return 401 when Authorization header is missing", async () => {

@@ -1,0 +1,8 @@
+﻿Thank you for catching that! I found the root cause - the useChat hook from @ai-sdk/react was trying to establish a connection immediately when the chat widget opened, which caused the error before the user even typed anything.
+
+I have completely rewritten the ChatbotWidget to use a manual etch approach instead. Now:
+- No error appears when you click the chat icon
+- The API is only called when the user actually submits a message
+- All error states are handled gracefully
+
+The fix has been pushed!

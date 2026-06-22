@@ -4,6 +4,7 @@ const id = {
     register: "Daftar",
     tokenize: "Tokenisasi",
     verify: "Verifikasi",
+    about: "Tentang",
     profile: "Profil",
     settings: "Pengaturan",
     logout: "Keluar",
@@ -77,6 +78,17 @@ const id = {
   footer: {
     rights: "Hak cipta dilindungi undang-undang.",
     tagline: "Ketertelusuran pangan berbasis blockchain untuk Indonesia.",
+  },
+  about: {
+    meta: { title: "Tentang AgroDex | Ketertelusuran Pangan Blockchain", description: "Pelajari bagaimana AgroDex menggabungkan blockchain Hedera dan AI untuk membuat rantai pasok pangan lebih transparan, tepercaya, dan dapat diverifikasi." },
+    hero: { badge: "Ketertelusuran pangan tepercaya", title: "Membangun <highlight>rantai pasok pangan transparan</highlight> dengan blockchain dan AI", description: "AgroDex membantu produsen, distributor, dan konsumen memverifikasi asal tanaman, sertifikasi, dan pergerakan melalui catatan digital bersama yang ditambatkan di Hedera.", primaryCta: "Daftarkan Batch", secondaryCta: "Verifikasi Produk" },
+    heroCard: { logoAlt: "Logo AgroDex", kicker: "Platform AgroDex", title: "Dari catatan kebun ke kepercayaan konsumen", signals: { originRecords: "Catatan asal", fraudSignals: "Sinyal penipuan", aiSummaries: "Ringkasan AI", stakeholderTrust: "Kepercayaan pemangku kepentingan" } },
+    overview: { eyebrow: "Ikhtisar platform", title: "Lapisan kepercayaan digital untuk produk pertanian", description: "AgroDex memberi setiap batch linimasa yang dapat diverifikasi, menggabungkan data produsen, analisis AI, dan bukti berbasis Hedera agar mitra rantai pasok dapat bertindak percaya diri.", cards: { mission: { title: "Misi Kami", text: "Membuat perdagangan pertanian lebih transparan dengan memberi petani dan pembeli alat praktis untuk mencatat, memverifikasi, dan membagikan data produk tepercaya." }, goals: { title: "Visi Kami", text: "Menciptakan ekosistem pangan di mana setiap produk membawa bukti asal, kualitas, dan penanganan yang tepercaya dari kebun ke meja." } } },
+    problem: { badge: "Mengapa penting", title: "Penipuan pangan dan catatan buram melemahkan kepercayaan", description: "Sertifikat kertas, basis data terpisah, dan klaim yang sulit diverifikasi membuat asal produk dan kualitasnya susah dipastikan." },
+    howItWorks: { title: "Cara Kerja AgroDex", description: "Platform mengubah aktivitas batch menjadi alur transparan yang dapat diperiksa produsen, distributor, dan konsumen.", steps: { register: { title: "Daftarkan batch tanaman", description: "Produsen mencatat detail asal, informasi panen, sertifikasi, dan dokumen pendukung dalam catatan produk terstruktur." }, anchor: { title: "Tambatkan bukti di Hedera", description: "Peristiwa penting batch dan sinyal verifikasi dicatat dengan integritas berbasis blockchain untuk akuntabilitas lebih kuat." }, verify: { title: "Verifikasi dengan yakin", description: "Pemangku kepentingan dapat memindai atau mencari batch untuk meninjau asal-usul, penilaian AI, dan riwayat rantai pasok tepercaya." } } },
+    technology: { title: "Teknologi di Balik Platform", description: "AgroDex menggabungkan infrastruktur terdesentralisasi dengan analisis cerdas agar verifikasi praktis untuk rantai pasok nyata.", cards: { hcs: { title: "Hedera Consensus Service", description: "Peristiwa batch dapat diberi stempel waktu dan ditambatkan ke Hedera untuk ketertelusuran yang transparan dan tahan manipulasi." }, hts: { title: "Sertifikat tertokenisasi", description: "Sertifikat digital dan kredensial batch dapat direpresentasikan sebagai aset tepercaya yang terhubung ke catatan produk." }, ai: { title: "Audit berbantuan AI", description: "Analisis berbasis Gemini membantu merangkum data batch, menandai inkonsistensi, dan mendukung keputusan verifikasi lebih cepat." } } },
+    benefits: { title: "Manfaat untuk Rantai Pasok Pangan", description: "AgroDex mendukung pihak yang menanam, memindahkan, menjual, dan membeli produk pertanian dengan catatan lebih jelas dan verifikasi lebih cepat.", cards: { producers: { title: "Untuk Produsen", description: "Tampilkan kualitas produk dengan catatan terverifikasi yang mengikuti setiap batch.", items: ["Dokumentasikan asal dan detail panen", "Bagikan sertifikasi secara digital", "Bangun kepercayaan dengan pembeli"] }, consumers: { title: "Untuk Konsumen", description: "Pahami asal makanan dan apakah klaimnya dapat diperiksa.", items: ["Verifikasi asal dengan cepat", "Tinjau riwayat produk transparan", "Pilih produk tepercaya"] }, distributors: { title: "Untuk Distributor", description: "Koordinasikan pergerakan produk dengan catatan yang mengurangi sengketa dan pemeriksaan manual.", items: ["Lacak status batch", "Kurangi dokumen kertas", "Tingkatkan akuntabilitas rantai pasok"] } } },
+    missionVision: { title: "Siap membuat ketertelusuran pangan dapat diverifikasi?", description: "Bergabunglah dengan AgroDex untuk membuat catatan produk tepercaya, memperkuat transparansi rantai pasok, dan membantu pembeli memverifikasi pembelian mereka.", primaryCta: "Mulai Mendaftarkan", secondaryCta: "Buka Dasbor" },
   },
 };
 

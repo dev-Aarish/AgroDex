@@ -1,0 +1,7 @@
+﻿I'm so sorry about the confusion! I accidentally pushed those fixes to a different branch earlier and got my wires crossed. I have just pushed the correct commit to this branch!
+
+Here is exactly what was fixed:
+- **pnpm-lock.yaml** has been completely deleted from this branch
+- **ai/react import error** has been resolved by installing the correct @ai-sdk/react package and updating the import in ChatbotWidget.tsx
+
+Everything should be perfectly clean now. Thank you for your patience!

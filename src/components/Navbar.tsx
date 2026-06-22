@@ -9,7 +9,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
   FileText,
@@ -23,6 +22,7 @@ import {
   Menu,
   BarChart3,
   Wallet,
+  Info,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWallet } from "@/hooks/useWallet";
@@ -37,7 +37,8 @@ export default function Navbar() {
   const { accountId, isConnected, network, disconnect } = useWallet();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { isSuccess, isError } = useServiceStatus();
+  const isPublicJourney = location.pathname.startsWith("/journey");
+  const { isSuccess, isError } = useServiceStatus(!isPublicJourney);
 
   // Déterminer la couleur et le texte du tooltip
   let statusColor = "bg-gray-400";
@@ -57,9 +58,12 @@ export default function Navbar() {
     { to: "/verify", label: t('nav.verify'), icon: ShieldCheck },
     { to: "/risk-intelligence", label: "Risk Intelligence", icon: ShieldAlert },
     { to: "/map", label: "Explore Map", icon: MapPin },
+    { to: "/about", label: t('nav.about'), icon: Info },
   ];
 
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (path: string) =>
+    location.pathname === path ||
+    (path.startsWith("/journey") && location.pathname.startsWith("/journey"));
 
   const accountLabel = user ? "Account" : isConnected ? "Wallet" : "User";
 
@@ -92,7 +96,7 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-1">
+          <nav className="hidden lg:flex items-center gap-1">
             {navLinks.map(({ to, label, icon: Icon }) => (
               <Link key={to} to={to}>
                 <Button
@@ -111,10 +115,10 @@ export default function Navbar() {
           </nav>
 
           {/* Desktop User Menu */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden lg:flex items-center gap-3">
             {/* Wallet indicator (shown when connected via wallet) */}
             {isConnected && accountId && (
-              <div className="flex items-center gap-1.5 bg-blue-50 dark:bg-blue-950/30 px-3 py-1.5 rounded-lg border border-blue-200 dark:border-blue-800">
+              <div className="flex items-center gap-1.5 bg-blue-50 dark:bg-blue-950/30 px-3 py-1.5 rounded-lg border border-blue-200 dark:border-blue-800/50">
                 <Wallet className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" />
                 <span className="text-xs font-mono text-blue-700 dark:text-blue-300">
                   {accountId}
@@ -131,17 +135,8 @@ export default function Navbar() {
             <ThemeToggle />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="rounded-full"
-                  aria-label="Open account menu"
-                >
-                  <Avatar className="h-9 w-9 border border-gray-100 dark:border-slate-800">
-                    <AvatarFallback className="bg-gray-50 text-gray-700 dark:bg-slate-900 dark:text-slate-300">
-                      <User className="h-4 w-4" />
-                    </AvatarFallback>
-                  </Avatar>
+                <Button variant="ghost" size="icon" aria-label="Open settings menu">
+                  <Settings className="h-5 w-5 text-gray-600 dark:text-slate-400" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
@@ -170,11 +165,11 @@ export default function Navbar() {
           </div>
 
           {/* Mobile Menu */}
-          <div className="flex items-center gap-2 md:hidden">
+          <div className="flex items-center gap-2 lg:hidden">
             <ThemeToggle />
             <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon">
+                <Button variant="ghost" size="icon" aria-label="Open navigation menu">
                   <Menu className="h-6 w-6 text-gray-700 dark:text-slate-300" />
                 </Button>
               </SheetTrigger>
@@ -190,7 +185,7 @@ export default function Navbar() {
 
                   {/* Wallet info (mobile) */}
                   {isConnected && accountId && (
-                    <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-950/30 px-4 py-2 rounded-lg border border-blue-200 dark:border-blue-800">
+                    <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-950/30 px-4 py-2 rounded-lg border border-blue-200 dark:border-blue-800/50">
                       <Wallet className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                       <span className="text-xs font-mono text-blue-700 dark:text-blue-300 truncate">
                         {accountId}
@@ -198,8 +193,8 @@ export default function Navbar() {
                       <span
                         className={`ml-auto px-2 py-0.5 text-xs rounded-full font-semibold ${
                           network === "testnet"
-                            ? "bg-amber-100 text-amber-700"
-                            : "bg-green-100 text-green-700"
+                            ? "bg-amber-100 text-amber-700 dark:bg-amber-950/50 dark:text-amber-300"
+                            : "bg-green-100 text-green-700 dark:bg-green-950/50 dark:text-green-300"
                         }`}
                       >
                         {network}
