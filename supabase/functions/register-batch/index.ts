@@ -97,7 +97,8 @@ const RegisterBatchSchema = z.object({
   quantity: z.union([z.string(), z.number()]).transform(val => String(val)),
   location: z.string().min(1, 'Location is required'),
   imageData: z.string().optional().default(''),
-  harvestDate: z.string().min(1, 'Harvest date is required')
+  harvestDate: z.string().min(1, 'Harvest date is required'),
+  aiVerification: z.any().optional()
 })
 
 /**
@@ -273,12 +274,16 @@ async function submitToHCS(batchData: any, signal?: AbortSignal) {
   }
 }
 
-// Gemini AI image analysis with timeout
-async function analyzeImage(photoUrl: string, signal?: AbortSignal) {
+// Gemini Flash Lite batch metadata analysis
+// Analyses structured text fields instead of an image URL (imageData is not captured in the registration form).
+async function analyzeBatch(
+  batchData: { productType: string; quantity: string; location: string; harvestDate: string },
+  signal?: AbortSignal
+) {
   const apiKey = Deno.env.get('GEMINI_API_KEY')
-  
+
   if (!apiKey) {
-    console.warn('⚠️  GEMINI_API_KEY not set - skipping AI analysis')
+    console.warn('⚠️  GEMINI_API_KEY not set - skipping AI batch analysis')
     return {
       caption: 'AI analysis unavailable',
       anomalies: [],
@@ -290,36 +295,61 @@ async function analyzeImage(photoUrl: string, signal?: AbortSignal) {
 
   const startTime = Date.now()
   const genAI = new GoogleGenerativeAI(apiKey)
-  const model = genAI.getGenerativeModel({ 
-    model: Deno.env.get('GEMINI_MODEL') || 'gemini-2.0-flash-exp',
+  const model = genAI.getGenerativeModel({
+    model: 'gemini-3.1-flash-lite',
     generationConfig: {
-      temperature: 0.3,
+      temperature: 0.2,
       topP: 0.8,
       topK: 40,
-      maxOutputTokens: 2048,
+      maxOutputTokens: 512,
     }
   })
 
-  const prompt = `Analyze this agricultural product image and return JSON with:
+  // Today's date for harvest date validation
+  const today = new Date().toISOString().split('T')[0]
+
+  const prompt = `You are an agricultural batch registration inspector. Verify the following batch metadata and return a structured quality assessment.
+
+Batch Details:
+- Product: ${batchData.productType}
+- Quantity: ${batchData.quantity}
+- Origin Location: ${batchData.location}
+- Harvest Date: ${batchData.harvestDate}
+- Today's Date: ${today}
+
+Return ONLY valid JSON in this exact format:
 {
-  "caption": "Brief description of the product",
-  "anomalies": ["list of any quality issues or anomalies"],
-  "confidence": 0-100 (quality confidence score),
-  "tags": ["relevant product tags"]
+  "caption": "1-2 sentence professional summary of this batch submission",
+  "anomalies": [],
+  "confidence": 80,
+  "tags": []
 }
 
-Image URL: ${photoUrl}
+Rules:
+- caption: Summarise the batch (product, quantity, origin, harvest). Keep it professional and factual.
+- anomalies: Array of strings. Check for and include any of these concerns (use exact strings):
+    "implausible-quantity" — quantity is zero, negative, or unrealistically large (>1,000,000)
+    "vague-location" — location is a single generic word (e.g. "here", "farm") with no region/country detail
+    "future-harvest-date" — harvest date is after today (${today})
+    "stale-harvest-date" — harvest date is more than 3 years in the past
+    "unusual-product-name" — product name contains numbers, special characters, or is fewer than 3 characters
+  Leave as empty array [] if no concerns.
+- confidence: Integer 0–100. Score based on:
+    100 = all fields plausible, location specific, date valid, product name clear
+    Deduct ~15 per anomaly found. Minimum 10 if any critical anomaly present.
+- tags: Array of strings. Select applicable from: [organic, conventional, fresh, dried, ripe, premium, standard, processed, unverified]
+  Use "unverified" when location or product name is vague. Use "fresh" when harvest date is within 30 days.
 
-Note: Analyze based on URL context and filename. Return valid JSON only.`
+Return ONLY the JSON object. No markdown. No explanation.`
 
   const result = await model.generateContent(prompt)
   const response = await result.response
   const text = response.text()
-  
-  // Parse JSON response
+
+  // Strip markdown code fences if present
   const cleaned = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim()
   const parsed = JSON.parse(cleaned)
-  
+
   return {
     ...parsed,
     ms: Date.now() - startTime
@@ -369,7 +399,7 @@ Deno.serve(async (req) => {
         SUPABASE_URL: !!Deno.env.get('SUPABASE_URL'),
         SUPABASE_SERVICE_ROLE_KEY: !!Deno.env.get('SUPABASE_SERVICE_ROLE_KEY'),
         GEMINI_API_KEY: !!Deno.env.get('GEMINI_API_KEY'),
-        GEMINI_MODEL: Deno.env.get('GEMINI_MODEL') || 'gemini-2.0-flash-exp'
+        GEMINI_MODEL: 'gemini-3.1-flash-lite'
       }
       console.log(`[${requestId}] Debug mode - env check:`, envInfo)
       return new Response(
@@ -405,7 +435,7 @@ Deno.serve(async (req) => {
       )
     }
 
-    const { productType, quantity, location, imageData, harvestDate } = parseResult.data
+    const { productType, quantity, location, imageData, harvestDate, aiVerification } = parseResult.data
 
     // Normalize and validate date
     let harvestDateISO: string
@@ -458,28 +488,31 @@ Deno.serve(async (req) => {
 
     console.log(`[${requestId}] 📦 Registering batch: ${productType} (${quantity} units) - Harvest: ${harvestDateISO}`)
 
-    // AI analysis (optional, non-blocking)
-    let aiAnalysis = null
-    try {
-      const geminiResult = await withTimeout(
-        async (signal) => await analyzeImage(imageData, signal),
-        20000,
-        'Gemini AI analysis'
-      )
-      
-      if (!geminiResult.error) {
-        aiAnalysis = {
-          caption: geminiResult.caption,
-          anomalies: geminiResult.anomalies,
-          confidence: geminiResult.confidence,
-          tags: geminiResult.tags,
-          generatedAt: new Date().toISOString(),
-          ms: geminiResult.ms
+    // AI batch metadata analysis via Gemini Flash Lite (optional, non-blocking)
+    // If pre-computed AI verification is passed from frontend, use it. Otherwise call Gemini.
+    let aiAnalysis = aiVerification || null
+    if (!aiAnalysis) {
+      try {
+        const geminiResult = await withTimeout(
+          async (signal) => await analyzeBatch({ productType, quantity, location, harvestDate: harvestDateISO }, signal),
+          20000,
+          'Gemini Flash Lite batch analysis'
+        )
+
+        if (!geminiResult.error) {
+          aiAnalysis = {
+            caption: geminiResult.caption,
+            anomalies: geminiResult.anomalies,
+            confidence: geminiResult.confidence,
+            tags: geminiResult.tags,
+            generatedAt: new Date().toISOString(),
+            ms: geminiResult.ms
+          }
         }
+      } catch (error) {
+        console.warn(`[${requestId}] AI batch analysis failed, continuing without it:`, error.message)
+        // AI failure is non-critical — registration proceeds regardless
       }
-    } catch (error) {
-      console.warn(`[${requestId}] AI analysis failed, continuing without it:`, error.message)
-      // AI failure is non-critical, continue without it
     }
 
     // Submit to Hedera Consensus Service with timeout handling

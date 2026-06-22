@@ -9,9 +9,9 @@ The following environment variables are required for the frontend application:
 ```bash
 VITE_API_BASE_URL=http://localhost:4000
 VITE_SUPABASE_URL=https://udnpbqtvbnepicwyubnm.supabase.co
-VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVkbnBicXR2Ym5lcGljd3l1Ym5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIyMjAxMjUsImV4cCI6MjA3Nzc5NjEyNX0.TAA7bxPqhDuO-8O6DHNazHo67n0kh7PmyH6aiyepUmQ
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 VITE_MIRROR_NODE_URL=https://testnet.mirrornode.hedera.com
-VITE_WALLETCONNECT_PROJECT_ID=ac9166dd615752bda362b92887c6a1ad
+VITE_WALLETCONNECT_PROJECT_ID=your_walletconnect_project_id
 ```
 
 ### Where They Are Used
@@ -73,9 +73,8 @@ The Supabase client is configured in `src/lib/supabaseClient.ts`:
 ```typescript
 import { createClient } from "@supabase/supabase-js";
 
-const supabaseUrl = "https://udnpbqtvbnepicwyubnm.supabase.co";
-const supabaseAnonKey =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVkbnBicXR2Ym5lcGljd3l1Ym5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIyMjAxMjUsImV4cCI6MjA3Nzc5NjEyNX0.TAA7bxPqhDuO-8O6DHNazHo67n0kh7PmyH6aiyepUmQ";
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 ```
@@ -104,8 +103,7 @@ fetch("https://udnpbqtvbnepicwyubnm.supabase.co/functions/v1/register-batch", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
-    apikey:
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVkbnBicXR2Ym5lcGljd3l1Ym5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIyMjAxMjUsImV4cCI6MjA3Nzc5NjEyNX0.TAA7bxPqhDuO-8O6DHNazHo67n0kh7PmyH6aiyepUmQ",
+    apikey: "your_supabase_anon_key",
   },
   body: JSON.stringify({
     batchId: "TEST-UI",
@@ -153,3 +151,52 @@ The app accepts dates in two formats:
 - `YYYY-MM-DD` (e.g., "2025-11-11") - used as-is
 
 Conversion is handled automatically in `src/lib/api.ts` via `normalizeDate()` function.
+
+## Gemini AI Configuration (Issue #7)
+
+The registration flow uses **Gemini Flash Lite** for batch metadata analysis.
+
+### Model
+
+| Variable | Default | Notes |
+|----------|---------|-------|
+| `GEMINI_API_KEY` | *(required)* | Get from [Google AI Studio](https://aistudio.google.com/) |
+| `GEMINI_MODEL` | `gemini-3.1-flash-lite` | Lightweight, fast, cost-efficient tier |
+| `GEMINI_TIMEOUT_MS` | `6000` (Express) / `20000` (Edge Function) | Timeout in milliseconds |
+
+### What the AI Analyses
+
+During batch registration, Gemini analyses the **batch metadata fields** (no image upload required):
+
+- **Product name** — flags unusual names (too short, special characters)
+- **Quantity** — flags implausible values (zero, negative, >1,000,000)
+- **Origin location** — flags vague single-word locations
+- **Harvest date** — flags future dates and dates older than 3 years
+
+### Response Shape
+
+```json
+{
+  "caption": "500 kg of Organic Arabica Coffee from Kigali Region, Rwanda, harvested on 2025-10-15.",
+  "anomalies": [],
+  "confidence": 95,
+  "tags": ["organic", "fresh"],
+  "generatedAt": "2026-06-09T16:00:00.000Z",
+  "ms": 412
+}
+```
+
+Stored in the `batches.ai_analysis` JSONB column and displayed in the registration success panel.
+
+### Supabase Edge Function Secrets
+
+Set these in your Supabase project dashboard under **Settings → Edge Functions → Secrets**:
+
+```
+GEMINI_API_KEY=your_api_key
+GEMINI_MODEL=gemini-3.1-flash-lite
+```
+
+### Graceful Degradation
+
+If `GEMINI_API_KEY` is not set or Gemini times out, registration still completes normally — `ai_analysis` will be `null` in the response and the AI panel will not render in the UI.

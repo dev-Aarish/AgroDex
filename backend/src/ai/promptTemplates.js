@@ -20,6 +20,48 @@ Rules:
 - tags: select from [organic, conventional, fresh, dried, ripe, unripe, premium, standard, damaged, processed]
 - Return ONLY the JSON object, no markdown, no explanation`;
 
+/**
+ * Batch metadata analysis prompt for Gemini Flash Lite.
+ * Used during product registration when no image is available.
+ * Analyses structured text fields: productType, quantity, location, harvestDate.
+ *
+ * Template variables (inject via fillTemplate):
+ *   {PRODUCT_TYPE}  {QUANTITY}  {LOCATION}  {HARVEST_DATE}  {TODAY}
+ */
+export const ANALYZE_BATCH_PROMPT = `You are an agricultural batch registration inspector. Verify the following batch metadata and return a structured quality assessment.
+
+Batch Details:
+- Product: {PRODUCT_TYPE}
+- Quantity: {QUANTITY}
+- Origin Location: {LOCATION}
+- Harvest Date: {HARVEST_DATE}
+- Today's Date: {TODAY}
+
+Return ONLY valid JSON in this exact format:
+{
+  "caption": "1-2 sentence professional summary of this batch submission",
+  "anomalies": [],
+  "confidence": 80,
+  "tags": []
+}
+
+Rules:
+- caption: Summarise the batch (product, quantity, origin, harvest). Keep it professional and factual.
+- anomalies: Array of strings. Check for and include any of these concerns (use exact strings):
+    "implausible-quantity" — quantity is zero, negative, or unrealistically large (>1,000,000)
+    "vague-location" — location is a single generic word (e.g. "here", "farm") with no region/country detail
+    "future-harvest-date" — harvest date is after today ({TODAY})
+    "stale-harvest-date" — harvest date is more than 3 years in the past
+    "unusual-product-name" — product name contains numbers, special characters, or is fewer than 3 characters
+  Leave as empty array [] if no concerns.
+- confidence: Integer 0-100. Score based on:
+    100 = all fields plausible, location specific, date valid, product name clear
+    Deduct ~15 per anomaly found. Minimum 10 if any critical anomaly present.
+- tags: Array of strings. Select applicable from: [organic, conventional, fresh, dried, ripe, premium, standard, processed, unverified]
+  Use "unverified" when location or product name is vague. Use "fresh" when harvest date is within 30 days.
+
+Return ONLY the JSON object. No markdown. No explanation.`;
+
 export const SUMMARIZE_PROVENANCE_PROMPT = `You are a blockchain traceability analyst. Given a timeline of agricultural events recorded on Hedera HCS, create a comprehensive provenance summary.
 
 Input format:
@@ -128,6 +170,51 @@ export const PROMPT_DASHBOARD_INSIGHT = (stats) => {
   }
   `;
 };
+
+export const VERIFY_REGISTRATION_PROMPT = `You are an AI agricultural supply chain inspector. Verify the following batch registration details before they are written to the Hedera blockchain ledger.
+
+Registration Details:
+- Product Name: {PRODUCT_NAME}
+- Harvest Batch: {HARVEST_BATCH}
+- Quantity: {QUANTITY} {UNIT}
+- Location: {LOCATION}
+- Harvest Date: {HARVEST_DATE}
+- Additional Metadata: {METADATA}
+- Today's Date: {TODAY}
+
+Analyze the details above and return ONLY a valid JSON object in this exact format:
+{
+  "productSummary": "A concise, user-friendly 1-sentence summary of what they are registering.",
+  "verificationSummary": {
+    "quantity": "Verification status of the quantity field (e.g. Verified, Vague, Missing)",
+    "harvestBatch": "Verification status of the harvest batch field (e.g. Verified, Vague, Missing)",
+    "location": "Verification status of the location field (e.g. Verified, Vague, Missing)",
+    "harvestDate": "Verification status of the harvest date field (e.g. Verified, Vague, Future Date)"
+  },
+  "warnings": [
+    "List of warning messages regarding missing or vague fields (e.g., location missing, quantity not specified), or empty array if none."
+  ],
+  "consistencyChecks": [
+    "List of consistency issues (e.g., future harvest date, quantity too large, location-product mismatch), or empty array if none."
+  ],
+  "cooperativeReadiness": {
+    "status": "Ready | Review Required",
+    "notes": [
+      "List of cooperative readiness observations (e.g., harvest batch details complete, quantity verified, location provided, etc.)"
+    ]
+  },
+  "statistics": {
+    "batchNumber": "The batch number/identifier provided or inferred (e.g. #150 or HB-2026-150)",
+    "quantity": "The formatted quantity with unit (e.g. 500 KG)",
+    "location": "The parsed location name (e.g. Maharashtra)",
+    "harvestDate": "The formatted harvest date (e.g. 2026-06-20)"
+  }
+}
+
+Rules:
+- For warnings: If any critical field is missing or vague, add a detailed warning message.
+- For consistencyChecks: If the harvest date is after today's date ({TODAY}), include the exact string "Future harvest date detected". If the quantity is unrealistically large for a typical batch (>1,000,000 kg), include the exact string "Quantity appears unusually large".
+- Return ONLY the JSON object. Do NOT wrap in markdown code blocks or add any other text.`;
 
 /**
  * Helper to inject variables into prompt templates

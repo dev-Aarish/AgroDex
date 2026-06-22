@@ -6,16 +6,18 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import {
   ANALYZE_IMAGE_PROMPT,
+  ANALYZE_BATCH_PROMPT,
   SUMMARIZE_PROVENANCE_PROMPT,
   BUYER_QA_PROMPT,
   TRANSLATE_MARKETING_PROMPT,
   PRICE_SUGGESTION_PROMPT,
   PROMPT_DASHBOARD_INSIGHT,
+  VERIFY_REGISTRATION_PROMPT,
   fillTemplate
 } from './promptTemplates.js';
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || '';
-const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-3.1-flash-lite';
 const GEMINI_TIMEOUT_MS = parseInt(process.env.GEMINI_TIMEOUT_MS || '6000', 10);
 
 let genAI = null;
@@ -100,6 +102,182 @@ function parseJSON(text, fallback) {
   } catch (error) {
     console.error('JSON parse error:', error.message, 'Text:', text.substring(0, 200));
     return { ...fallback, ai: { error: 'Invalid JSON response' } };
+  }
+}
+
+/**
+ * Analyse batch registration metadata using Gemini Flash Lite.
+ * Used by the Express backend's /api/register-batch route.
+ * The Edge Function has its own equivalent inline implementation.
+ *
+ * @param {Object} params - {productType, quantity, location, harvestDate}
+ * @returns {Promise<{caption, anomalies, confidence, tags, ms}>}
+ */
+export async function analyzeBatch({ productType, quantity, location, harvestDate }) {
+  console.log(`🔍 Analysing batch metadata: ${productType} @ ${location}`);
+
+  const fallback = {
+    caption: 'Batch metadata analysis unavailable',
+    anomalies: [],
+    confidence: 0,
+    tags: []
+  };
+
+  if (!productType || !location || !harvestDate) {
+    return { ...fallback, ms: 0, error: 'Missing required batch fields' };
+  }
+
+  try {
+    const today = new Date().toISOString().split('T')[0];
+    const prompt = fillTemplate(ANALYZE_BATCH_PROMPT, {
+      PRODUCT_TYPE: productType,
+      QUANTITY: String(quantity),
+      LOCATION: location,
+      HARVEST_DATE: harvestDate,
+      TODAY: today
+    });
+
+    const { result, ms, error } = await callWithTimeout(prompt);
+
+    if (error) {
+      return { ...fallback, ms, error };
+    }
+
+    const parsed = parseJSON(result, fallback);
+    return { ...parsed, ms };
+  } catch (error) {
+    return { ...fallback, ms: 0, error: error.message };
+  }
+}
+
+/**
+ * Generate a deterministic local verification fallback when Gemini is unavailable.
+ */
+export function generateLocalFallbackVerification({ productName, harvestBatch, quantity, unit, location, harvestDate, metadata }) {
+  const cleanQty = quantity ? String(quantity).trim() : '';
+  const cleanUnit = unit ? String(unit).trim() : '';
+  const qtyStr = cleanQty ? `${cleanQty} ${cleanUnit}` : '';
+  
+  const productSummary = `You are about to register ${qtyStr || 'an unspecified quantity of'} ${productName || 'product'} from ${location || 'an unspecified location'} under Harvest Batch ${harvestBatch || 'N/A'} harvested on ${harvestDate || 'an unspecified date'}.`;
+  
+  const warnings = [];
+  const consistencyChecks = [];
+  const notes = [];
+  
+  if (!productName || productName.trim().length < 3) {
+    warnings.push("Product name is missing or too short");
+    notes.push("Product name verification failed");
+  } else {
+    notes.push("Product name verified locally");
+  }
+
+  if (!harvestBatch || harvestBatch.trim() === '') {
+    warnings.push("Harvest batch not specified");
+    notes.push("Harvest batch missing");
+  } else {
+    notes.push("Harvest batch info complete");
+  }
+
+  if (!cleanQty) {
+    warnings.push("Quantity not specified");
+    notes.push("Quantity verification failed");
+  } else {
+    const parsedQty = parseFloat(cleanQty);
+    if (isNaN(parsedQty) || parsedQty <= 0) {
+      warnings.push("Quantity must be a positive number");
+      notes.push("Quantity invalid");
+    } else if (parsedQty > 1000000) {
+      consistencyChecks.push("Quantity appears unusually large");
+      notes.push("Quantity is unusually large");
+    } else {
+      notes.push("Quantity verified");
+    }
+  }
+
+  if (!location || location.trim().length < 3) {
+    warnings.push("Harvest location missing or too vague");
+    notes.push("Location verification failed");
+  } else {
+    notes.push("Location provided");
+  }
+
+  if (!harvestDate) {
+    warnings.push("Harvest date not specified");
+    notes.push("Harvest date missing");
+  } else {
+    try {
+      const todayISO = new Date().toISOString().split('T')[0];
+      if (harvestDate > todayISO) {
+        consistencyChecks.push("Future harvest date detected");
+        notes.push("Harvest date is in the future");
+      } else {
+        notes.push("Harvest date verified");
+      }
+    } catch {
+      notes.push("Harvest date checked");
+    }
+  }
+
+  const status = warnings.length > 0 || consistencyChecks.length > 0 ? "Review Required" : "Ready";
+
+  return {
+    productSummary,
+    verificationSummary: {
+      quantity: cleanQty ? `Provided: ${qtyStr}` : "Quantity not specified",
+      harvestBatch: harvestBatch ? `Provided: ${harvestBatch}` : "Harvest batch not specified",
+      location: location ? `Provided: ${location}` : "Location not specified",
+      harvestDate: harvestDate ? `Provided: ${harvestDate}` : "Harvest date not specified"
+    },
+    warnings,
+    consistencyChecks,
+    cooperativeReadiness: {
+      status,
+      notes
+    },
+    statistics: {
+      batchNumber: harvestBatch || "N/A",
+      quantity: qtyStr || "N/A",
+      location: location || "N/A",
+      harvestDate: harvestDate || "N/A"
+    },
+    fallback: true,
+    warningMessage: "AI verification unavailable. Manual review recommended."
+  };
+}
+
+/**
+ * Pre-registration AI verification using Gemini 3.1 Flash Lite.
+ */
+export async function verifyRegistration({ productName, harvestBatch, quantity, unit, location, harvestDate, metadata }) {
+  console.log(`🔍 AI Verification for registration: ${productName} Batch ${harvestBatch}`);
+
+  const fallback = generateLocalFallbackVerification({ productName, harvestBatch, quantity, unit, location, harvestDate, metadata });
+
+  try {
+    const today = new Date().toISOString().split('T')[0];
+    const prompt = fillTemplate(VERIFY_REGISTRATION_PROMPT, {
+      PRODUCT_NAME: productName || 'Not specified',
+      HARVEST_BATCH: harvestBatch || 'Not specified',
+      QUANTITY: quantity || 'Not specified',
+      UNIT: unit || '',
+      LOCATION: location || 'Not specified',
+      HARVEST_DATE: harvestDate || 'Not specified',
+      METADATA: metadata || 'None',
+      TODAY: today
+    });
+
+    const { result, ms, error } = await callWithTimeout(prompt);
+
+    if (error) {
+      console.warn("Gemini registration verification failed, returning local fallback:", error);
+      return { ...fallback, ms, error };
+    }
+
+    const parsed = parseJSON(result, fallback);
+    return { ...parsed, ms, fallback: false };
+  } catch (error) {
+    console.warn("Exception during Gemini verification, returning local fallback:", error.message);
+    return { ...fallback, ms: 0, error: error.message };
   }
 }
 
@@ -334,5 +512,7 @@ export default {
   translateMarketing,
   priceSuggestion,
   dashboardInsight,
-  healthCheck
+  healthCheck,
+  verifyRegistration,
+  generateLocalFallbackVerification
 };

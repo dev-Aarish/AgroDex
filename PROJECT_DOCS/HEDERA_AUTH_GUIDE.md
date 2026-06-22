@@ -1,13 +1,13 @@
 # Hedera Edge Functions - Authentication & Testing Guide
 
-## 🔐 Understanding Supabase Edge Function Authentication
+## ðŸ” Understanding Supabase Edge Function Authentication
 
 ### Key Concepts
 
 1. **`apikey` header** (ALWAYS required)
    - This is your Supabase project's anon key
    - Required for ALL Edge Function calls
-   - Found in: Supabase Dashboard → Settings → API → `anon` `public`
+   - Found in: Supabase Dashboard â†’ Settings â†’ API â†’ `anon` `public`
 
 2. **`Authorization: Bearer` header** (conditionally required)
    - Contains a **user access token** (NOT the anon key)
@@ -18,27 +18,27 @@
    - `verify_jwt = true` (default): Requires authenticated user
    - `verify_jwt = false`: Allows anonymous/public access
 
-### Common Confusion: Anon Key ≠ User Access Token
+### Common Confusion: Anon Key â‰  User Access Token
 
-❌ **WRONG:**
+âŒ **WRONG:**
 ```bash
 curl -H "Authorization: Bearer <ANON_KEY>"
 ```
 
-✅ **CORRECT for authenticated calls:**
+âœ… **CORRECT for authenticated calls:**
 ```bash
 curl -H "apikey: <ANON_KEY>" \
      -H "Authorization: Bearer <USER_ACCESS_TOKEN>"
 ```
 
-✅ **CORRECT for public calls (verify_jwt = false):**
+âœ… **CORRECT for public calls (verify_jwt = false):**
 ```bash
 curl -H "apikey: <ANON_KEY>"
 ```
 
 ---
 
-## 📋 Configuration Options
+## ðŸ“‹ Configuration Options
 
 ### Option 1: Public Access (No JWT verification)
 
@@ -83,14 +83,14 @@ curl -X POST 'https://udnpbqtvbnepicwyubnm.supabase.co/functions/v1/test-hedera-
 
 ---
 
-## 🧪 Testing Commands
+## ðŸ§ª Testing Commands
 
 ### Environment Setup
 
 ```bash
 # Your Supabase project details
 export SUPABASE_URL="https://udnpbqtvbnepicwyubnm.supabase.co"
-export ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVkbnBicXR2Ym5lcGljd3l1Ym5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIyMjAxMjUsImV4cCI6MjA3Nzc5NjEyNX0.TAA7bxPqhDuO-8O6DHNazHo67n0kh7PmyH6aiyepUmQ"
+export ANON_KEY="your_supabase_anon_key"
 
 # Get user access token (from browser console after login):
 # const { data: { session } } = await supabase.auth.getSession()
@@ -115,7 +115,7 @@ curl -X POST "${SUPABASE_URL}/functions/v1/test-hedera-credentials" \
   "network": "testnet",
   "account": {
     "id": "0.0.12345",
-    "balance": "100.00000000 ℏ",
+    "balance": "100.00000000 â„",
     "keyType": "302a300506032b6570...",
     "isDeleted": false
   },
@@ -125,7 +125,7 @@ curl -X POST "${SUPABASE_URL}/functions/v1/test-hedera-credentials" \
     "operatorKeyFingerprint": "302e020100..."
   },
   "userId": "Anonymous",
-  "message": "✅ Credentials are valid and account is accessible"
+  "message": "âœ… Credentials are valid and account is accessible"
 }
 ```
 
@@ -147,7 +147,7 @@ curl -X POST "${SUPABASE_URL}/functions/v1/test-hedera-credentials" \
   "network": "testnet",
   "account": { ... },
   "userId": "550e8400-e29b-41d4-a716-446655440000",
-  "message": "✅ Credentials are valid and account is accessible"
+  "message": "âœ… Credentials are valid and account is accessible"
 }
 ```
 
@@ -180,7 +180,7 @@ curl -X POST "${SUPABASE_URL}/functions/v1/register-batch" \
     "SUPABASE_URL": true,
     "SUPABASE_SERVICE_ROLE_KEY": true,
     "GEMINI_API_KEY": true,
-    "GEMINI_MODEL": "gemini-2.0-flash-exp"
+    "GEMINI_MODEL": "gemini-3.1-flash-lite"
   },
   "received": {
     "productType": "Organic Tomatoes",
@@ -262,7 +262,7 @@ curl -X POST "${SUPABASE_URL}/functions/v1/register-batch" \
 
 ---
 
-## 🚨 Common Errors & Solutions
+## ðŸš¨ Common Errors & Solutions
 
 ### Error: `401 Invalid JWT`
 
@@ -329,7 +329,7 @@ curl -X POST "${SUPABASE_URL}/functions/v1/register-batch" \
 
 ---
 
-## 🔧 Environment Variables Checklist
+## ðŸ”§ Environment Variables Checklist
 
 ### Required for Both Functions
 
@@ -350,18 +350,18 @@ SUPABASE_SERVICE_ROLE_KEY=eyJhbGci...
 
 # Optional: AI Analysis
 GEMINI_API_KEY=AIzaSy...
-GEMINI_MODEL=gemini-2.0-flash-exp
+GEMINI_MODEL=gemini-3.1-flash-lite
 ```
 
 ### How to Set in Supabase
 
-1. Go to: Supabase Dashboard → Edge Functions → Settings
+1. Go to: Supabase Dashboard â†’ Edge Functions â†’ Settings
 2. Add each variable under "Secrets"
 3. Redeploy functions after adding secrets
 
 ---
 
-## 📦 Postman Collection
+## ðŸ“¦ Postman Collection
 
 ### Collection Variables
 
@@ -447,7 +447,7 @@ Body (JSON):
 
 ---
 
-## 🔍 Debugging Tips
+## ðŸ” Debugging Tips
 
 ### 1. Check Edge Function Logs
 
@@ -499,7 +499,7 @@ echo -n "$HEDERA_OPERATOR_KEY" | od -c
 
 ---
 
-## 📚 Additional Resources
+## ðŸ“š Additional Resources
 
 - [Supabase Edge Functions Auth](https://supabase.com/docs/guides/functions/auth)
 - [Hedera SDK Documentation](https://docs.hedera.com/hedera/sdks-and-apis/sdks)
@@ -508,7 +508,7 @@ echo -n "$HEDERA_OPERATOR_KEY" | od -c
 
 ---
 
-## ✅ Quick Checklist
+## âœ… Quick Checklist
 
 Before deploying to production:
 
