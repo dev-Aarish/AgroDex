@@ -9,20 +9,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
   FileText,
   Coins,
   ShieldCheck,
-  ShieldAlert,
-  Route,
   User,
   Settings,
   LogOut,
   Menu,
   BarChart3,
   Wallet,
+  Info,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWallet } from "@/hooks/useWallet";
@@ -56,8 +54,7 @@ export default function Navbar() {
     { to: "/register", label: t('nav.register'), icon: FileText },
     { to: "/tokenize", label: t('nav.tokenize'), icon: Coins },
     { to: "/verify", label: t('nav.verify'), icon: ShieldCheck },
-    { to: "/journey/sample-batch", label: "Journey", icon: Route },
-    { to: "/risk-intelligence", label: "Risk Intelligence", icon: ShieldAlert },
+    { to: "/about", label: t('nav.about'), icon: Info },
   ];
 
   const isActive = (path: string) =>
@@ -134,17 +131,8 @@ export default function Navbar() {
             <ThemeToggle />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="rounded-full"
-                  aria-label="Open account menu"
-                >
-                  <Avatar className="h-9 w-9 border border-gray-100 dark:border-slate-800">
-                    <AvatarFallback className="bg-gray-50 text-gray-700 dark:bg-slate-900 dark:text-slate-300">
-                      <User className="h-4 w-4" />
-                    </AvatarFallback>
-                  </Avatar>
+                <Button variant="ghost" size="icon" aria-label="Open settings menu">
+                  <Settings className="h-5 w-5 text-gray-600 dark:text-slate-400" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
@@ -177,7 +165,7 @@ export default function Navbar() {
             <ThemeToggle />
             <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon">
+                <Button variant="ghost" size="icon" aria-label="Open navigation menu">
                   <Menu className="h-6 w-6 text-gray-700 dark:text-slate-300" />
                 </Button>
               </SheetTrigger>
