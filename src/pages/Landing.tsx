@@ -4,13 +4,7 @@ import {
     Button
 } from "@/components/ui/button";
 import {
-    ArrowRight,
-    ShieldCheck,
-    Coins,
-    Brain,
-    AlertTriangle,
-    Users,
-    TrendingUp
+    ArrowRight
 } from "lucide-react";
 import logoUrl from "@/assets/agritrust-logo.png";
 import { Github, Mail, Globe, ExternalLink } from "lucide-react";
