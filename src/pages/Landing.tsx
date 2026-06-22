@@ -479,29 +479,6 @@ export default function Landing() {
                             </div>
                         </div>
                     </div>
-
-                    {/* ================= BOTTOM BAR ================= */}
-                    <div className="mt-10 pt-6 border-t flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
-
-                        <p>© {new Date().getFullYear()} AgroDex. All rights reserved.</p>
-
-                        <div className="mt-2 md:mt-0 text-center md:text-right">
-                            <p>Built with ❤️ using React, Hedera & AI</p>
-
-                            <p className="text-xs text-gray-400 mt-1">
-                                Website by{" "}
-                                <a
-                                    href="https://github.com/stargalax"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-gray-400 hover:text-emerald-500 transition-colors"
-                                >
-                                    Nikitha
-                                </a>
-                            </p>
-                        </div>
-
-                    </div>
                 </div>
             </footer>
         </div>
