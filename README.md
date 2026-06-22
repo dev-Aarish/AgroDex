@@ -3,7 +3,7 @@
 <h1>🌾 AgroDex 🌾</h1>
 
 <p align="center">
-  <b>AgroDex fights food fraud in Indonesia by pairing Hedera’s immutable ledger with Gemini AI for real-time food auditing.</b>
+  <b>AgroDex fights food fraud in Indonesia by pairing Hedera's immutable ledger with Gemini AI for real-time food auditing.</b>
 </p>
 
 ---
@@ -66,12 +66,12 @@ Food fraud and missing traceability drain billions from the Indonesian agricultu
 We chose Hedera because predictable, low fees are the only sustainable option for low-margin Indonesian logistics.
 
 ### 🏛️ Hedera Services Utilized
-* **Hedera Consensus Service (HCS):** Every “proof” event (planting, harvest, etc.) is submitted via `TopicMessageSubmitTransaction` to our topic ID, producing a low-cost (~$0.0001) immutable audit log.
+* **Hedera Consensus Service (HCS):** Every "proof" event (planting, harvest, etc.) is submitted via `TopicMessageSubmitTransaction` to our topic ID, producing a low-cost (~$0.0001) immutable audit log.
 * **Hedera Token Service (HTS):** We mint the final certificate as a unique NFT using `TokenCreateTransaction`. HCS transaction IDs are embedded directly into the NFT metadata, structurally binding the asset to its evidence trail.
 * **Mirror Nodes:** The Verify page queries Mirror Nodes (via the SDK) to replay the HCS history and seamlessly demonstrate authenticity to buyers and judges.
 
 ### 💰 Economic Justification
-Widespread adoption in Indonesia demands sub-$1 fees per transaction. Hedera’s fixed, negligible HCS pricing lets us log thousands of logistical events for just a few dollars, keeping the business model completely viable.
+Widespread adoption in Indonesia demands sub-$1 fees per transaction. Hedera's fixed, negligible HCS pricing lets us log thousands of logistical events for just a few dollars, keeping the business model completely viable.
 
 ---
 
@@ -186,11 +186,18 @@ This is the instruction about how to get work with this project:
    cd ..
    ```
 <b>3.</b> Configure Environment Variables
-   ```sh
-   cp backend/.env.example backend/.env
-   // edit backend/.env and fill:
-   // OPERATOR_ID, OPERATOR_KEY, GEMINI_API_KEY, SUPABASE_URL, SUPABASE_SERVICE_KEY
-   ```
+   
+   - **Frontend**: Copy `.env.example` at the root of the project to `.env`:
+     ```sh
+     cp .env.example .env
+     ```
+     Open `.env` and configure `VITE_WALLETCONNECT_PROJECT_ID`. Contributors need to obtain their own WalletConnect Project ID by registering their dApp on the [WalletConnect Cloud Dashboard](https://cloud.walletconnect.com/).
+     
+   - **Backend**: Copy `backend/.env.example` to `backend/.env`:
+     ```sh
+     cp backend/.env.example backend/.env
+     ```
+     Edit `backend/.env` and fill in: `OPERATOR_ID`, `OPERATOR_KEY`, `GEMINI_API_KEY`, `SUPABASE_URL`, `SUPABASE_SERVICE_KEY`.
 <b>4.</b> Seed the demo data
    ```sh
    cd backend
@@ -242,7 +249,7 @@ npm run dev
      - Extracting embedded images or assets and adding them to `/assets/`.  
      - Moving CSS/JS into separate files.  
      - Updating README or file structure consistency.  
-   - Submit your PR under the “maintenance” label.
+   - Submit your PR under the "maintenance" label.
 
 ---
 

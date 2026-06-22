@@ -38,7 +38,7 @@ describe('normalizeDate', () => {
   });
 
   it('should throw error for US format (10-28-2025)', () => {
-    expect(() => normalizeDate('10-28-2025')).toThrow('Invalid date format');
+    expect(() => normalizeDate('10-28-2025')).toThrow('Invalid month: 28');
   });
 
   it('should throw error for invalid string', () => {

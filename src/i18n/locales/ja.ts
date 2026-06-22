@@ -4,6 +4,7 @@ const ja = {
     register: "登録",
     tokenize: "トークン化",
     verify: "検証",
+    about: "概要",
     profile: "プロフィール",
     settings: "設定",
     logout: "ログアウト",
@@ -77,6 +78,17 @@ const ja = {
   footer: {
     rights: "All rights reserved.",
     tagline: "インドネシアのためのブロックチェーンを活用した食のトレーサビリティ。",
+  },
+  about: {
+    meta: { title: "AgroDexについて | ブロックチェーン食品トレーサビリティ", description: "AgroDexがHederaブロックチェーンとAIを組み合わせ、食品サプライチェーンをより透明で信頼でき、検証可能にする方法を紹介します。" },
+    hero: { badge: "信頼できる食品トレーサビリティ", title: "ブロックチェーンとAIで<highlight>透明な食品サプライチェーン</highlight>を構築", description: "AgroDexは、Hederaにアンカーされた共有デジタル記録により、生産者、流通業者、消費者が作物の原産地、認証、移動を検証できるよう支援します。", primaryCta: "バッチを登録", secondaryCta: "製品を検証" },
+    heroCard: { logoAlt: "AgroDexロゴ", kicker: "AgroDexプラットフォーム", title: "農場記録から消費者の信頼へ", signals: { originRecords: "原産地記録", fraudSignals: "不正シグナル", aiSummaries: "AI要約", stakeholderTrust: "関係者の信頼" } },
+    overview: { eyebrow: "プラットフォーム概要", title: "農産物のためのデジタル信頼レイヤー", description: "AgroDexは各バッチに検証可能なタイムラインを提供し、生産者データ、AI分析、Hederaに裏付けられた証明を組み合わせ、サプライチェーン関係者の判断を支えます。", cards: { mission: { title: "私たちの使命", text: "農家と買い手が信頼できる製品データを記録、検証、共有できる実用的なツールにより、農業取引をより透明にします。" }, goals: { title: "私たちのビジョン", text: "すべての製品が農場から食卓まで、原産地、品質、取扱いの信頼できる証明を持てる食品エコシステムを作ります。" } } },
+    problem: { badge: "重要な理由", title: "食品不正と不透明な記録は信頼を弱めます", description: "紙の証明書、分断されたデータベース、検証できない主張により、製品の出所や品質を確認することが困難になります。" },
+    howItWorks: { title: "AgroDexの仕組み", description: "プラットフォームはバッチ活動を、生産者、流通業者、消費者が確認できる透明なワークフローに変換します。", steps: { register: { title: "作物バッチを登録", description: "生産者は原産地、収穫情報、認証、補足文書を構造化された製品記録に入力します。" }, anchor: { title: "Hederaに証明をアンカー", description: "重要なバッチイベントと検証シグナルは、説明責任を高めるためブロックチェーンに裏付けられた完全性で記録されます。" }, verify: { title: "自信を持って検証", description: "関係者はバッチをスキャンまたは検索し、来歴、AI評価、信頼できるサプライチェーン履歴を確認できます。" } } },
+    technology: { title: "プラットフォームを支える技術", description: "AgroDexは分散型インフラと知的分析を組み合わせ、実際のサプライチェーンで検証を実用的にします。", cards: { hcs: { title: "Hedera Consensus Service", description: "バッチイベントはタイムスタンプされHederaにアンカーされ、透明で改ざんに強いトレーサビリティを実現します。" }, hts: { title: "トークン化証明書", description: "デジタル証明書とバッチ資格情報は、製品記録に紐づく信頼できる資産として表現できます。" }, ai: { title: "AI支援監査", description: "Geminiによる分析がバッチデータの要約、不整合の検出、迅速な検証判断を支援します。" } } },
+    benefits: { title: "食品サプライチェーンへの利点", description: "AgroDexは農産物を育て、運び、販売し、購入する人々を、より明確な記録と迅速な検証で支援します。", cards: { producers: { title: "生産者向け", description: "各バッチに付随する検証可能な記録で製品品質を示します。", items: ["原産地と収穫詳細を記録", "認証をデジタル共有", "買い手との信頼を構築"] }, consumers: { title: "消費者向け", description: "食品がどこから来たのか、その主張を確認できるかを理解できます。", items: ["来歴を素早く検証", "透明な製品履歴を確認", "信頼できる製品を選択"] }, distributors: { title: "流通業者向け", description: "紛争や手作業確認を減らす記録で製品移動を調整します。", items: ["バッチ状態を追跡", "書類作業を削減", "サプライチェーンの説明責任を改善"] } } },
+    missionVision: { title: "食品トレーサビリティを検証可能にしませんか？", description: "AgroDexに参加して信頼できる製品記録を作成し、サプライチェーンの透明性を高め、買い手の確認を支援しましょう。", primaryCta: "登録を開始", secondaryCta: "ダッシュボードを開く" },
   },
 };
 

@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -23,7 +24,7 @@ const LANGUAGES = [
   { code: 'ko', label: '한국어', flag: '🇰🇷' },
 ];
 
-const changeLanguage = (code: string) => {
+const changeGoogleLanguage = (code: string) => {
   const select = document.querySelector('.goog-te-combo') as HTMLSelectElement;
   if (select) {
     select.value = code === 'zh' ? 'zh-CN' : code;
@@ -32,23 +33,32 @@ const changeLanguage = (code: string) => {
 };
 
 export function LanguageSelector() {
+  const { i18n } = useTranslation();
   const [current, setCurrent] = useState(LANGUAGES[0]);
+
+  useEffect(() => {
+    const currentLanguage = LANGUAGES.find(lang => lang.code === i18n.language);
+    if (currentLanguage) {
+      setCurrent(currentLanguage);
+    }
+  }, [i18n.language]);
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm" className="gap-1.5 notranslate">
+        <Button variant="ghost" size="sm" className="gap-1.5">
           <span>{current.flag}</span>
           <span className="hidden sm:block text-xs">{current.label}</span>
           <ChevronDown className="h-3 w-3" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="max-h-72 overflow-y-auto notranslate">
+      <DropdownMenuContent align="end" className="max-h-72 overflow-y-auto">
         {LANGUAGES.map(lang => (
           <DropdownMenuItem
             key={lang.code}
             onSelect={() => {
-              changeLanguage(lang.code);
+              i18n.changeLanguage(lang.code);
+              changeGoogleLanguage(lang.code);
               setCurrent(lang);
             }}
             className={current.code === lang.code ? 'bg-emerald-50 text-emerald-700' : ''}
