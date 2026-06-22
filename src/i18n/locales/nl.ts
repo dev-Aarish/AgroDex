@@ -4,6 +4,7 @@ const nl = {
     register: "Registreren",
     tokenize: "Tokeniseren",
     verify: "Verifiëren",
+    about: "Over",
     profile: "Profiel",
     settings: "Instellingen",
     logout: "Uitloggen",
@@ -77,6 +78,17 @@ const nl = {
   footer: {
     rights: "Alle rechten voorbehouden.",
     tagline: "Blockchain-aangedreven voedseltraceerbaarheid voor Indonesië.",
+  },
+  about: {
+    meta: { title: "Over AgroDex | Blockchain voedseltraceerbaarheid", description: "Ontdek hoe AgroDex Hedera-blockchain en AI combineert om voedselketens transparanter, betrouwbaarder en verifieerbaar te maken." },
+    hero: { badge: "Betrouwbare voedseltraceerbaarheid", title: "Bouwen aan <highlight>transparante voedselketens</highlight> met blockchain en AI", description: "AgroDex helpt producenten, distributeurs en consumenten om herkomst, certificeringen en bewegingen te verifiëren via een gedeeld digitaal record dat op Hedera is verankerd.", primaryCta: "Batch registreren", secondaryCta: "Product verifiëren" },
+    heroCard: { logoAlt: "AgroDex-logo", kicker: "AgroDex-platform", title: "Van boerderijrecords naar consumentenvertrouwen", signals: { originRecords: "Herkomstrecords", fraudSignals: "Fraudesignalen", aiSummaries: "AI-samenvattingen", stakeholderTrust: "Vertrouwen van stakeholders" } },
+    overview: { eyebrow: "Platformoverzicht", title: "Een digitale vertrouwenslaag voor landbouwproducten", description: "AgroDex geeft elke batch een verifieerbare tijdlijn met producentendata, AI-analyse en door Hedera ondersteunde bewijzen, zodat ketenpartners met vertrouwen kunnen handelen.", cards: { mission: { title: "Onze missie", text: "Landbouwhandel transparanter maken met praktische tools waarmee boeren en kopers betrouwbare productdata kunnen vastleggen, verifiëren en delen." }, goals: { title: "Onze visie", text: "Een voedselecosysteem creëren waarin elk product betrouwbaar bewijs van herkomst, kwaliteit en behandeling kan dragen van boerderij tot bord." } } },
+    problem: { badge: "Waarom het telt", title: "Voedselfraude en ondoorzichtige records verzwakken vertrouwen", description: "Papieren certificaten, versnipperde databases en niet-verifieerbare claims maken het lastig om herkomst en kwaliteit te bevestigen." },
+    howItWorks: { title: "Hoe AgroDex werkt", description: "Het platform zet batchactiviteit om in een transparante workflow die producenten, distributeurs en consumenten kunnen inspecteren.", steps: { register: { title: "Oogstbatches registreren", description: "Producenten leggen herkomst, oogstinformatie, certificeringen en ondersteunende documenten vast in een gestructureerd productrecord." }, anchor: { title: "Bewijzen op Hedera verankeren", description: "Belangrijke batchevents en verificatiesignalen worden vastgelegd met blockchainintegriteit voor meer verantwoordelijkheid." }, verify: { title: "Met vertrouwen verifiëren", description: "Stakeholders kunnen een batch scannen of zoeken om herkomst, AI-beoordeling en betrouwbare ketengeschiedenis te bekijken." } } },
+    technology: { title: "Technologie achter het platform", description: "AgroDex combineert gedecentraliseerde infrastructuur met intelligente analyse om verificatie praktisch te maken voor echte ketens.", cards: { hcs: { title: "Hedera Consensus Service", description: "Batchevents kunnen worden getimestamped en aan Hedera worden verankerd voor transparante, manipulatiebestendige traceerbaarheid." }, hts: { title: "Getokeniseerde certificaten", description: "Digitale certificaten en batchreferenties kunnen worden weergegeven als vertrouwde assets gekoppeld aan productrecords." }, ai: { title: "AI-ondersteunde audits", description: "Analyse met Gemini helpt batchdata samen te vatten, inconsistenties te markeren en snellere verificatiebeslissingen te ondersteunen." } } },
+    benefits: { title: "Voordelen voor de voedselketen", description: "AgroDex ondersteunt iedereen die landbouwproducten teelt, verplaatst, verkoopt en koopt met duidelijkere records en snellere verificatie.", cards: { producers: { title: "Voor producenten", description: "Toon productkwaliteit met verifieerbare records die met elke batch meereizen.", items: ["Herkomst en oogst vastleggen", "Certificeringen digitaal delen", "Vertrouwen opbouwen met kopers"] }, consumers: { title: "Voor consumenten", description: "Begrijp waar voedsel vandaan komt en of claims controleerbaar zijn.", items: ["Herkomst snel verifiëren", "Transparante productgeschiedenis bekijken", "Vertrouwde producten kiezen"] }, distributors: { title: "Voor distributeurs", description: "Coördineer productbewegingen met records die geschillen en handmatige controles verminderen.", items: ["Batchstatus volgen", "Papierwerk verminderen", "Ketenverantwoordelijkheid verbeteren"] } } },
+    missionVision: { title: "Klaar om voedseltraceerbaarheid verifieerbaar te maken?", description: "Sluit je aan bij AgroDex om betrouwbare productrecords te maken, ketentransparantie te versterken en kopers te helpen controleren wat ze kopen.", primaryCta: "Begin met registreren", secondaryCta: "Dashboard openen" },
   },
 };
 
