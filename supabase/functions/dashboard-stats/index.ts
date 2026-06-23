@@ -61,7 +61,9 @@ serve(async (req) => {
       let parsedSummary = null;
       if (item.ai_provenance_summary) {
         try {
-          parsedSummary = JSON.parse(item.ai_provenance_summary);
+          parsedSummary = typeof item.ai_provenance_summary === 'string'
+            ? JSON.parse(item.ai_provenance_summary)
+            : item.ai_provenance_summary;
         } catch (e) {
           console.error('Failed to parse ai_provenance_summary:', e);
         }

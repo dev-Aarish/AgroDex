@@ -379,7 +379,9 @@ router.get("/batches/:batchId", async (req, res) => {
       let aiSummary = null;
       if (batch.ai_provenance_summary) {
         try {
-          aiSummary = JSON.parse(batch.ai_provenance_summary);
+          aiSummary = typeof batch.ai_provenance_summary === "string"
+            ? JSON.parse(batch.ai_provenance_summary)
+            : batch.ai_provenance_summary;
         } catch {
           aiSummary = { summary_en: batch.ai_provenance_summary, summary_fr: batch.ai_provenance_summary, trustScore: 70, trustExplanation: "Restored from batch provenance" };
         }
