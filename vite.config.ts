@@ -14,7 +14,7 @@ export default defineConfig({
       registerType: 'autoUpdate',
       devOptions: { enabled: true },
       workbox: {
-        maximumFileSizeToCacheInBytes: 7000000, // Set to 7 MB
+        maximumFileSizeToCacheInBytes: 10000000, // Set to 10 MB
       },
       manifest: {
         name: 'AgroDex',
