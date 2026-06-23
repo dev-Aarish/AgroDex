@@ -11,7 +11,7 @@
  */
 
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "@/lib/supabaseClient";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWallet } from "@/hooks/useWallet";
@@ -38,6 +38,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function Login() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, loading } = useAuth();
   const { isConnected } = useWallet();
   const [authError, setAuthError] = useState<string | null>(null);
@@ -46,7 +47,18 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
+  const [deletionMessage, setDeletionMessage] = useState<string | null>(null);
   const { t } = useTranslation();
+
+  // Check for deletion success message from navigation state
+  useEffect(() => {
+    const message = location.state?.message;
+    if (message) {
+      setDeletionMessage(message);
+      // Clear the message from history to prevent it showing on refresh/back navigation
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
 
   // Auto-redirect if authenticated via either method
   useEffect(() => {
@@ -260,6 +272,22 @@ export default function Login() {
               </p>
             </motion.div>
           </div>
+
+          {/* Account Deletion Success Message */}
+          {deletionMessage && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-6"
+            >
+              <Alert className="border-2 border-emerald-200 dark:border-emerald-900/50 bg-emerald-50 dark:bg-emerald-950/20 rounded-xl">
+                <CheckCircle className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                <AlertDescription className="font-body text-base ml-2 text-emerald-700 dark:text-emerald-300">
+                  {deletionMessage}
+                </AlertDescription>
+              </Alert>
+            </motion.div>
+          )}
 
           <Tabs defaultValue="email" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-8 bg-gray-100 dark:bg-slate-800 p-1 rounded-xl">

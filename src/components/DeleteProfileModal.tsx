@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/lib/supabaseClient";
+import { useWallet } from "@/hooks/useWallet";
+import { deleteAccount } from "@/lib/api";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,6 +19,7 @@ import {
 export function DeleteProfileModal() {
   const [isLoading, setIsLoading] = useState(false);
   const { user, signOut } = useAuth();
+  const { isConnected, disconnect } = useWallet();
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -34,26 +36,24 @@ export function DeleteProfileModal() {
     setIsLoading(true);
 
     try {
-      // Soft delete: set deleted_at timestamp
-      const { error } = await supabase
-        .from("profiles")
-        .update({ deleted_at: new Date().toISOString() })
-        .eq("id", user.id);
+      // Step 1: Hard-delete via backend — MUST run before signOut().
+      // signOut() invalidates the access_token; the backend needs it to
+      // authenticate this request. Reversing the order causes a 401.
+      await deleteAccount();
 
-      if (error) {
-        throw error;
+      // Step 2: Disconnect Hedera wallet if one is linked.
+      // Done before signOut() so the wallet context is still available.
+      if (isConnected) {
+        await disconnect();
       }
 
-      toast({
-        title: "Account Deleted",
-        description: "Your profile has been successfully deleted.",
-      });
-
-      // Sign out the user
+      // Step 3: Invalidate local Supabase session.
       await signOut();
 
-      // Redirect to home page
-      navigate("/");
+      // Step 4: Redirect to /login with the exact success string from issue #107.
+      navigate("/login", {
+        state: { message: "Account Deleted Successfully" },
+      });
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "Failed to delete account";
@@ -78,8 +78,7 @@ export function DeleteProfileModal() {
           <AlertDialogTitle>Delete Account</AlertDialogTitle>
           <AlertDialogDescription>
             This action cannot be undone. Your profile and all associated data
-            will be permanently marked for deletion. You will be signed out
-            immediately.
+            will be permanently deleted. You will be signed out immediately.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <div className="flex gap-2 justify-end">

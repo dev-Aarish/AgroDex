@@ -6,6 +6,7 @@ import apiRoutes from "./routes/api.js";
 import healthRoutes from "./routes/health.js";
 import aiRoutes from "./routes/ai.js";
 import fraudRoutes from "./routes/fraud.js";
+import accountRoutes from "./routes/account.js";
 import { getHederaClient } from "./hederaClient.js";
 import { generalLimiter } from "./middleware/rateLimiter.js";
 import { logger } from "./middleware/logger.js";
@@ -36,6 +37,7 @@ app.use("/api", healthRoutes);
 app.use("/api", apiRoutes);
 app.use("/api/ai", aiRoutes);
 app.use("/api/fraud", fraudRoutes);
+app.use("/api/account", accountRoutes);
 
 app.get("/", (req, res) => {
   res.json({
@@ -49,6 +51,7 @@ app.get("/", (req, res) => {
       registerBatch: "POST /api/register-batch",
       tokenizeBatch: "POST /api/tokenize-batch",
       verifyBatch: "GET /api/verify-batch/:tokenId/:serialNumber",
+      deleteAccount: "DELETE /api/account",
       ai: {
         analyzeImage: "POST /api/ai/analyze-image",
         summarizeProvenance: "POST /api/ai/summarize-provenance",

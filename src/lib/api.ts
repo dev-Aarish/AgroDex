@@ -788,3 +788,45 @@ export const getAuditLogs = async (params: {
   return result as AuditLogsResponse;
 };
 
+
+/**
+ * Hard-deletes the authenticated user's account via the backend.
+ *
+ * CRITICAL — call order matters:
+ * This MUST run before signOut(). The backend authenticates via the
+ * session's access_token. Once signOut() runs the token is gone → 401.
+ *
+ * Requirements: 2.1
+ */
+export const deleteAccount = async (): Promise<{ ok: boolean; message: string }> => {
+  const headers = await buildAuthHeaders();
+
+  if (!headers['Authorization']) {
+    throw new Error('No active session');
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let payload: any = null;
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/account`, {
+      method: 'DELETE',
+      headers,
+    });
+
+    try { payload = await response.json(); } catch { /* ignore */ }
+
+    if (!response.ok) {
+      throw new Error(
+        payload?.error ||
+        payload?.message ||
+        `deleteAccount failed: HTTP ${response.status}`
+      );
+    }
+
+    return payload;
+  } catch (err) {
+    if (err instanceof Error) throw err;
+    throw new Error('deleteAccount failed: network error');
+  }
+};
