@@ -1,1 +1,0 @@
-﻿Hi @daviddprtma! I have resolved all the merge conflicts with the upstream main branch. The PR should be clean and mergeable now. Thank you for the assignment!
