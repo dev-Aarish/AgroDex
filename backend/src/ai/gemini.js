@@ -47,6 +47,40 @@ function initGemini() {
 }
 
 /**
+ * Sanitize raw Gemini API error traces to user-friendly messages
+ */
+function sanitizeError(errorMessage) {
+  if (!errorMessage) return null;
+  
+  const lowerMsg = errorMessage.toLowerCase();
+  
+  if (
+    lowerMsg.includes('api_key_invalid') || 
+    lowerMsg.includes('api key not configured') || 
+    lowerMsg.includes('api_key') || 
+    lowerMsg.includes('key is invalid')
+  ) {
+    return 'AI Insights are currently unavailable due to a service configuration issue.';
+  }
+  
+  if (lowerMsg.includes('timeout')) {
+    return 'AI request timed out. Please try again.';
+  }
+
+  if (
+    lowerMsg.includes('googlegenerativeai') || 
+    lowerMsg.includes('bad request') || 
+    lowerMsg.includes('fetch failed') ||
+    lowerMsg.includes('http') ||
+    lowerMsg.includes('status:')
+  ) {
+    return 'AI Insights are currently unavailable due to a temporary service error.';
+  }
+  
+  return errorMessage;
+}
+
+/**
  * Call Gemini with timeout and retry logic
  */
 async function callWithTimeout(promptText, retries = 1) {
@@ -56,7 +90,7 @@ async function callWithTimeout(promptText, retries = 1) {
     return { 
       result: null, 
       ms: Date.now() - start, 
-      error: 'API key not configured' 
+      error: sanitizeError('API key not configured') 
     };
   }
 
@@ -83,7 +117,7 @@ async function callWithTimeout(promptText, retries = 1) {
         continue;
       }
       
-      return { result: null, ms, error: error.message };
+      return { result: null, ms, error: sanitizeError(error.message) };
     }
   }
 }

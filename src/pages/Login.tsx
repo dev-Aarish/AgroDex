@@ -11,6 +11,9 @@
  * The wallet tab now shows both HashPack and MetaMask options.
  */
 
+
+
+
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "@/lib/supabaseClient";
@@ -30,7 +33,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle, Mail, Lock, Shield, Sparkles, Globe, CheckCircle } from "lucide-react";
+import { AlertCircle, Mail, Lock, Shield, Sparkles, Globe, CheckCircle, Eye, EyeOff } from "lucide-react";
 import WalletButton from "@/components/WalletButton";
 import MetaMaskButton from "@/components/MetaMaskButton";
 import ErrorBoundary from "@/components/ErrorBoundary";
@@ -53,6 +56,9 @@ export default function Login() {
   const [deletionMessage, setDeletionMessage] = useState<string | null>(null);
   const { t } = useTranslation();
 
+  const [showPassword, setShowPassword] = useState(false);
+
+  
   // Check for deletion success message from navigation state
   useEffect(() => {
     const message = location.state?.message;
@@ -359,13 +365,21 @@ export default function Login() {
                           <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
                           <Input
                             id="password"
-                            type="password"
+                            type={showPassword ? "text" : "password"}
                             placeholder="••••••••"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="pl-12 h-14 border-2 border-gray-200 dark:border-slate-700 dark:bg-slate-950 dark:text-white rounded-xl font-body text-base focus:border-emerald-500 focus:ring-emerald-500 transition-colors"
+                            className="pl-12 pr-12 h-14 border-2 border-gray-200 dark:border-slate-700 dark:bg-slate-950 dark:text-white rounded-xl font-body text-base focus:border-emerald-500 focus:ring-emerald-500 transition-colors"
                             required
                           />
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword((prev) => !prev)}
+                            className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-slate-300 transition-colors"
+                            aria-label={showPassword ? "Hide password" : "Show password"}
+                          >
+                            {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                          </button>
                         </div>
                       </div>
 
