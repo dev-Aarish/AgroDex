@@ -73,6 +73,32 @@ interface AIInsight {
   error?: string;
 }
 
+const getCleanInsightError = (errorStr: string | null | undefined): string | null => {
+  if (!errorStr) return null;
+  const lower = errorStr.toLowerCase();
+  
+  if (
+    lower.includes("api_key_invalid") ||
+    lower.includes("api key not configured") ||
+    lower.includes("api_key") ||
+    lower.includes("key is invalid")
+  ) {
+    return "AI Insights are currently unavailable due to a service configuration issue.";
+  }
+  
+  if (
+    lower.includes("googlegenerativeai") ||
+    lower.includes("bad request") ||
+    lower.includes("fetch failed") ||
+    lower.includes("http") ||
+    lower.includes("status:")
+  ) {
+    return "AI Insights are currently unavailable due to a temporary service error.";
+  }
+  
+  return errorStr;
+};
+
 export default function Dashboard() {
   
   const { t, i18n } = useTranslation();
@@ -373,7 +399,7 @@ export default function Dashboard() {
             )}
             {aiInsightError && !statsLoading && !statsError && (
               <p className="text-xs text-gray-500 dark:text-slate-400 mt-2">
-                AI Note: {aiInsightError}
+                AI Note: {getCleanInsightError(aiInsightError)}
               </p>
             )}
           </CardContent>

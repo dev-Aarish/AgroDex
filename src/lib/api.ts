@@ -783,18 +783,19 @@ export const getAuditLogs = async (params: {
   
   const headers = await buildAuthHeaders();
   
+  const query = new URLSearchParams({
+    page: String(page),
+    limit: String(limit),
+    sortBy,
+    sortOrder,
+    status,
+    search,
+  }).toString();
+
   const { data: result, error } = await supabase.functions.invoke(
-    "audit-logs",
+    `audit-logs?${query}`,
     {
       method: "GET",
-      queryParams: {
-        page: String(page),
-        limit: String(limit),
-        sortBy,
-        sortOrder,
-        status,
-        search,
-      },
       headers,
     }
   );
