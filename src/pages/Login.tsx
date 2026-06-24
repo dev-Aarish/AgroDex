@@ -1,13 +1,14 @@
 /**
  * =============================================================================
- * Login Page — Email + HashPack Wallet Authentication
+ * Login Page — Email + HashPack Wallet + MetaMask Wallet Authentication
  * =============================================================================
  *
- * Supports two login methods:
+ * Supports three login methods:
  *  1. Email/Password via Supabase (existing, unchanged)
- *  2. HashPack Wallet via HashConnect v3 (updated from old WalletConnect)
+ *  2. HashPack Wallet via HashConnect v3 (existing)
+ *  3. MetaMask Wallet via Supabase Web3 Auth (EIP-4361)
  *
- * The wallet tab now uses the new WalletButton component with HashConnect v3.
+ * The wallet tab now shows both HashPack and MetaMask options.
  */
 
 import { useEffect, useState } from "react";
@@ -31,6 +32,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle, Mail, Lock, Shield, Sparkles, Globe, CheckCircle } from "lucide-react";
 import WalletButton from "@/components/WalletButton";
+import MetaMaskButton from "@/components/MetaMaskButton";
+import ErrorBoundary from "@/components/ErrorBoundary";
 import { motion } from "framer-motion";
 import { Helmet } from "react-helmet-async";
 import logoUrl from "@/assets/agritrust-logo.png";
@@ -438,24 +441,54 @@ export default function Login() {
               </motion.div>
             </TabsContent>
 
-            {/* ===== WALLET TAB (updated: uses new WalletButton with HashConnect v3) ===== */}
+            {/* ===== WALLET TAB (HashPack + MetaMask) ===== */}
             <TabsContent value="wallet">
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4 }}
+                className="space-y-4"
               >
+                {/* MetaMask Option */}
                 <Card className="border-2 border-gray-200 dark:border-slate-800 dark:bg-slate-900 shadow-2xl rounded-2xl overflow-hidden">
-                  <CardHeader className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20 pb-8">
-                    <CardTitle className="text-3xl font-extrabold text-gray-900 dark:text-white">
-                      Wallet Login
+                  <CardHeader className="bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-950/20 dark:to-amber-950/20 pb-6">
+                    <CardTitle className="text-2xl font-extrabold text-gray-900 dark:text-white">
+                      MetaMask
                     </CardTitle>
                     <CardDescription className="font-body text-base text-gray-600 dark:text-slate-400">
-                      Connect your HashPack wallet to continue
+                      Connect with your MetaMask wallet (Hedera EVM)
                     </CardDescription>
                   </CardHeader>
-                  <CardContent className="pt-8">
-                    {/* New WalletButton replaces the old WalletLogin component */}
+                  <CardContent>
+                    <ErrorBoundary>
+                      <MetaMaskButton />
+                    </ErrorBoundary>
+                  </CardContent>
+                </Card>
+
+                {/* Divider */}
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-gray-200 dark:border-slate-700"></div>
+                  </div>
+                  <div className="relative flex justify-center text-xs">
+                    <span className="bg-white dark:bg-slate-900 px-2 text-gray-500 dark:text-slate-400 font-semibold">
+                      OR
+                    </span>
+                  </div>
+                </div>
+
+                {/* HashPack Option */}
+                <Card className="border-2 border-gray-200 dark:border-slate-800 dark:bg-slate-900 shadow-2xl rounded-2xl overflow-hidden">
+                  <CardHeader className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20 pb-6">
+                    <CardTitle className="text-2xl font-extrabold text-gray-900 dark:text-white">
+                      HashPack
+                    </CardTitle>
+                    <CardDescription className="font-body text-base text-gray-600 dark:text-slate-400">
+                      Connect with your HashPack wallet (Hedera native)
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
                     <WalletButton />
                   </CardContent>
                 </Card>
