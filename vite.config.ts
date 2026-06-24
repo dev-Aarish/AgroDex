@@ -2,6 +2,7 @@ import react from "@vitejs/plugin-react";
 import path from "path";
 import { defineConfig } from "vitest/config";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
+import { VitePWA } from 'vite-plugin-pwa';
 import componentTagger from "./plugins/component-tagger";
 
 export default defineConfig({
@@ -9,6 +10,31 @@ export default defineConfig({
     react(),
     componentTagger(),
     nodePolyfills(),
+    VitePWA({
+      registerType: 'autoUpdate',
+      devOptions: { enabled: true },
+      workbox: {
+        maximumFileSizeToCacheInBytes: 10000000, // Set to 10 MB
+      },
+      manifest: {
+        name: 'AgroDex',
+        short_name: 'AgroDex',
+        description: 'Securing Indonesia with Real-time Food Auditing',
+        theme_color: '#ffffff',
+        icons: [
+          {
+            src: '/favicon.ico',
+            sizes: '192x192',
+            type: 'image/png'
+          },
+          {
+            src: '/favicon.ico',
+            sizes: '512x512',
+            type: 'image/png'
+          }
+        ]
+      }
+    }),
   ],
   resolve: {
     alias: {
