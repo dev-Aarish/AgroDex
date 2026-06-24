@@ -5,7 +5,7 @@ import { submitBatchData, fetchHCSMessage } from "../hcs.js";
 import { createBatchNFT, fetchNFTMetadata } from "../hts.js";
 import { supabase, insertBatch, insertToken, upsertVerification, getVerification, getToken } from "../db.js";
 import { env } from "../utils/config.js";
-import { requireAuth } from "../middleware/auth.js";
+import { requireAuth, optionalAuth } from "../middleware/auth.js";
 import {
   analyzeBatch,
   summarizeProvenance,
@@ -20,7 +20,7 @@ void fetchHCSMessage;
 
 const router = express.Router();
 
-router.get("/dashboard-stats", requireAuth, async (_req, res) => {
+router.get("/dashboard-stats", optionalAuth, async (_req, res) => {
   try {
     const [batchCountResult, tokenCountResult, verificationCountResult, aiVerifiedCountResult, approvedLotsResult, flaggedLotsResult] = await Promise.all([
       supabase.from("batches").select("*", { head: true, count: "exact" }),
@@ -67,7 +67,7 @@ router.get("/dashboard-stats", requireAuth, async (_req, res) => {
   }
 });
 
-router.get("/dashboard-health", requireAuth, async (_req, res) => {
+router.get("/dashboard-health", optionalAuth, async (_req, res) => {
   const supabaseStatus = { ok: false, ms: 0 };
   const hederaStatus = { ok: false, ms: 0 };
   const geminiStatus = { ok: false, ms: 0 };

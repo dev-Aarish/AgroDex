@@ -13,7 +13,7 @@ const CORE_WALLET_CHAIN_NAMES: Record<string, string> = {
   '0xa869': 'Avalanche Fuji Testnet',
 };
 
-function getProvider() {
+export function getProvider() {
   if (typeof window === 'undefined') return null;
   if ((window as any).avalanche) return (window as any).avalanche;
   if ((window as any).ethereum?.isAvalanche) return (window as any).ethereum;

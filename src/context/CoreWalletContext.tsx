@@ -3,7 +3,10 @@ import {
   isCoreWalletInstalled,
   connectCoreWallet,
   listenToWalletChanges,
+  getProvider,
 } from "@/lib/coreWallet";
+import { signInWithCoreWallet } from "@/lib/coreWalletAuth";
+import { supabase } from "@/lib/supabaseClient";
 
 interface CoreWalletContextType {
   status: "disconnected" | "connecting" | "connected" | "error";
@@ -14,7 +17,7 @@ interface CoreWalletContextType {
   isConnected: boolean;
   isConnecting: boolean;
   connect: () => Promise<void>;
-  disconnect: () => void;
+  disconnect: () => Promise<void>;
 }
 
 const CoreWalletContext = createContext<CoreWalletContextType | undefined>(undefined);
@@ -38,7 +41,7 @@ export function CoreWalletProvider({ children }: { children: React.ReactNode }) 
       (accounts) => {
         if (accounts.length === 0) {
           // Wallet disconnected or locked
-          disconnect();
+          void disconnect();
         } else {
           setAddress(accounts[0].toLowerCase());
         }
@@ -60,6 +63,19 @@ export function CoreWalletProvider({ children }: { children: React.ReactNode }) 
       const result = await connectCoreWallet();
       setAddress(result.address);
       setChainId(result.chainId);
+
+      const { error: authError } = await signInWithCoreWallet();
+      if (authError) {
+        console.warn("Supabase Web3 auth failed:", authError.message);
+      }
+
+      // Re-read chain ID after possible Hedera network switch
+      const provider = getProvider();
+      if (provider) {
+        const newChainId: string = await provider.request({ method: "eth_chainId" });
+        setChainId(newChainId);
+      }
+
       setStatus("connected");
     } catch (err: any) {
       setErrorMessage(err.message || "Failed to connect Core wallet");
@@ -67,11 +83,22 @@ export function CoreWalletProvider({ children }: { children: React.ReactNode }) 
     }
   }, []);
 
-  const disconnect = useCallback(() => {
+  const disconnect = useCallback(async () => {
     setAddress(null);
     setChainId(null);
     setErrorMessage(null);
     setStatus("disconnected");
+
+    try {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (session?.user && !session.user.email) {
+        await supabase.auth.signOut();
+      }
+    } catch {
+      // Ignore sign-out errors
+    }
   }, []);
 
   const isConnected = status === "connected";

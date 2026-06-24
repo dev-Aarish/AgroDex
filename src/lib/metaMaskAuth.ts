@@ -27,6 +27,44 @@ export const HEDERA_TESTNET_PARAMS = {
 };
 
 /**
+ * Find MetaMask's provider via EIP-6963 discovery or window.ethereum.
+ * When multiple wallets are installed, window.ethereum may not be MetaMask's
+ * provider (e.g. Core Wallet may have injected itself there instead).
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function findMetaMaskProvider(): Promise<any> {
+  return new Promise((resolve) => {
+    // If window.ethereum is MetaMask's own provider, use it directly
+    const eth = (window as Record<string, any>).ethereum;
+    if (eth?.isMetaMask) {
+      resolve(eth);
+      return;
+    }
+
+    // Otherwise discover via EIP-6963
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const handler = (event: any) => {
+      const p = event.detail?.provider;
+      if (p?.isMetaMask) {
+        clearTimeout(timeout);
+        window.removeEventListener("eip6963:announceProvider", handler);
+        resolve(p);
+      }
+    };
+
+    const cleanup = () => window.removeEventListener("eip6963:announceProvider", handler);
+
+    const timeout = setTimeout(() => {
+      cleanup();
+      resolve(eth);
+    }, 500);
+
+    window.addEventListener("eip6963:announceProvider", handler);
+    window.dispatchEvent(new Event("eip6963:requestProvider"));
+  });
+}
+
+/**
  * Check if MetaMask or any EIP-1193 provider is installed
  */
 export function isMetaMaskInstalled(): boolean {
@@ -96,7 +134,7 @@ export async function signInWithMetaMask(statement?: string): Promise<{ data: un
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const provider = (window as Record<string, any>).ethereum;
+  const provider = await findMetaMaskProvider();
 
   try {
     // 1. Request account access first — authorizes the dapp with MetaMask

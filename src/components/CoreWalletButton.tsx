@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useCoreWallet } from "@/hooks/useCoreWallet";
+import { HEDERA_TESTNET_CHAIN_ID } from "@/lib/metaMaskAuth";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
@@ -18,21 +19,27 @@ function formatAddress(address: string): string {
   return `${address.slice(0, 6)}...${address.slice(-4)}`;
 }
 
+const CHAIN_LABELS: Record<string, { label: string; testnet: boolean }> = {
+  "0xa86a": { label: "Avalanche C-Chain", testnet: false },
+  "0xa869": { label: "Fuji Testnet", testnet: true },
+  [HEDERA_TESTNET_CHAIN_ID]: { label: "Hedera Testnet", testnet: true },
+};
+
 function ChainBadge({ chainId }: { chainId: string | null }) {
   if (!chainId) return null;
-  const isTestnet = chainId === '0xa869';
+  const info = CHAIN_LABELS[chainId] ?? { label: "Unsupported Network", testnet: false };
   return (
     <span
       className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold ${
-        isTestnet
+        info.testnet
           ? "bg-amber-100 text-amber-700 border border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800"
           : "bg-green-100 text-green-700 border border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800"
       }`}
     >
       <span
-        className={`w-1.5 h-1.5 rounded-full ${isTestnet ? "bg-amber-500" : "bg-green-500"}`}
+        className={`w-1.5 h-1.5 rounded-full ${info.testnet ? "bg-amber-500" : "bg-green-500"}`}
       />
-      {isTestnet ? "Fuji Testnet" : "Avalanche C-Chain"}
+      {info.label}
     </span>
   );
 }
@@ -47,7 +54,9 @@ export default function CoreWalletButton() {
       await navigator.clipboard.writeText(address);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch {}
+    } catch {
+      // Clipboard write failed silently — not critical
+    }
   };
 
   return (

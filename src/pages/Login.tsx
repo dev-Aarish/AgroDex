@@ -529,7 +529,7 @@ export default function Login() {
                       Core
                     </CardTitle>
                     <CardDescription className="font-body text-base text-gray-600 dark:text-slate-400">
-                      Connect with your Core wallet (Avalanche)
+                      Connect with your Core wallet (Hedera EVM)
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
