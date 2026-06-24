@@ -60,7 +60,13 @@ export function ChatbotWidget() {
 
       if (!response.ok) {
         const errData = await response.json().catch(() => null);
-        throw new Error(errData?.error || `Request failed with status ${response.status}`);
+        let errorMsg = errData?.error || `Request failed with status ${response.status}`;
+        
+        if (errorMsg === 'ANTHROPIC_API_KEY not configured') {
+          errorMsg = 'AI is not configured. Maintainer must run: supabase secrets set ANTHROPIC_API_KEY=your_key';
+        }
+        
+        throw new Error(errorMsg);
       }
 
       const textResponse = await response.text();
