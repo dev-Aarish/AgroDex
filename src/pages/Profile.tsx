@@ -14,16 +14,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import {
-  Wallet,
-  Mail,
-  Link as LinkIcon,
-  AlertCircle,
-  CheckCircle,
-  Clock,
-  Zap,
-  Globe,
-} from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Helmet } from "react-helmet-async";
