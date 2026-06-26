@@ -9,6 +9,7 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 import { HelmetProvider } from 'react-helmet-async';
 import { DEMO_VERIFY_URL } from '@/lib/demo';
 import { lazy, Suspense } from 'react';
+import { ChatbotWidget } from '@/components/chat/ChatbotWidget';
 
 const Landing = lazy(() => import('./pages/Landing'));
 const Index = lazy(() => import('./pages/Index'));
@@ -63,6 +64,7 @@ const App = () => (
                     <Route path="/risk-intelligence" element={<ProtectedRoute><RiskIntelligence /></ProtectedRoute>} />
                     <Route path="/journey/:batchId" element={<BatchJourney />} />
                   </Routes>
+                  <ChatbotWidget />
                 </Suspense>
               </WalletProvider>
             </AuthProvider>

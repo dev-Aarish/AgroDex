@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { verifyBatch, registerBatch, verifyBatchById } from "../api";
+import { verifyBatch, registerBatch, verifyBatchById, updateProfile } from "../api";
 
 // ---------------------------------------------------------------------------
 // vi.mock() is hoisted to the top of the file by Vitest's transform, so any
@@ -397,3 +397,77 @@ describe("verifyBatchById", () => {
     );
   });
 });
+
+// ---------------------------------------------------------------------------
+// updateProfile — Issue #143 tests
+// ---------------------------------------------------------------------------
+describe("updateProfile", () => {
+  let fetchSpy: ReturnType<typeof vi.fn>;
+
+  beforeEach(() => {
+    fetchSpy = vi.fn();
+    vi.stubGlobal("fetch", fetchSpy);
+    // Authenticated session by default
+    mockGetSession.mockResolvedValue({
+      data: { session: { access_token: "test-jwt-token" } },
+    });
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.clearAllMocks();
+  });
+
+  it("should make PATCH request to /api/account with correct body and headers", async () => {
+    const mockResponse = {
+      ok: true,
+      message: "Profile updated successfully",
+      profile: { username: "new_username" },
+    };
+
+    fetchSpy.mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: vi.fn().mockResolvedValue(mockResponse),
+    } as any);
+
+    const result = await updateProfile({ username: "new_username" });
+
+    expect(fetch).toHaveBeenCalledWith(
+      expect.stringContaining("/api/account"),
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: "Bearer test-jwt-token",
+        },
+        body: JSON.stringify({ username: "new_username" }),
+      },
+    );
+    expect(result).toEqual(mockResponse);
+  });
+
+  it("should throw error if session is not active", async () => {
+    mockGetSession.mockResolvedValue({ data: { session: null } });
+
+    await expect(updateProfile({ username: "new_username" })).rejects.toThrow(
+      "No active session",
+    );
+  });
+
+  it("should throw server error when response not ok", async () => {
+    fetchSpy.mockResolvedValue({
+      ok: false,
+      status: 409,
+      json: vi.fn().mockResolvedValue({
+        error: "Username is already taken",
+      }),
+    } as any);
+
+    await expect(updateProfile({ username: "taken_username" })).rejects.toThrow(
+      "Username is already taken",
+    );
+  });
+});
+

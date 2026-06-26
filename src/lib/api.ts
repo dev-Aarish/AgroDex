@@ -849,3 +849,48 @@ export const deleteAccount = async (): Promise<{ ok: boolean; message: string }>
     throw new Error('deleteAccount failed: network error');
   }
 };
+
+/**
+ * Updates the authenticated user's profile details (username/email) via the backend.
+ */
+export const updateProfile = async (
+  data: { username?: string; email?: string }
+): Promise<{ ok: boolean; message: string; profile: any }> => {
+  const headers = await buildAuthHeaders();
+  headers["Content-Type"] = "application/json";
+
+  if (!headers["Authorization"]) {
+    throw new Error("No active session");
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let payload: any = null;
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/account`, {
+      method: "PATCH",
+      headers,
+      body: JSON.stringify(data),
+    });
+
+    try {
+      payload = await response.json();
+    } catch {
+      // ignore
+    }
+
+    if (!response.ok) {
+      throw new Error(
+        payload?.error ||
+        payload?.message ||
+        `updateProfile failed: HTTP ${response.status}`
+      );
+    }
+
+    return payload;
+  } catch (err) {
+    if (err instanceof Error) throw err;
+    throw new Error("updateProfile failed: network error");
+  }
+};
+
