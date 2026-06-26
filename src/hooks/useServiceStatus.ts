@@ -19,12 +19,12 @@ const fetchHealth = async (): Promise<HealthCheckResponse> => {
   }
 
   // Vérifie si tous les services sont 'ok'
-  const allOk = Object.values(data.services || {}).every((s: any) => s?.ok);
+  const allOk = Object.values(data.status || {}).every((s: any) => s?.ok);
   if (!allOk) {
     throw new Error("One or more services are down");
   }
 
-  return { ok: data.ok, status: data.services };
+  return { ok: data.ok, status: data.status };
 };
 
 export const useServiceStatus = (enabled = true) => {
