@@ -13,6 +13,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Input } from "@/components/ui/input";
+import { updateProfile } from "@/lib/api";
 import {
   Wallet,
   Mail,
@@ -20,12 +22,16 @@ import {
   AlertCircle,
   CheckCircle,
   Clock,
+  Pencil,
+  Save,
+  X,
   Globe,
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Helmet } from "react-helmet-async";
 import { DeleteProfileModal } from "@/components/DeleteProfileModal";
+
 
 interface UserProfile {
   username: string | null;
@@ -45,6 +51,103 @@ export default function Profile() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
+  const [isEditing, setIsEditing] = useState(false);
+  const [editUsername, setEditUsername] = useState("");
+  const [editEmail, setEditEmail] = useState("");
+  const [updating, setUpdating] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<{ username?: string; email?: string }>({});
+
+  const validateFields = (usernameVal: string, emailVal: string) => {
+    const errors: { username?: string; email?: string } = {};
+    
+    // Validate username
+    const trimmedUsername = usernameVal.trim();
+    if (!trimmedUsername) {
+      errors.username = "Username is required";
+    } else if (trimmedUsername.length < 3 || trimmedUsername.length > 30) {
+      errors.username = "Username must be between 3 and 30 characters";
+    } else if (!/^[a-zA-Z0-9_-]+$/.test(trimmedUsername)) {
+      errors.username = "Username can only contain alphanumeric characters, underscores, and hyphens";
+    }
+
+    // Validate email
+    const trimmedEmail = emailVal.trim();
+    if (!trimmedEmail) {
+      errors.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+      errors.email = "Please enter a valid email address";
+    }
+
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleStartEdit = () => {
+    setEditUsername(profile?.username || "");
+    setEditEmail(user?.email || "");
+    setValidationErrors({});
+    setError(null);
+    setSuccess(null);
+    setIsEditing(true);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setValidationErrors({});
+  };
+
+  const handleSaveChanges = async () => {
+    setError(null);
+    setSuccess(null);
+
+    const isValid = validateFields(editUsername, editEmail);
+    if (!isValid) return;
+
+    if (!supabase) {
+      setError("Supabase client is not initialized");
+      return;
+    }
+
+    setUpdating(true);
+
+    try {
+      // Determine what changed
+      const payload: { username?: string; email?: string } = {};
+      if (editUsername.trim() !== (profile?.username || "")) {
+        payload.username = editUsername.trim();
+      }
+      if (editEmail.trim() !== (user?.email || "")) {
+        payload.email = editEmail.trim();
+      }
+
+      // If nothing changed, just exit edit mode
+      if (Object.keys(payload).length === 0) {
+        setIsEditing(false);
+        return;
+      }
+
+      const res = await updateProfile(payload);
+      if (res.ok) {
+        // Refresh local session so user.email updates in supabase client cache
+        if (payload.email) {
+          const { error: refreshError } = await supabase.auth.refreshSession();
+          if (refreshError) {
+            console.warn("Failed to refresh session:", refreshError.message);
+          }
+        }
+        await loadProfile();
+        setIsEditing(false);
+        setSuccess("Profile updated successfully");
+      }
+    } catch (err: any) {
+      console.error("Profile update error:", err);
+      setError(err.message || "Failed to update profile");
+    } finally {
+      setUpdating(false);
+    }
+  };
+
+
   useEffect(() => {
     loadProfile();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -52,6 +155,12 @@ export default function Profile() {
 
   const loadProfile = async () => {
     if (!user) {
+      setLoading(false);
+      return;
+    }
+
+    if (!supabase) {
+      setError("Supabase client is not initialized");
       setLoading(false);
       return;
     }
@@ -125,11 +234,24 @@ export default function Profile() {
       
       <div className="container mx-auto max-w-2xl py-8 px-4">
         <Card className="bg-card text-card-foreground dark:border-slate-800">
-          <CardHeader>
-            <CardTitle className="text-gray-900 dark:text-white">User Profile</CardTitle>
-            <CardDescription className="text-slate-500 dark:text-slate-400">
-              Manage your account and linked Hedera wallet
-            </CardDescription>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <div>
+              <CardTitle className="text-gray-900 dark:text-white">User Profile</CardTitle>
+              <CardDescription className="text-slate-500 dark:text-slate-400">
+                Manage your account and linked Hedera wallet
+              </CardDescription>
+            </div>
+            {!isEditing && (
+              <Button
+                onClick={handleStartEdit}
+                variant="outline"
+                size="sm"
+                className="border-gray-300 dark:border-slate-800 text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800 transition-all duration-300 ease-in-out hover:scale-105"
+              >
+                <Pencil className="mr-2 h-4 w-4" />
+                Edit Profile
+              </Button>
+            )}
           </CardHeader>
           
           <CardContent className="space-y-6">
@@ -155,12 +277,39 @@ export default function Profile() {
                 <label className="text-sm font-medium text-gray-700 dark:text-slate-300">
                   Email
                 </label>
-                <div className="flex items-center gap-2 mt-1">
-                  <Mail className="h-4 w-4 text-gray-500" />
-                  <span className="text-gray-900 dark:text-white">
-                    {user?.email || "Anonymous"}
-                  </span>
-                </div>
+                {isEditing ? (
+                  <div className="mt-1 space-y-1">
+                    <div className="relative flex items-center">
+                      <Mail className="absolute left-3 h-4 w-4 text-gray-500" />
+                      <Input
+                        type="email"
+                        value={editEmail}
+                        onChange={(e) => {
+                          setEditEmail(e.target.value);
+                          validateFields(editUsername, e.target.value);
+                        }}
+                        disabled={updating}
+                        className={`pl-9 bg-background border ${
+                          validationErrors.email
+                            ? "border-red-500 focus-visible:ring-red-500"
+                            : "border-slate-300 dark:border-slate-800 focus-visible:ring-primary"
+                        }`}
+                      />
+                    </div>
+                    {validationErrors.email && (
+                      <p className="text-xs text-red-500 font-medium">
+                        {validationErrors.email}
+                      </p>
+                    )}
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2 mt-1">
+                    <Mail className="h-4 w-4 text-gray-500" />
+                    <span className="text-gray-900 dark:text-white">
+                      {user?.email || "Anonymous"}
+                    </span>
+                  </div>
+                )}
               </div>
 
               {/* Username */}
@@ -168,10 +317,71 @@ export default function Profile() {
                 <label className="text-sm font-medium text-gray-700 dark:text-slate-300">
                   Username
                 </label>
-                <p className="text-gray-900 dark:text-white mt-1">
-                  {profile?.username || "Not set"}
-                </p>
+                {isEditing ? (
+                  <div className="mt-1 space-y-1">
+                    <Input
+                      type="text"
+                      value={editUsername}
+                      onChange={(e) => {
+                        setEditUsername(e.target.value);
+                        validateFields(e.target.value, editEmail);
+                      }}
+                      disabled={updating}
+                      className={`bg-background border ${
+                        validationErrors.username
+                          ? "border-red-500 focus-visible:ring-red-500"
+                          : "border-slate-300 dark:border-slate-800 focus-visible:ring-primary"
+                      }`}
+                    />
+                    {validationErrors.username ? (
+                      <p className="text-xs text-red-500 font-medium">
+                        {validationErrors.username}
+                      </p>
+                    ) : (
+                      <p className="text-xs text-gray-500 dark:text-slate-400">
+                        Alphanumeric, underscores, and hyphens, 3-30 characters.
+                      </p>
+                    )}
+                  </div>
+                ) : (
+                  <p className="text-gray-900 dark:text-white mt-1">
+                    {profile?.username || "Not set"}
+                  </p>
+                )}
               </div>
+
+              {/* Edit Actions */}
+              {isEditing && (
+                <div className="flex gap-3 pt-2">
+                  <Button
+                    onClick={handleSaveChanges}
+                    disabled={updating || Object.keys(validationErrors).length > 0}
+                    className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-medium shadow-md transition-all duration-300 ease-in-out hover:scale-[1.02]"
+                  >
+                    {updating ? (
+                      <>
+                        <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                        Saving...
+                      </>
+                    ) : (
+                      <>
+                        <Save className="mr-2 h-4 w-4" />
+                        Save Changes
+                      </>
+                    )}
+                  </Button>
+                  <Button
+                    onClick={handleCancelEdit}
+                    disabled={updating}
+                    variant="outline"
+                    className="flex-1 border-gray-300 dark:border-slate-800 text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800"
+                  >
+                    <X className="mr-2 h-4 w-4" />
+                    Cancel
+                  </Button>
+                </div>
+              )}
+
 
               {/* Authentication Method */}
               <div>
