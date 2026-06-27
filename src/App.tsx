@@ -10,6 +10,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { DEMO_VERIFY_URL } from '@/lib/demo';
 import { lazy, Suspense } from 'react';
 import { ChatbotWidget } from '@/components/chat/ChatbotWidget';
+import ScrollToTopButton from "@/components/ScrollToTopButton";
 
 const Landing = lazy(() => import('./pages/Landing'));
 const Index = lazy(() => import('./pages/Index'));
@@ -65,6 +66,7 @@ const App = () => (
                     <Route path="/journey/:batchId" element={<BatchJourney />} />
                   </Routes>
                   <ChatbotWidget />
+                  <ScrollToTopButton />
                 </Suspense>
               </WalletProvider>
             </AuthProvider>
