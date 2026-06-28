@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 import {
   Card,
   CardContent,
@@ -23,11 +23,36 @@ import Footer from "@/components/Footer";
 import { Helmet } from "react-helmet-async";
 import { CopyButton } from "@/components/CopyButton";
 import { useQuery } from "@tanstack/react-query";
-import { getDashboardStats, getDashboardHealth, getAuditLogs, type AuditLogEntry } from "@/lib/api";
+import {
+  getDashboardStats,
+  getDashboardHealth,
+  getAuditLogs,
+  type AuditLogEntry,
+} from "@/lib/api";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
@@ -73,10 +98,12 @@ interface AIInsight {
   error?: string;
 }
 
-const getCleanInsightError = (errorStr: string | null | undefined): string | null => {
+const getCleanInsightError = (
+  errorStr: string | null | undefined,
+): string | null => {
   if (!errorStr) return null;
   const lower = errorStr.toLowerCase();
-  
+
   if (
     lower.includes("api_key_invalid") ||
     lower.includes("api key not configured") ||
@@ -85,7 +112,7 @@ const getCleanInsightError = (errorStr: string | null | undefined): string | nul
   ) {
     return "AI Insights are currently unavailable due to a service configuration issue.";
   }
-  
+
   if (
     lower.includes("googlegenerativeai") ||
     lower.includes("bad request") ||
@@ -95,12 +122,11 @@ const getCleanInsightError = (errorStr: string | null | undefined): string | nul
   ) {
     return "AI Insights are currently unavailable due to a temporary service error.";
   }
-  
+
   return errorStr;
 };
 
 export default function Dashboard() {
-  
   const { t, i18n } = useTranslation();
   const [page, setPage] = useState(1);
   const [status, setStatus] = useState<"all" | "approved" | "flagged">("all");
@@ -122,7 +148,8 @@ export default function Dashboard() {
 
   const auditLogsQuery = useQuery({
     queryKey: ["audit-logs", page, status, search, sortBy, sortOrder],
-    queryFn: () => getAuditLogs({ page, limit: 10, status, search, sortBy, sortOrder }),
+    queryFn: () =>
+      getAuditLogs({ page, limit: 10, status, search, sortBy, sortOrder }),
     refetchOnWindowFocus: false,
   });
 
@@ -227,7 +254,7 @@ export default function Dashboard() {
                     AgroDex
                   </h2>
                   <p className="text-sm sm:text-base text-emerald-600 font-semibold mt-0.5">
-                    {t('dashboard.hero.subtitle')}
+                    {t("dashboard.hero.subtitle")}
                   </p>
                 </div>
               </motion.div>
@@ -239,16 +266,20 @@ export default function Dashboard() {
                 transition={{ delay: 0.2, duration: 0.5 }}
               >
                 <CheckCircle2 className="h-4 w-4" />
-                {t('dashboard.hero.poweredBy')}
+                {t("dashboard.hero.poweredBy")}
               </motion.div>
 
               <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-gray-900 dark:text-white leading-tight">
-                {t('dashboard.hero.fighting')}<span className="text-emerald-600">{t('dashboard.hero.fraud')}</span> in
-                {t('dashboard.hero.location')}
+                {t("dashboard.hero.fighting")}
+                <span className="text-emerald-600">
+                  {t("dashboard.hero.fraud")}
+                </span>{" "}
+                in
+                {t("dashboard.hero.location")}
               </h1>
 
               <p className="text-xl sm:text-2xl font-body text-gray-600 dark:text-slate-300 leading-relaxed">
-                {t('dashboard.hero.description')}
+                {t("dashboard.hero.description")}
               </p>
             </motion.div>
 
@@ -276,7 +307,7 @@ export default function Dashboard() {
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-sm font-medium text-gray-600 dark:text-slate-400">
-                  {t('dashboard.stats.registeredBatches')}
+                  {t("dashboard.stats.registeredBatches")}
                 </CardTitle>
                 <div className="bg-emerald-100 dark:bg-emerald-950/50 p-2 rounded-lg">
                   <FileText className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
@@ -291,7 +322,9 @@ export default function Dashboard() {
                   kpis.totalBatches.toLocaleString()
                 )}
               </div>
-              <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">{t('dashboard.stats.totalOnPlatform')}</p>
+              <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
+                {t("dashboard.stats.totalOnPlatform")}
+              </p>
             </CardContent>
           </Card>
 
@@ -299,7 +332,7 @@ export default function Dashboard() {
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-sm font-medium text-gray-600 dark:text-slate-400">
-                  {t('dashboard.stats.nftsCreated')}
+                  {t("dashboard.stats.nftsCreated")}
                 </CardTitle>
                 <div className="bg-blue-100 dark:bg-blue-950/50 p-2 rounded-lg">
                   <Coins className="h-5 w-5 text-blue-600 dark:text-blue-400" />
@@ -315,7 +348,7 @@ export default function Dashboard() {
                 )}
               </div>
               <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
-                {t('dashboard.stats.tokenizedCertificates')}
+                {t("dashboard.stats.tokenizedCertificates")}
               </p>
             </CardContent>
           </Card>
@@ -324,7 +357,7 @@ export default function Dashboard() {
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-sm font-medium text-gray-600 dark:text-slate-400">
-                  {t('dashboard.stats.aiVerifications')}
+                  {t("dashboard.stats.aiVerifications")}
                 </CardTitle>
                 <div className="bg-purple-100 dark:bg-purple-950/50 p-2 rounded-lg">
                   <ShieldCheck className="h-5 w-5 text-purple-600 dark:text-purple-400" />
@@ -340,24 +373,24 @@ export default function Dashboard() {
                 )}
               </div>
               <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
-                {t('dashboard.stats.verifiedBatches')}
+                {t("dashboard.stats.verifiedBatches")}
               </p>
             </CardContent>
           </Card>
         </div>
-
         {!statsLoading && !statsError && (
           <p className="text-xs text-gray-500 mb-8">
             {kpis.totalVerifications.toLocaleString()} verifications IA
             realisees, dont {audit.flaggedLots.length} lot(s) a surveiller.
           </p>
-        )}        {/* AI Insight Card */}
+        )}{" "}
+        {/* AI Insight Card */}
         <Card className="mb-8 border-2 border-purple-200 dark:border-purple-950/30 bg-gradient-to-br from-purple-50 via-white to-white dark:from-purple-950/20 dark:via-slate-900/10 dark:to-card bg-card text-card-foreground">
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
                 <Sparkles className="h-5 w-5 text-purple-600 dark:text-purple-400" />
-                {t('dashboard.aiInsight.title')}
+                {t("dashboard.aiInsight.title")}
               </CardTitle>
               <div className="flex items-center gap-2">
                 <div className="flex items-center gap-1 px-2 py-1 bg-purple-100 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 text-xs font-semibold rounded-full">
@@ -367,14 +400,14 @@ export default function Dashboard() {
               </div>
             </div>
             <CardDescription className="text-gray-500 dark:text-slate-400">
-              {t('dashboard.aiInsight.description')}
+              {t("dashboard.aiInsight.description")}
             </CardDescription>
           </CardHeader>
           <CardContent>
             {statsLoading ? (
               <div className="text-center py-4 text-gray-500 dark:text-slate-400 flex items-center justify-center gap-2">
                 <Loader2 className="h-5 w-5 animate-spin text-purple-500" />
-                {t('dashboard.aiInsight.loading')}
+                {t("dashboard.aiInsight.loading")}
               </div>
             ) : statsError ? (
               <div className="text-center py-4 text-red-600 dark:text-red-400 font-semibold">
@@ -386,7 +419,7 @@ export default function Dashboard() {
                   “{aiInsightText}”
                 </p>
                 <p className="text-xs text-gray-500 dark:text-slate-400 mt-3">
-                  {t('dashboard.aiInsight.generatedOn')}{" "}
+                  {t("dashboard.aiInsight.generatedOn")}{" "}
                   {new Date(
                     statsData?.generatedAt ?? Date.now(),
                   ).toLocaleString()}
@@ -394,7 +427,7 @@ export default function Dashboard() {
               </>
             ) : (
               <p className="text-base text-gray-600 dark:text-slate-400 italic">
-                {t('dashboard.aiInsight.unavailable')}
+                {t("dashboard.aiInsight.unavailable")}
               </p>
             )}
             {aiInsightError && !statsLoading && !statsError && (
@@ -404,7 +437,6 @@ export default function Dashboard() {
             )}
           </CardContent>
         </Card>
-
         {/* Audit Journal & Service Status */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {/* Audit Journal Card */}
@@ -412,10 +444,10 @@ export default function Dashboard() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
                 <Activity className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-                {t('dashboard.audit.title')}
+                {t("dashboard.audit.title")}
               </CardTitle>
               <CardDescription className="text-gray-500 dark:text-slate-400">
-                {t('dashboard.audit.description')}
+                {t("dashboard.audit.description")}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -465,10 +497,18 @@ export default function Dashboard() {
                       <SelectValue placeholder="Sort by" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="created_at:desc">Newest First</SelectItem>
-                      <SelectItem value="created_at:asc">Oldest First</SelectItem>
-                      <SelectItem value="trustScore:desc">Score High-Low</SelectItem>
-                      <SelectItem value="trustScore:asc">Score Low-High</SelectItem>
+                      <SelectItem value="created_at:desc">
+                        Newest First
+                      </SelectItem>
+                      <SelectItem value="created_at:asc">
+                        Oldest First
+                      </SelectItem>
+                      <SelectItem value="trustScore:desc">
+                        Score High-Low
+                      </SelectItem>
+                      <SelectItem value="trustScore:asc">
+                        Score Low-High
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -484,9 +524,13 @@ export default function Dashboard() {
                 </div>
               ) : auditLogsQuery.isError ? (
                 <div className="text-center py-8 text-red-600 dark:text-red-400 font-semibold">
-                  Error loading audit logs: {auditLogsQuery.error instanceof Error ? auditLogsQuery.error.message : "Failed to load"}
+                  Error loading audit logs:{" "}
+                  {auditLogsQuery.error instanceof Error
+                    ? auditLogsQuery.error.message
+                    : "Failed to load"}
                 </div>
-              ) : !auditLogsQuery.data || auditLogsQuery.data.data.length === 0 ? (
+              ) : !auditLogsQuery.data ||
+                auditLogsQuery.data.data.length === 0 ? (
                 <div className="text-center py-12 text-gray-500 dark:text-slate-400 italic">
                   No verification records found.
                 </div>
@@ -496,60 +540,91 @@ export default function Dashboard() {
                     <Table>
                       <TableHeader className="bg-slate-50 dark:bg-slate-900/50">
                         <TableRow>
-                          <TableHead className="text-xs font-bold text-gray-600 dark:text-slate-400 py-2">Lot ID</TableHead>
-                          <TableHead className="text-xs font-bold text-gray-600 dark:text-slate-400 py-2 text-center">Score</TableHead>
-                          <TableHead className="text-xs font-bold text-gray-600 dark:text-slate-400 py-2 text-center">Status</TableHead>
-                          <TableHead className="text-xs font-bold text-gray-600 dark:text-slate-400 py-2 text-right">Actions</TableHead>
+                          <TableHead className="text-xs font-bold text-gray-600 dark:text-slate-400 py-2">
+                            Lot ID
+                          </TableHead>
+                          <TableHead className="text-xs font-bold text-gray-600 dark:text-slate-400 py-2 text-center">
+                            Score
+                          </TableHead>
+                          <TableHead className="text-xs font-bold text-gray-600 dark:text-slate-400 py-2 text-center">
+                            Status
+                          </TableHead>
+                          <TableHead className="text-xs font-bold text-gray-600 dark:text-slate-400 py-2 text-right">
+                            Actions
+                          </TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {auditLogsQuery.data.data.map((lot: AuditLogEntry, idx: number) => {
-                          return (
-                            <TableRow key={`${lot.token_id}-${lot.serial_number}-${idx}`} className="hover:bg-slate-50/50 dark:hover:bg-slate-900/50">
-                              <TableCell className="py-2.5">
-                                <div className="flex flex-col min-w-[120px]">
-                                  <span className="font-mono text-xs font-bold text-gray-900 dark:text-white truncate" title={lot.token_id}>
-                                    {lot.token_id} (S/N: {lot.serial_number})
-                                  </span>
-                                  {lot.trustExplanation && (
-                                    <span className="text-[10px] text-gray-500 dark:text-slate-400 truncate max-w-[200px] mt-0.5" title={lot.trustExplanation}>
-                                      {lot.trustExplanation}
+                        {auditLogsQuery.data.data.map(
+                          (lot: AuditLogEntry, idx: number) => {
+                            return (
+                              <TableRow
+                                key={`${lot.token_id}-${lot.serial_number}-${idx}`}
+                                className="hover:bg-slate-50/50 dark:hover:bg-slate-900/50"
+                              >
+                                <TableCell className="py-2.5">
+                                  <div className="flex flex-col min-w-[120px]">
+                                    <span
+                                      className="font-mono text-xs font-bold text-gray-900 dark:text-white truncate"
+                                      title={lot.token_id}
+                                    >
+                                      {lot.token_id} (S/N: {lot.serial_number})
                                     </span>
-                                  )}
-                                </div>
-                              </TableCell>
-                              <TableCell className="py-2.5 text-center font-bold text-xs">
-                                <span style={{ color: lot.score >= 80 ? "#10b981" : "#f97316" }}>
-                                  {lot.score}/100
-                                </span>
-                              </TableCell>
-                              <TableCell className="py-2.5 text-center">
-                                <Badge className={lot.status === "approved" ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-400 border-emerald-200" : "bg-orange-100 text-orange-850 dark:bg-orange-950/40 dark:text-orange-400 border-orange-200"} variant="outline">
-                                  {lot.status}
-                                </Badge>
-                              </TableCell>
-                              <TableCell className="py-2.5 text-right">
-                                <div className="inline-flex items-center gap-1">
-                                  <CopyButton
-                                    value={lot.token_id}
-                                    successMessage="Token ID copied!"
-                                    className="h-8 w-8 text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400"
-                                    tooltip="Copy Token ID"
-                                  />
-                                  <a
-                                    href={`https://hashscan.io/testnet/token/${lot.token_id}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="p-1.5 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-                                    title="View on HashScan"
+                                    {lot.trustExplanation && (
+                                      <span
+                                        className="text-[10px] text-gray-500 dark:text-slate-400 truncate max-w-[200px] mt-0.5"
+                                        title={lot.trustExplanation}
+                                      >
+                                        {lot.trustExplanation}
+                                      </span>
+                                    )}
+                                  </div>
+                                </TableCell>
+                                <TableCell className="py-2.5 text-center font-bold text-xs">
+                                  <span
+                                    style={{
+                                      color:
+                                        lot.score >= 80 ? "#10b981" : "#f97316",
+                                    }}
                                   >
-                                    <ExternalLink className="h-3.5 w-3.5" />
-                                  </a>
-                                </div>
-                              </TableCell>
-                            </TableRow>
-                          );
-                        })}
+                                    {lot.score}/100
+                                  </span>
+                                </TableCell>
+                                <TableCell className="py-2.5 text-center">
+                                  <Badge
+                                    className={
+                                      lot.status === "approved"
+                                        ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-400 border-emerald-200"
+                                        : "bg-orange-100 text-orange-850 dark:bg-orange-950/40 dark:text-orange-400 border-orange-200"
+                                    }
+                                    variant="outline"
+                                  >
+                                    {lot.status}
+                                  </Badge>
+                                </TableCell>
+                                <TableCell className="py-2.5 text-right">
+                                  <div className="inline-flex items-center gap-1">
+                                    <CopyButton
+                                      value={lot.token_id}
+                                      successMessage="Token ID copied!"
+                                      className="h-8 w-8 text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400"
+                                      tooltip="Copy Token ID"
+                                    />
+                                    <a
+                                      href={`https://hashscan.io/testnet/token/${lot.token_id}`}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="p-1.5 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                                      title="View on HashScan"
+                                    >
+                                      <ExternalLink className="h-3.5 w-3.5" />
+                                    </a>
+                                  </div>
+                                </TableCell>
+                              </TableRow>
+                            );
+                          },
+                        )}
                       </TableBody>
                     </Table>
                   </div>
@@ -558,24 +633,41 @@ export default function Dashboard() {
                   {auditLogsQuery.data.pagination.totalPages > 1 && (
                     <div className="flex items-center justify-between pt-2 border-t border-border mt-4">
                       <p className="text-[11px] text-muted-foreground">
-                        Showing page {auditLogsQuery.data.pagination.currentPage} of {auditLogsQuery.data.pagination.totalPages} ({auditLogsQuery.data.pagination.totalRecords} logs)
+                        Showing page{" "}
+                        {auditLogsQuery.data.pagination.currentPage} of{" "}
+                        {auditLogsQuery.data.pagination.totalPages} (
+                        {auditLogsQuery.data.pagination.totalRecords} logs)
                       </p>
                       <Pagination className="w-auto mx-0">
                         <PaginationContent>
                           <PaginationItem>
                             <PaginationPrevious
                               onClick={() => setPage((p) => Math.max(1, p - 1))}
-                              className={page === 1 ? "pointer-events-none opacity-50 cursor-not-allowed text-xs h-8" : "cursor-pointer text-xs h-8"}
+                              className={
+                                page === 1
+                                  ? "pointer-events-none opacity-50 cursor-not-allowed text-xs h-8"
+                                  : "cursor-pointer text-xs h-8"
+                              }
                             />
                           </PaginationItem>
-                          {Array.from({ length: auditLogsQuery.data.pagination.totalPages }).map((_, i) => {
+                          {Array.from({
+                            length: auditLogsQuery.data.pagination.totalPages,
+                          }).map((_, i) => {
                             const p = i + 1;
-                            const total = auditLogsQuery.data.pagination.totalPages;
-                            if (total > 4 && Math.abs(p - page) > 1 && p !== 1 && p !== total) {
+                            const total =
+                              auditLogsQuery.data.pagination.totalPages;
+                            if (
+                              total > 4 &&
+                              Math.abs(p - page) > 1 &&
+                              p !== 1 &&
+                              p !== total
+                            ) {
                               if (p === 2 || p === total - 1) {
                                 return (
                                   <PaginationItem key={p}>
-                                    <span className="px-1 text-muted-foreground text-xs">...</span>
+                                    <span className="px-1 text-muted-foreground text-xs">
+                                      ...
+                                    </span>
                                   </PaginationItem>
                                 );
                               }
@@ -595,8 +687,20 @@ export default function Dashboard() {
                           })}
                           <PaginationItem>
                             <PaginationNext
-                              onClick={() => setPage((p) => Math.min(auditLogsQuery.data.pagination.totalPages, p + 1))}
-                              className={page === auditLogsQuery.data.pagination.totalPages ? "pointer-events-none opacity-50 cursor-not-allowed text-xs h-8" : "cursor-pointer text-xs h-8"}
+                              onClick={() =>
+                                setPage((p) =>
+                                  Math.min(
+                                    auditLogsQuery.data.pagination.totalPages,
+                                    p + 1,
+                                  ),
+                                )
+                              }
+                              className={
+                                page ===
+                                auditLogsQuery.data.pagination.totalPages
+                                  ? "pointer-events-none opacity-50 cursor-not-allowed text-xs h-8"
+                                  : "cursor-pointer text-xs h-8"
+                              }
                             />
                           </PaginationItem>
                         </PaginationContent>
@@ -613,9 +717,11 @@ export default function Dashboard() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
                 <Zap className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-                {t('dashboard.status.title')}
+                {t("dashboard.status.title")}
               </CardTitle>
-              <CardDescription className="text-slate-500 dark:text-slate-400">{t('dashboard.status.description')}</CardDescription>
+              <CardDescription className="text-slate-500 dark:text-slate-400">
+                {t("dashboard.status.description")}
+              </CardDescription>
             </CardHeader>
             <CardContent>
               {healthLoading ? (
@@ -627,14 +733,18 @@ export default function Dashboard() {
                   <p className="text-red-600 dark:text-red-400 font-semibold mb-2">
                     ⚠️ Connection Error
                   </p>
-                  <p className="text-sm text-gray-600 dark:text-slate-300 mb-2">{healthError}</p>
+                  <p className="text-sm text-gray-600 dark:text-slate-300 mb-2">
+                    {healthError}
+                  </p>
                   <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
                     Verifier que le backend est demarre et accessible.
                   </p>
                 </div>
               ) : !healthStatus ? (
                 <div className="text-center py-8">
-                  <p className="text-red-600 dark:text-red-400 font-semibold mb-2">⚠️ No Data</p>
+                  <p className="text-red-600 dark:text-red-400 font-semibold mb-2">
+                    ⚠️ No Data
+                  </p>
                   <p className="text-sm text-gray-600 dark:text-slate-300">
                     Unable to retrieve service status.
                   </p>
@@ -645,20 +755,17 @@ export default function Dashboard() {
                   <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-900/50 rounded-lg border border-gray-200 dark:border-slate-800">
                     <div className="flex items-center gap-3">
                       <div
-                        className={`w-3 h-3 rounded-full ${healthStatus.hedera.ok
-                          ? "bg-emerald-500"
-                          : "bg-red-500"
-                          }`}
+                        className={`w-3 h-3 rounded-full ${healthStatus?.hedera?.ok ? "bg-emerald-500" : "bg-red-500"}`}
                       />
                       <div>
                         <p className="text-sm font-medium text-gray-900 dark:text-white">
                           Hedera Mirror Node
                         </p>
                         <p className="text-xs text-gray-500 dark:text-slate-400">
-                          {healthStatus.hedera.ok ? "Operational" : "Offline"}
+                          {healthStatus?.hedera?.ok ? "Operational" : "Offline"}
                         </p>
-                        {!healthStatus.hedera.ok &&
-                          healthStatus.hedera.error && (
+                        {!healthStatus?.hedera?.ok &&
+                          healthStatus?.hedera?.error && (
                             <p className="text-xs text-red-500 dark:text-red-400 mt-1">
                               {healthStatus.hedera.error}
                             </p>
@@ -667,7 +774,9 @@ export default function Dashboard() {
                     </div>
                     <div className="text-right">
                       <p className="text-sm font-bold text-gray-700 dark:text-slate-300">
-                        {healthStatus.hedera.ms}ms
+                        {healthStatus?.hedera?.ms
+                          ? `${healthStatus.hedera.ms}ms`
+                          : "--"}
                       </p>
                     </div>
                   </div>
@@ -676,23 +785,28 @@ export default function Dashboard() {
                   <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-900/50 rounded-lg border border-gray-200 dark:border-slate-800">
                     <div className="flex items-center gap-3">
                       <div
-                        className={`w-3 h-3 rounded-full ${healthStatus.supabase.ok
-                          ? "bg-emerald-500"
-                          : "bg-red-500"
-                          }`}
+                        className={`w-3 h-3 rounded-full ${
+                          healthStatus?.supabase?.ok
+                            ? "bg-emerald-500"
+                            : "bg-red-500"
+                        }`}
                       />
                       <div>
                         <p className="text-sm font-medium text-gray-900 dark:text-white">
                           Supabase DB
                         </p>
                         <p className="text-xs text-gray-500 dark:text-slate-400">
-                          {healthStatus.supabase.ok ? "Operational" : "Offline"}
+                          {healthStatus?.supabase?.ok
+                            ? "Operational"
+                            : "Offline"}
                         </p>
                       </div>
                     </div>
                     <div className="text-right">
                       <p className="text-sm font-bold text-gray-700 dark:text-slate-300">
-                        {healthStatus.supabase.ms}ms
+                        {healthStatus?.supabase?.ms
+                          ? `${healthStatus.supabase.ms}ms`
+                          : "--"}
                       </p>
                     </div>
                   </div>
@@ -701,26 +815,27 @@ export default function Dashboard() {
                   <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-900/50 rounded-lg border border-gray-200 dark:border-slate-800">
                     <div className="flex items-center gap-3">
                       <div
-                        className={`w-3 h-3 rounded-full ${healthStatus.gemini.ok
-                          ? "bg-emerald-500"
-                          : "bg-red-500"
-                          }`}
+                        className={`w-3 h-3 rounded-full ${
+                          healthStatus?.gemini?.ok
+                            ? "bg-emerald-500"
+                            : "bg-red-500"
+                        }`}
                       />
                       <div>
                         <p className="text-sm font-medium text-gray-900 dark:text-white">
                           Gemini AI{" "}
-                          {healthStatus.gemini.model
+                          {healthStatus?.gemini?.model
                             ? `(${healthStatus.gemini.model})`
                             : ""}
                         </p>
                         <p className="text-xs text-gray-500 dark:text-slate-400">
-                          {healthStatus.gemini.ok ? "Operational" : "Offline"}
+                          {healthStatus?.gemini?.ok ? "Operational" : "Offline"}
                         </p>
                       </div>
                     </div>
                     <div className="text-right">
                       <p className="text-sm font-bold text-gray-700 dark:text-slate-300">
-                        {healthStatus.gemini.ms}ms
+                        {healthStatus?.gemini?.ms ? `${healthStatus.gemini.ms}ms` : "--"}
                       </p>
                     </div>
                   </div>
@@ -729,7 +844,6 @@ export default function Dashboard() {
             </CardContent>
           </Card>
         </div>
-
         {/* Recent Activities */}
         <Card className="mb-8 bg-card text-card-foreground dark:border-slate-800">
           <CardHeader>
@@ -757,15 +871,14 @@ export default function Dashboard() {
                     className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 p-3 rounded-lg border border-border"
                   >
                     <div>
-                      <p className="text-sm font-medium">
-                        {activity.title}
-                      </p>
+                      <p className="text-sm font-medium">{activity.title}</p>
 
                       <p
-                        className={`text-xs mt-1 ${activity.type === "approved"
+                        className={`text-xs mt-1 ${
+                          activity.type === "approved"
                             ? "text-emerald-600"
                             : "text-orange-600"
-                          }`}
+                        }`}
                       >
                         {activity.type === "approved"
                           ? "Approved"
@@ -784,11 +897,12 @@ export default function Dashboard() {
             )}
           </CardContent>
         </Card>
-
         {/* Technology Stack */}
         <Card className="bg-card text-card-foreground dark:border-slate-800">
           <CardHeader>
-            <CardTitle className="text-gray-900 dark:text-white">Technology Stack</CardTitle>
+            <CardTitle className="text-gray-900 dark:text-white">
+              Technology Stack
+            </CardTitle>
             <CardDescription className="text-slate-500 dark:text-slate-400">
               Technologies used for traceability
             </CardDescription>
@@ -799,25 +913,33 @@ export default function Dashboard() {
                 <p className="text-sm font-semibold text-emerald-900 dark:text-emerald-400 mb-1">
                   Hedera HCS
                 </p>
-                <p className="text-xs text-emerald-700 dark:text-emerald-500">Immutable consensus</p>
+                <p className="text-xs text-emerald-700 dark:text-emerald-500">
+                  Immutable consensus
+                </p>
               </div>
               <div className="p-4 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950/30 dark:to-slate-900/30 rounded-lg border border-blue-100/50 dark:border-blue-900/20">
                 <p className="text-sm font-semibold text-blue-900 dark:text-blue-400 mb-1">
                   Hedera HTS
                 </p>
-                <p className="text-xs text-blue-700 dark:text-blue-500">NFT Tokenization</p>
+                <p className="text-xs text-blue-700 dark:text-blue-500">
+                  NFT Tokenization
+                </p>
               </div>
               <div className="p-4 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950/30 dark:to-slate-900/30 rounded-lg border border-purple-100/50 dark:border-purple-900/20">
                 <p className="text-sm font-semibold text-purple-900 dark:text-purple-400 mb-1">
                   Gemini 3.1 Flash Lite
                 </p>
-                <p className="text-xs text-purple-700 dark:text-purple-500">Analysis & Provenance</p>
+                <p className="text-xs text-purple-700 dark:text-purple-500">
+                  Analysis & Provenance
+                </p>
               </div>
               <div className="p-4 bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-950/30 dark:to-slate-900/30 rounded-lg border border-orange-100/50 dark:border-orange-900/20">
                 <p className="text-sm font-semibold text-orange-900 dark:text-orange-400 mb-1">
                   Supabase
                 </p>
-                <p className="text-xs text-orange-700 dark:text-orange-500">Database</p>
+                <p className="text-xs text-orange-700 dark:text-orange-500">
+                  Database
+                </p>
               </div>
             </div>
           </CardContent>
