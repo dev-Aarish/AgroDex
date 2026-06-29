@@ -9,7 +9,7 @@ import {
 import logoUrl from "@/assets/agritrust-logo.png";
 import { Github, Mail, Globe, ExternalLink } from "lucide-react";
 import heroImage from "@/assets/Petani_padi.jpg";
-import { motion } from "framer-motion";
+
 
 export default function Landing() {
     const [isBottom, setIsBottom] = useState(false);
@@ -64,18 +64,23 @@ export default function Landing() {
         <div className="bg-background text-foreground">
 
             {/* ================= NAVBAR ================= */}
-            <div className="fixed top-0 left-0 w-full z-[999] shadow-md backdrop-blur bg-white/70 dark:bg-black/50 border-b">
-                <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+            <div className="fixed top-0 left-0 w-full z-[999] backdrop-blur-md bg-black/80 border-b border-zinc-800/60">
+                <div className="container mx-auto px-4 h-14 flex items-center justify-between">
 
-                    {/* NAV LINKS */}
+                    {/* Logo dot */}
+                    <div className="flex items-center gap-2 font-semibold text-sm text-white">
+                        <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                        AgroDex
+                    </div>
+
                     <div className="flex gap-6 text-sm font-medium">
                         {sections.map((s) => (
                             <button
                                 key={s.id}
                                 onClick={() => scrollTo(s.id)}
                                 className={`transition ${activeSection === s.id
-                                    ? "text-emerald-600 font-bold"
-                                    : "text-gray-700 dark:text-gray-300"
+                                    ? "text-emerald-400 font-semibold"
+                                    : "text-gray-400 hover:text-gray-200"
                                     }`}
                             >
                                 {s.label}
@@ -83,12 +88,11 @@ export default function Landing() {
                         ))}
                     </div>
 
-                    {/* CTA */}
                     <Link to="/register">
                         <Button
-                            className={`transition-all duration-300 text-white ${isBottom
-                                ? "bg-emerald-500 shadow-[0_0_25px_#10b981] animate-pulse"
-                                : "bg-emerald-600"
+                            className={`text-sm font-semibold text-black transition-all duration-300 ${isBottom
+                                ? "bg-emerald-400 shadow-[0_0_20px_#10b981] animate-pulse"
+                                : "bg-emerald-500 hover:bg-emerald-400"
                                 }`}
                         >
                             Sign Up <ArrowRight className="ml-2 h-4 w-4" />
@@ -96,8 +100,8 @@ export default function Landing() {
                     </Link>
                 </div>
             </div>
-
             {/* ================= HERO ================= */}
+
             <section id="hero" className="pt-28 min-h-screen container mx-auto px-4 flex items-center">
                 <div className="grid md:grid-cols-2 gap-10 items-center">
 
@@ -145,40 +149,100 @@ export default function Landing() {
             </section>
 
             {/* ================= PROBLEM ================= */}
-            <section id="problem" className="py-24 container mx-auto px-4">
-
+            <section
+                id="problem"
+                className="py-24 bg-gray-50 dark:bg-black/20 container mx-auto px-4"
+            >
                 <h2 className="text-4xl font-bold text-center mb-6">
                     The Problem
                 </h2>
 
                 <p className="text-center max-w-3xl mx-auto text-gray-600 mb-12">
-                    Food fraud in agricultural supply chains destroys trust between farmers, distributors, and consumers which
-                    leads to billions in losses and unverifiable product quality.
+                    Food fraud in agricultural supply chains destroys trust between farmers,
+                    distributors, and consumers, resulting in billions in losses and making
+                    product quality difficult to verify.
                 </p>
 
                 <div className="grid md:grid-cols-3 gap-6">
+                    {[
+                        {
+                            icon: (
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-5 w-5 text-green-400"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={1.5}
+                                        d="M9 17v-6h13M9 17l-4-4m4 4l-4 4M5 5h14"
+                                    />
+                                </svg>
+                            ),
+                            title: "Lack of Traceability",
+                            desc: "Agricultural products pass through multiple intermediaries with little to no reliable record of their origin or journey.",
+                        },
+                        {
+                            icon: (
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-5 w-5 text-green-400"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={1.5}
+                                        d="M12 8c-1.657 0-3 1.343-3 3v2m3-5a3 3 0 013 3v2m-6 0h6m-8 6h10a2 2 0 002-2v-4H4v4a2 2 0 002 2z"
+                                    />
+                                </svg>
+                            ),
+                            title: "Farmer Disadvantage",
+                            desc: "Authentic farmers struggle to prove premium quality, making it difficult to earn fair value for certified produce.",
+                        },
+                        {
+                            icon: (
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-5 w-5 text-green-400"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={1.5}
+                                        d="M12 9v2m0 4h.01M10.29 3.86l-7 12.14A2 2 0 005.03 19h13.94a2 2 0 001.74-3l-7-12.14a2 2 0 00-3.48 0z"
+                                    />
+                                </svg>
+                            ),
+                            title: "Consumer Distrust",
+                            desc: "Buyers cannot independently verify authenticity, certifications, or whether products have been tampered with.",
+                        },
+                    ].map((card) => (
+                        <div
+                            key={card.title}
+                            className="p-6 border border-zinc-800 hover:border-green-900 rounded-xl bg-zinc-950 transition-all duration-300 hover:-translate-y-1"
+                        >
+                            <div className="w-9 h-9 rounded-lg bg-green-950/40 flex items-center justify-center mb-4">
+                                {card.icon}
+                            </div>
 
-                    <div className="p-6 border rounded-xl">
-                        <h3 className="font-bold mb-2">Lack of Traceability</h3>
-                        <p className="text-sm text-gray-500">
-                            No reliable way to verify crop origin or production history.
-                        </p>
-                    </div>
+                            <h3 className="font-semibold text-white mb-2">
+                                {card.title}
+                            </h3>
 
-                    <div className="p-6 border rounded-xl">
-                        <h3 className="font-bold mb-2">Farmer Disadvantage</h3>
-                        <p className="text-sm text-gray-500">
-                            Farmers cannot prove premium quality like organic or fair trade.
-                        </p>
-                    </div>
-
-                    <div className="p-6 border rounded-xl">
-                        <h3 className="font-bold mb-2">Consumer Distrust</h3>
-                        <p className="text-sm text-gray-500">
-                            Buyers have no cryptographic proof of authenticity.
-                        </p>
-                    </div>
-
+                            <p className="text-sm text-gray-500 leading-relaxed">
+                                {card.desc}
+                            </p>
+                        </div>
+                    ))}
                 </div>
             </section>
 
@@ -195,120 +259,97 @@ export default function Landing() {
 
                 <div className="grid md:grid-cols-3 gap-6">
 
-                    <div className="p-6 border rounded-xl">
-                        <h3 className="font-bold">Hedera HCS</h3>
-                        <p className="text-sm text-gray-500">
-                            Every farming event is permanently recorded on an immutable consensus log.
-                        </p>
-                    </div>
-
-                    <div className="p-6 border rounded-xl">
-                        <h3 className="font-bold">HTS NFTs</h3>
-                        <p className="text-sm text-gray-500">
-                            Each batch becomes a verifiable token tied to its origin history.
-                        </p>
-                    </div>
-
-                    <div className="p-6 border rounded-xl">
-                        <h3 className="font-bold">Mirror Node Verification</h3>
-                        <p className="text-sm text-gray-500">
-                            Real-time replay of supply chain history for instant validation.
-                        </p>
-                    </div>
-
-                </div>
-            </section>
-
-            {/* ================= HOW ================= */}
-            <section id="how" className="py-24 container mx-auto px-4 text-center">
-                <h2 className="text-4xl font-bold mb-4">How It Works</h2>
-                <p className="text-gray-500 max-w-2xl mx-auto mb-10">
-                    A simple 3-step system that turns agricultural products into verifiable digital assets.
-                </p>
-
-                <div className="grid md:grid-cols-3 gap-6">
-                    {["Register Batch", "Mint NFT", "Verify via QR"].map((step, i) => (
-                        <div key={i} className="p-6 border rounded-xl">
-                            <div className="text-4xl font-bold text-emerald-600 mb-3">
-                                0{i + 1}
+                    {[
+                        {
+                            icon: <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>,
+                            title: "Hedera HCS",
+                            desc: "Every farming event is permanently committed to an immutable consensus log, tamper-proof from origin."
+                        },
+                        {
+                            icon: <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" /></svg>,
+                            title: "HTS NFTs",
+                            desc: "Each batch becomes a certifiable token tied to its origin history and quality data on-chain."
+                        },
+                        {
+                            icon: <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2" /></svg>,
+                            title: "Mirror Node Verification",
+                            desc: "Real-time replay of supply chain history for remote auditors, regulators, and buyers."
+                        },
+                    ].map((card) => (
+                        <div key={card.title} className="p-6 border border-zinc-800 hover:border-emerald-900 rounded-xl bg-zinc-950 transition-colors">
+                            <div className="w-9 h-9 rounded-lg bg-emerald-950/60 flex items-center justify-center mb-4">
+                                {card.icon}
                             </div>
-                            <h3 className="font-bold">{step}</h3>
+                            <h3 className="font-semibold text-white mb-2">{card.title}</h3>
+                            <p className="text-sm text-gray-500 leading-relaxed">{card.desc}</p>
                         </div>
                     ))}
                 </div>
             </section>
-            {/*animation*/}
-            <section id="flow" className="py-24 container mx-auto px-4">
 
-                <h2 className="text-4xl font-bold text-center mb-6">
-                    How AgroDex Works
-                </h2>
+            {/* ================= HOW ================= */}
 
-                <p className="text-center max-w-2xl mx-auto text-gray-600 mb-14">
-                    A real-time traceability flow powered by Hedera Consensus Service and AI verification.
+            <section id="how" className="py-24 container mx-auto px-4 text-center">
+
+                <p className="text-xs text-emerald-400 font-semibold uppercase tracking-widest mb-3">
+                    How It Works
                 </p>
 
-                <div className="flex flex-col md:flex-row items-center justify-center gap-8">
+                <h2 className="text-4xl font-bold mb-3">
+                    From farm to verified in 3 steps
+                </h2>
 
-                    {/* FARMER */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5 }}
-                        className="p-6 border rounded-xl text-center w-64"
-                    >
-                        <div className="text-3xl mb-2">🌾</div>
-                        <h3 className="font-bold">Farmer</h3>
-                        <p className="text-sm text-gray-500 mt-2">
-                            Registers crop batch with data & images
-                        </p>
-                    </motion.div>
+                <p className="text-gray-500 max-w-2xl mx-auto mb-14">
+                    A simple, deterministic system that turns agricultural products into
+                    verifiable digital assets.
+                </p>
 
-                    {/* ARROW 1 */}
-                    <motion.div
-                        animate={{ x: [0, 8, 0] }}
-                        transition={{ repeat: Infinity, duration: 1.5 }}
-                        className="text-emerald-600"
-                    >
-                        <ArrowRight size={28} />
-                    </motion.div>
+                <div className="relative">
 
-                    {/* BLOCKCHAIN */}
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.5 }}
-                        className="p-6 border rounded-xl text-center w-64 bg-emerald-50 dark:bg-emerald-950/20"
-                    >
-                        <div className="text-3xl mb-2">⛓️</div>
-                        <h3 className="font-bold">Hedera Blockchain</h3>
-                        <p className="text-sm text-gray-500 mt-2">
-                            HCS logs + HTS NFT minting for immutability
-                        </p>
-                    </motion.div>
+                    {/* Left connector */}
+                    <div className="hidden md:block absolute top-7 left-[19%] w-[24%] h-px bg-gradient-to-r from-emerald-900 via-emerald-500 to-emerald-900"></div>
 
-                    {/* ARROW 2 */}
-                    <motion.div
-                        animate={{ x: [0, 8, 0] }}
-                        transition={{ repeat: Infinity, duration: 1.5, delay: 0.2 }}
-                        className="text-emerald-600"
-                    >
-                        <ArrowRight size={28} />
-                    </motion.div>
+                    {/* Right connector */}
+                    <div className="hidden md:block absolute top-7 right-[19%] w-[24%] h-px bg-gradient-to-r from-emerald-900 via-emerald-500 to-emerald-900"></div>
 
-                    {/* BUYER */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5 }}
-                        className="p-6 border rounded-xl text-center w-64"
-                    >
-                        <div className="text-3xl mb-2">🛒</div>
-                        <h3 className="font-bold">Buyer</h3>
-                        <p className="text-sm text-gray-500 mt-2">
-                            Verifies authenticity via QR + Mirror Node
-                        </p>
-                    </motion.div>
+                    <div className="grid md:grid-cols-3 gap-8">
+
+                        {[
+                            {
+                                num: "01",
+                                title: "Register Batch",
+                                desc: "Farmer logs crop data, images, and provenance details into the AgroDex platform.",
+                            },
+                            {
+                                num: "02",
+                                title: "Mint NFT",
+                                desc: "A unique HTS NFT is minted on Hedera, anchoring the batch to an immutable identity.",
+                            },
+                            {
+                                num: "03",
+                                title: "Verify via QR",
+                                desc: "Any buyer or auditor scans the QR code to instantly validate the full provenance chain.",
+                            },
+                        ].map((step) => (
+                            <div
+                                key={step.num}
+                                className="relative flex flex-col items-center"
+                            >
+                                <div className="relative z-10 w-14 h-14 rounded-full border border-emerald-700 bg-emerald-950/50 flex items-center justify-center text-xl font-bold text-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.15)]">
+                                    {step.num}
+                                </div>
+
+                                <h3 className="font-semibold text-white mt-5 mb-2">
+                                    {step.title}
+                                </h3>
+
+                                <p className="text-sm text-gray-500 leading-relaxed max-w-[200px]">
+                                    {step.desc}
+                                </p>
+                            </div>
+                        ))}
+
+                    </div>
 
                 </div>
 
@@ -367,7 +408,7 @@ export default function Landing() {
                             ].map((item, i) => (
                                 <span
                                     key={i}
-                                    className="text-xs px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600"
+                                    className="text-xs px-3 py-1 rounded-full bg-emerald-950/60 border border-emerald-800/50 text-emerald-400"
                                 >
                                     {item}
                                 </span>
@@ -381,22 +422,18 @@ export default function Landing() {
             {/* ================= CTA ================= */}
             <section id="cta" className="py-24 container mx-auto px-4">
 
-                <div className="max-w-4xl mx-auto text-center p-12 rounded-3xl border bg-gradient-to-br from-emerald-50 to-white dark:from-emerald-950/20 dark:to-background shadow-lg">
-
-                    <h2 className="text-4xl font-bold mb-4 text-gray-900 dark:text-white">
+                <div className="max-w-3xl mx-auto text-center p-14 rounded-2xl border border-emerald-900/60 bg-emerald-950/30">
+                    <h2 className="text-4xl font-bold mb-4 text-white">
                         Start building trust in food systems
                     </h2>
-
-                    <p className="text-gray-600 dark:text-gray-300 mb-8">
+                    <p className="text-gray-400 mb-8 leading-relaxed">
                         Join AgroDex and make every agricultural product verifiable, transparent, and fraud-resistant.
                     </p>
-
                     <Link to="/register">
-                        <Button size="lg" className="bg-emerald-600 text-white hover:bg-emerald-700">
+                        <Button size="lg" className="bg-emerald-500 hover:bg-emerald-400 text-black font-semibold px-8">
                             Create Account
                         </Button>
                     </Link>
-
                 </div>
 
             </section>
