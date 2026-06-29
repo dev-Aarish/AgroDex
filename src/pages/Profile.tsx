@@ -18,6 +18,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Helmet } from "react-helmet-async";
 import { DeleteProfileModal } from "@/components/DeleteProfileModal";
+import { Pencil, Mail, Wallet, Zap, Clock } from 'lucide-react';
 
 
 interface UserProfile {
