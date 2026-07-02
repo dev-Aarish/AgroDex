@@ -748,6 +748,23 @@ export const getFraudOverview = async (): Promise<{ ok: boolean; data: FraudOver
   return payload;
 };
 
+/**
+ * Fetch all registered batches from Supabase for the Supply Chain Map.
+ * Returns an array of batch records with location, quantity, and risk data.
+ */
+export const getBatches = async () => {
+  const { data, error } = await supabase
+    .from('batches')
+    .select('id, batch_name, location, quantity, harvest_date, status, farmer_id, hcs_tx_id, ai_analysis')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    throw new Error(error.message || 'Failed to fetch batches');
+  }
+
+  return data || [];
+};
+
 export interface AuditLogEntry {
   token_id: string;
   serial_number: string;
