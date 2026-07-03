@@ -8,6 +8,9 @@
 
 ---
 
+![Downloads](https://img.shields.io/github/downloads/daviddprtma/AgroDex/total) ![Contributors](https://img.shields.io/github/contributors/daviddprtma/AgroDex?color=dark-green) ![Stargazers](https://img.shields.io/github/stars/daviddprtma/AgroDex?style=social) ![Issues](https://img.shields.io/github/issues/daviddprtma/AgroDex) ![License](https://img.shields.io/github/license/daviddprtma/AgroDex) ![Last Commit](https://img.shields.io/github/last-commit/daviddprtma/AgroDex) ![Repo Size](https://img.shields.io/github/repo-size/daviddprtma/AgroDex)
+
+
 <h3><i>🏆 Winner of Basic Track Problem Statement in Hello Future Hedera Ascension Hackathon 2025 🏆</i></h3>
 
 <img width="700" height=auto alt="AgroDex Dashboard Banner" src="https://github.com/user-attachments/assets/81bd6e83-879e-4319-92d8-38229919ffd5" />
