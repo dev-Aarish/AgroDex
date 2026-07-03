@@ -32,6 +32,8 @@ function TimelineStepCard({
   index,
 }: TimelineStep & { index: number }) {
   const [expanded, setExpanded] = useState(false);
+  const { state } = useVerificationAssistant();
+  const isIndonesian = state.assistantLanguage === "id";
   const Icon = statusIcons[status];
 
   return (
@@ -72,7 +74,7 @@ function TimelineStepCard({
                         : "border-red-200 dark:border-red-800 text-red-700 dark:text-red-300"
                   }`}
                 >
-                  {status === "verified" ? "Verified" : status === "pending" ? "Pending" : "Failed"}
+                  {isIndonesian ? (status === "verified" ? "Terverifikasi" : status === "pending" ? "Tertunda" : "Gagal") : (status === "verified" ? "Verified" : status === "pending" ? "Pending" : "Failed")}
                 </Badge>
               </div>
               <p className="font-semibold text-sm text-foreground">{event}</p>
@@ -102,14 +104,14 @@ function TimelineStepCard({
                 <div className="flex items-center justify-between gap-2">
                   <EducationalTooltip term="HCSMessage">
                     <span className="text-xs font-semibold text-muted-foreground">
-                      Transaction ID
+                      {isIndonesian ? "ID Transaksi" : "Transaction ID"}
                     </span>
                   </EducationalTooltip>
                   <div className="flex items-center gap-1.5">
                     <span className="text-xs font-mono text-foreground truncate max-w-[160px]">
                       {txId}
                     </span>
-                    <CopyButton value={txId} successMessage="Tx ID copied!" size="sm" className="h-5 w-5" />
+                    <CopyButton value={txId} successMessage={isIndonesian ? "ID Tx disalin!" : "Tx ID copied!"} size="sm" className="h-5 w-5" />
                   </div>
                 </div>
                 <div className="flex justify-end">
@@ -119,7 +121,7 @@ function TimelineStepCard({
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1 text-xs text-blue-600 dark:text-blue-400 hover:underline"
                   >
-                    View on HashScan <ExternalLink className="h-3 w-3" />
+                    {isIndonesian ? "Lihat di HashScan" : "View on HashScan"} <ExternalLink className="h-3 w-3" />
                   </a>
                 </div>
               </div>

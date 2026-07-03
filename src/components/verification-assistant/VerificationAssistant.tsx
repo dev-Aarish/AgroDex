@@ -144,6 +144,7 @@ interface VerificationAssistantProps {
       }>;
     };
     batch?: {
+      id?: string;
       batch_name?: string;
       product_type?: string;
     };
@@ -197,13 +198,21 @@ export function VerificationAssistant({
   }, [batchId, navigate]);
 
   const timelineSteps: TimelineStep[] = useMemo(() => {
-    if (demo) return DEMO_TIMELINE;
+    if (demo) {
+      return isIndonesian ? [
+        { step: 1, event: "Batch Terdaftar di Hedera", timestamp: "2025-10-28T09:00:00Z", txId: "0.0.7170927@1730102400.000000000", status: "verified" },
+        { step: 2, event: "Penilaian Kualitas AI", timestamp: "2025-10-28T09:15:00Z", txId: "0.0.7170927@1730103300.000000001", status: "verified" },
+        { step: 3, event: "Sertifikat NFT Dicetak", timestamp: "2025-10-28T10:00:00Z", txId: "0.0.7170927@1730106000.000000002", status: "verified" },
+        { step: 4, event: "Transfer Rantai Pasok", timestamp: "2025-10-30T14:30:00Z", txId: "0.0.7170927@1730284200.000000003", status: "verified" },
+        { step: 5, event: "Verifikasi Pasar", timestamp: "2025-11-02T08:00:00Z", txId: "0.0.7170927@1730524800.000000004", status: "pending" },
+      ] : DEMO_TIMELINE;
+    }
     const result: TimelineStep[] = [];
     const vr = verifiedResult;
 
     // 1. Add steps from AI summary timeline (e.g. "Batch Registered on HCS")
     if (vr?.ai_summary?.timeline) {
-      vr.ai_summary.timeline.forEach((item, idx) => {
+      vr.ai_summary.timeline?.forEach((item, idx) => {
         result.push({
           step: idx + 1,
           event: item.event,
@@ -216,11 +225,11 @@ export function VerificationAssistant({
 
     // 2. Add steps from HCS transaction IDs not already covered
     if (vr?.hcsTransactionIds) {
-      vr.hcsTransactionIds.forEach((txId, idx) => {
+      vr.hcsTransactionIds?.forEach((txId, idx) => {
         if (!result.some((r) => r.txId === txId)) {
           result.push({
             step: result.length + 1,
-            event: `HCS Transaction #${idx + 1}`,
+            event: isIndonesian ? `Transaksi HCS #${idx + 1}` : `HCS Transaction #${idx + 1}`,
             timestamp: new Date().toISOString(),
             txId,
             status: "verified",
@@ -233,9 +242,9 @@ export function VerificationAssistant({
     if (vr?.status === "registered" && !vr?.tokenId) {
       result.push({
         step: result.length + 1,
-        event: "Awaiting NFT Tokenization",
-        timestamp: vr.verifiedAt || new Date().toISOString(),
-        txId: vr.hcsTransactionIds?.[0] || "",
+        event: isIndonesian ? "Menunggu Tokenisasi NFT" : "Awaiting NFT Tokenization",
+        timestamp: vr?.verifiedAt || new Date().toISOString(),
+        txId: vr?.hcsTransactionIds?.[0] || "",
         status: "pending",
       });
     }
@@ -244,15 +253,15 @@ export function VerificationAssistant({
     result.push({
       step: result.length + 1,
       event: vr?.status === "registered"
-        ? "Registration Verified on Hedera"
-        : "Batch Verification Complete",
-      timestamp: vr.verifiedAt || new Date().toISOString(),
-      txId: vr.hcsTransactionIds?.[0] || "",
+        ? (isIndonesian ? "Pendaftaran Diverifikasi di Hedera" : "Registration Verified on Hedera")
+        : (isIndonesian ? "Verifikasi Batch Selesai" : "Batch Verification Complete"),
+      timestamp: vr?.verifiedAt || new Date().toISOString(),
+      txId: vr?.hcsTransactionIds?.[0] || "",
       status: "verified",
     });
 
     return result;
-  }, [verifiedResult, demo]);
+  }, [verifiedResult, isIndonesian, demo]);
 
   const trustSignals: TrustSignal[] = useMemo(() => {
     if (demo) return DEMO_SIGNALS.map((s) => ({
@@ -263,6 +272,12 @@ export function VerificationAssistant({
             : s.id === "trust-score" ? "Skor Kepercayaan AI: 92/100"
               : "Analisis Riwayat AI"
         : s.title,
+      plainExplanation: isIndonesian
+        ? s.id === "status" ? "Status ini menunjukkan apakah batch telah sepenuhnya diverifikasi di blockchain Hedera. Status 'Terverifikasi' berarti semua catatan telah diperiksa dan dikonfirmasi."
+          : s.id === "hcs-trail" ? "Setiap transaksi ini adalah catatan yang disimpan secara permanen di jaringan Hedera. Seperti stempel waktu digital yang tidak dapat diubah oleh siapa pun."
+            : s.id === "trust-score" ? "Skor kepercayaan tinggi! Data batch konsisten, sertifikasi valid, dan riwayat rantai pasok dapat diverifikasi."
+              : "AI telah menganalisis semua data batch dan memberikan ringkasan tentang asal-usul dan perjalanan produk. Ini membantu Anda memahami riwayat produk secara cepat."
+        : s.plainExplanation,
     }));
     const signals: TrustSignal[] = [];
     const result = verifiedResult;
@@ -337,9 +352,9 @@ export function VerificationAssistant({
   const recommendations: Recommendation[] = useMemo(() => {
     const recs = demo
       ? [
-          { id: "scan-qr", icon: Camera, title: "Scan QR Code", description: "Use your phone camera to scan the QR code on the product packaging. This will open the verification page instantly.", priority: "high" as const, action: { label: "Open Scanner", onClick: onOpenScanner } },
-          { id: "export-pdf", icon: FileText, title: "Download Certificate", description: "Save the verification result as a PDF that can be shared with buyers or regulatory authorities.", priority: "high" as const, action: { label: "Download PDF", onClick: onExportPDF } },
-          { id: "share-report", icon: Download, title: "Share Proof", description: "High-trust product. Share this verification report with your supply chain partners.", priority: "medium" as const },
+          { id: "scan-qr", icon: Camera, title: isIndonesian ? "Pindai Kode QR" : "Scan QR Code", description: isIndonesian ? "Gunakan kamera ponsel Anda untuk memindai kode QR pada kemasan produk. Ini akan membuka halaman verifikasi secara instan." : "Use your phone camera to scan the QR code on the product packaging. This will open the verification page instantly.", priority: "high" as const, action: { label: isIndonesian ? "Buka Pemindai" : "Open Scanner", onClick: onOpenScanner } },
+          { id: "export-pdf", icon: FileText, title: isIndonesian ? "Unduh Sertifikat" : "Download Certificate", description: isIndonesian ? "Simpan hasil verifikasi sebagai PDF yang dapat dibagikan dengan pembeli atau otoritas pengatur." : "Save the verification result as a PDF that can be shared with buyers or regulatory authorities.", priority: "high" as const, action: { label: isIndonesian ? "Unduh PDF" : "Download PDF", onClick: onExportPDF } },
+          { id: "share-report", icon: Download, title: isIndonesian ? "Bagikan Bukti" : "Share Proof", description: isIndonesian ? "Produk kepercayaan tinggi. Bagikan laporan verifikasi ini dengan mitra rantai pasok Anda." : "High-trust product. Share this verification report with your supply chain partners.", priority: "medium" as const },
         ]
       : generateRecommendations(
           !!verifiedResult,
@@ -350,16 +365,16 @@ export function VerificationAssistant({
         );
 
     // Wire up action handlers to generated recommendations
-    return recs.map((rec) => {
+    return recs.map((rec): Recommendation => {
       switch (rec.id) {
         case "scan-qr":
-          return { ...rec, action: { ...rec.action, onClick: onOpenScanner } };
+          return { ...rec, action: { label: rec.action?.label ?? "", ...rec.action, onClick: onOpenScanner } };
         case "export-pdf":
-          return { ...rec, action: { ...rec.action, onClick: onExportPDF } };
+          return { ...rec, action: { label: rec.action?.label ?? "", ...rec.action, onClick: onExportPDF } };
         case "share-report":
-          return { ...rec, action: { ...rec.action, label: rec.action?.label ?? (isIndonesian ? "Bagikan" : "Share"), onClick: handleShareProof } };
+          return { ...rec, action: { label: rec.action?.label ?? (isIndonesian ? "Bagikan" : "Share"), ...rec.action, onClick: handleShareProof } };
         case "learn-more":
-          return { ...rec, action: { ...rec.action, label: rec.action?.label ?? (isIndonesian ? "Lihat Perjalanan" : "View Journey"), onClick: handleExploreJourney } };
+          return { ...rec, action: { label: rec.action?.label ?? (isIndonesian ? "Lihat Perjalanan" : "View Journey"), ...rec.action, onClick: handleExploreJourney } };
         default:
           return rec;
       }

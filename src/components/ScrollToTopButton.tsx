@@ -33,7 +33,7 @@ const ScrollToTopButton = () => {
             title="Scroll to top"
             onClick={scrollToTop}
             className={`
-        fixed bottom-24 right-6 z-50 rounded-full shadow-lg
+        fixed bottom-[148px] right-8 z-50 rounded-full shadow-lg
         transition-all duration-300
         ${
                 isVisible
