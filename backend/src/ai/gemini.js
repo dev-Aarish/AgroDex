@@ -519,22 +519,41 @@ export async function dashboardInsight(stats) {
   }
 }
 
+// Cache for healthCheck to avoid hammering Gemini API on every request
+let healthCheckCache = null;
+let healthCheckCacheTimestamp = 0;
+const HEALTH_CHECK_CACHE_TTL_MS = 60_000; // 1 minute
+
 export async function healthCheck() {
   if (!GEMINI_API_KEY) {
     return { ok: false, model: GEMINI_MODEL, ms: 0, error: 'API key not configured' };
   }
 
+  // Return cached result if still fresh
+  if (healthCheckCache && (Date.now() - healthCheckCacheTimestamp) < HEALTH_CHECK_CACHE_TTL_MS) {
+    return healthCheckCache;
+  }
+
   try {
-    const { result, ms, error } = await callWithTimeout('Return JSON: {"pong": true}');
+    const { result, ms, error } = await callWithTimeout('Return JSON: {"pong": true}', 0);
     
     if (error) {
-      return { ok: false, model: GEMINI_MODEL, ms, error };
+      const response = { ok: false, model: GEMINI_MODEL, ms, error };
+      healthCheckCache = response;
+      healthCheckCacheTimestamp = Date.now();
+      return response;
     }
 
     const parsed = parseJSON(result, { pong: false });
-    return { ok: parsed.pong === true, model: GEMINI_MODEL, ms };
+    const response = { ok: parsed.pong === true, model: GEMINI_MODEL, ms };
+    healthCheckCache = response;
+    healthCheckCacheTimestamp = Date.now();
+    return response;
   } catch (error) {
-    return { ok: false, model: GEMINI_MODEL, ms: 0, error: error.message };
+    const response = { ok: false, model: GEMINI_MODEL, ms: 0, error: error.message };
+    healthCheckCache = response;
+    healthCheckCacheTimestamp = Date.now();
+    return response;
   }
 }
 

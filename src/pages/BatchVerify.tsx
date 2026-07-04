@@ -44,6 +44,9 @@ import Footer from "@/components/Footer";
 import { Helmet } from "react-helmet-async";
 import { CopyButton } from "@/components/CopyButton";
 import { exportVerifyResultToPDF } from "@/utils/pdfExport";
+import { VerificationAssistantProvider } from "@/context/VerificationAssistantContext";
+import { VerificationAssistant } from "@/components/verification-assistant/VerificationAssistant";
+import ErrorBoundary from "@/components/ErrorBoundary";
 
 type NotFoundResult = Extract<VerifyBatchResult, { reason: "not_found" }>;
 
@@ -389,6 +392,23 @@ export default function BatchVerify() {
               />
             </CardContent>
           </Card>
+        )}
+
+        {!showResults && (
+          <VerificationAssistantProvider>
+            <ErrorBoundary>
+              <VerificationAssistant
+                demo={true}
+                onOpenScanner={() => setIsScannerOpen(true)}
+                onExportPDF={() => {
+                  toast({
+                    title: "Verification required",
+                    description: "Verify a batch first to download the PDF certificate.",
+                  });
+                }}
+              />
+            </ErrorBoundary>
+          </VerificationAssistantProvider>
         )}
 
         {/* Verification Results - Only show if URL params present */}
@@ -823,6 +843,18 @@ export default function BatchVerify() {
               )}
             </CardContent>
           </Card>
+        )}
+
+        {verifiedResult && (
+          <VerificationAssistantProvider>
+            <ErrorBoundary>
+              <VerificationAssistant
+                verifiedResult={verifiedResult}
+                onExportPDF={handleExportPDF}
+                onOpenScanner={() => setIsScannerOpen(true)}
+              />
+            </ErrorBoundary>
+          </VerificationAssistantProvider>
         )}
       </div>
       <Footer />

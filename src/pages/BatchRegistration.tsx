@@ -455,12 +455,20 @@ export default function BatchRegistration() {
                         Your proof is saved. Copy the Transaction ID and proceed
                         to the next step to create your certificate.
                       </p>
-                      <button
-                        onClick={() => navigate("/tokenize")}
-                        className="mt-3 w-full px-4 py-2 font-bold text-white bg-emerald-700 rounded-lg shadow hover:bg-emerald-800 transition-colors"
-                      >
-                        Next Step: Tokenize
-                      </button>
+                      <div className="mt-3 flex flex-col gap-3 sm:flex-row">
+                        <button
+                          onClick={() => navigate("/tokenize")}
+                          className="flex-1 px-4 py-2 font-bold text-white bg-emerald-700 rounded-lg shadow hover:bg-emerald-800 transition-colors"
+                        >
+                          Next Step: Tokenize
+                        </button>
+                        <button
+                          onClick={() => navigate(`/journey/${mutation.data.batchId}`)}
+                          className="flex-1 px-4 py-2 font-bold text-emerald-700 bg-emerald-50 border border-emerald-300 rounded-lg shadow-sm hover:bg-emerald-100 transition-colors dark:bg-emerald-950/30 dark:text-emerald-300 dark:border-emerald-800 dark:hover:bg-emerald-950/50"
+                        >
+                          View Blockchain Journey
+                        </button>
+                      </div>
                     </div>
 
                     {mutation.data.ai_analysis && (

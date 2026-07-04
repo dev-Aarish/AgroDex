@@ -37,6 +37,7 @@ import {
 import { getFraudByBatch, type FraudScore, verifyBatchById } from "@/lib/api";
 import type { VerifyBatchResponse, VerifyBatchResult } from "@/lib/api";
 
+
 type TimelineStatus = "complete" | "attention" | "pending";
 
 interface JourneyEvent {
@@ -303,18 +304,20 @@ export default function BatchJourney() {
   const selectedEvent = events.find((event) => event.id === selectedId) ?? events[0];
   const riskData = isSample ? null : riskQuery.data?.data ?? null;
 
-  const productName = verifiedBatch?.batch?.batch_name || verifiedBatch?.batch?.product_type || "Organic Arabica Coffee";
-  const productOrigin = verifiedBatch?.batch?.location || "Nyeri County, Kenya";
-  const tokenId = verifiedBatch?.batch?.hedera_token_id || verifiedBatch?.tokenId || "0.0.6124839";
-  const verificationRecords = verifiedBatch?.hcsTransactionIds?.length || sampleEvents.filter((event) => event.txId).length;
-  const qualityInsight = verifiedBatch?.ai_summary?.trustExplanation || "Quality evidence is consistent across registration, validation, tokenization, and verification checkpoints.";
+  const productName = verifiedBatch?.batch?.batch_name || verifiedBatch?.batch?.product_type || (isSample ? "Organic Arabica Coffee" : "Batch name not available");
+  const productOrigin = verifiedBatch?.batch?.location || (isSample ? "Nyeri County, Kenya" : "Origin not recorded");
+  const tokenId = verifiedBatch?.batch?.hedera_token_id || verifiedBatch?.tokenId || (isSample ? "0.0.6124839" : "Not tokenized yet");
+  const verificationRecords = verifiedBatch?.hcsTransactionIds?.length ?? (isSample ? sampleEvents.filter((event) => event.txId).length : 0);
+  const qualityInsight = verifiedBatch?.ai_summary?.trustExplanation || (isSample ? "Quality evidence is consistent across registration, validation, tokenization, and verification checkpoints." : "Quality assessment pending or unavailable.");
   const highlights = verifiedBatch?.ai_summary?.summary_en
     ? [verifiedBatch.ai_summary.summary_en]
-    : [
-        "Origin and tokenization records are anchored to Hedera.",
-        "One transport and distribution checkpoint needs review.",
-        "Buyer verification completed with matching token evidence.",
-      ];
+    : isSample
+      ? [
+          "Origin and tokenization records are anchored to Hedera.",
+          "One transport and distribution checkpoint needs review.",
+          "Buyer verification completed with matching token evidence.",
+        ]
+      : ["No AI provenance summary available for this batch yet. Tokenize the batch to generate one."];
 
   const riskWarnings = riskData?.triggeredSignals?.length
     ? riskData.triggeredSignals.map((signal) => signal.description)
@@ -351,7 +354,7 @@ export default function BatchJourney() {
             <div className="flex items-center justify-between gap-3">
               <div>
                 <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Traceability health</p>
-                <p className="mt-1 text-2xl font-bold text-gray-900 dark:text-white">{isSample ? "82%" : verifiedBatch ? "Live" : "Loading"}</p>
+                <p className="mt-1 text-2xl font-bold text-gray-900 dark:text-white">{isSample ? "82%" : verifiedBatch ? (verifiedBatch.batch?.hedera_token_id ? "Tokenized" : "Registered") : "Loading..."}</p>
               </div>
               <RiskBadge risk={riskData} />
             </div>
@@ -360,7 +363,8 @@ export default function BatchJourney() {
 
         {batchQuery.isError && !isSample && (
           <div className="mb-6 rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800 dark:border-amber-900/40 dark:bg-amber-950/30 dark:text-amber-300">
-            Live batch history could not be loaded, so the dashboard is showing the standard journey structure with missing-data indicators.
+            <p className="font-bold mb-1">Could not load batch data</p>
+            <p>The backend server might be unavailable. The timeline below shows a simplified view. Try refreshing the page or come back later.</p>
           </div>
         )}
 
@@ -381,7 +385,7 @@ export default function BatchJourney() {
               <CardContent>
                 <div className="flex items-center justify-between gap-2">
                   <p className="break-words text-lg font-bold text-gray-900 dark:text-white">{metric.value}</p>
-                  {metric.label === "Hedera Token" && metric.value && metric.value !== "Not recorded" && (
+                  {metric.label === "Hedera Token" && metric.value && metric.value !== "Not recorded" && metric.value !== "Not tokenized yet" && (
                     <CopyButton value={metric.value} successMessage="Token ID copied!" />
                   )}
                 </div>
