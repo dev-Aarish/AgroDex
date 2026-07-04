@@ -87,6 +87,11 @@ export default function Landing() {
                             </button>
                         ))}
                     </div>
+                    <Link to="/login">
+                    <button className="text-sm font-semibold text-gray-400 hover:text-gray-200 transition-colors duration-200 mr-4">
+                    Login
+                    </button>
+                    </Link>
 
                     <Link to="/register">
                         <Button
