@@ -46,6 +46,7 @@ export default function Navbar() {
     disconnect: coreDisconnect,
   } = useCoreWallet();
   const isConnected = isHPConnected || isCoreConnected;
+  const isAuthenticated = !!user || isConnected;
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const isPublicJourney = location.pathname.startsWith("/journey");
@@ -152,6 +153,8 @@ export default function Navbar() {
             )}
             <LanguageSelector />
             <ThemeToggle />
+            {/* if user not logged it, then hide the dropdownmenu */}
+            {isAuthenticated && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -185,6 +188,7 @@ export default function Navbar() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+            )}
           </div>
 
           {/* Mobile Menu */}
