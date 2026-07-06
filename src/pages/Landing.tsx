@@ -1,16 +1,28 @@
-import { useState } from "react";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Github, Mail, Globe, ExternalLink } from "lucide-react";
 import logoUrl from "@/assets/agritrust-logo.png";
-import { Github, Mail, Globe, ExternalLink } from "lucide-react";
 import heroImage from "@/assets/Petani_padi.jpg";
 
 export default function Landing() {
+  const [activeSection, setActiveSection] = useState("hero");
 
-   
+  const sections = [
+    { id: "hero", label: "Home" },
+    { id: "problem", label: "Problem" },
+    { id: "solution", label: "Solution" },
+    { id: "how", label: "Process" },
+    { id: "ai-risk", label: "AI Risk" },
+    { id: "impact", label: "Impact" },
+    { id: "cta", label: "Join" },
+  ];
 
+  /* ================= SCROLL HANDLING ================= */
+  useEffect(() => {
+    const handleScroll = () => {
+      // scroll logic agar niche defined ho toh, nahi toh ye empty function crash nahi karega
+    };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -42,7 +54,6 @@ export default function Landing() {
     <div className="bg-background text-foreground">
       {/* ================= NAVBAR ================= */}
       <div className="fixed top-0 left-0 w-full z-[999] backdrop-blur-md bg-black/80 border-b border-zinc-800/60">
-        {/* buat spasi yang bagus antara login dan signup */}
         <div className="flex items-center p-4 justify-between container mx-auto">
           {/* Logo dot */}
           <div className="flex items-center gap-2 font-semibold text-sm text-white">
