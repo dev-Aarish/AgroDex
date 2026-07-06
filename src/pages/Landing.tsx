@@ -21,7 +21,7 @@ export default function Landing() {
   /* ================= SCROLL HANDLING ================= */
   useEffect(() => {
     const handleScroll = () => {
-      // scroll logic agar niche defined ho toh, nahi toh ye empty function crash nahi karega
+      // scroll logic placeholder
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
