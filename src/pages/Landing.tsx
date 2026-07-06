@@ -20,7 +20,7 @@ export default function Landing() {
         { id: "problem", label: "Problem" },
         { id: "solution", label: "Solution" },
         { id: "how", label: "Process" },
-        { id: "fraud", label: "AI Risk" },
+        { id: "ai-risk", label: "AI Risk" },
         { id: "impact", label: "Impact" },
         { id: "cta", label: "Join" },
     ];
@@ -364,7 +364,7 @@ export default function Landing() {
             </section>
 
             {/* ================= FRAUD ================= */}
-            <section id="fraud" className="py-24 container mx-auto px-4">
+            <section id="ai-risk" className="py-24 container mx-auto px-4">
 
                 <h2 className="text-4xl font-bold text-center mb-4">
                     AI Risk Intelligence Engine
