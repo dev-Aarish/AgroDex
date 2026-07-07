@@ -498,7 +498,7 @@ export default function Landing() {
               </p>
             </div>
 
-<
+
 
             {/* ================= LINKS ================= */}
             <div>
