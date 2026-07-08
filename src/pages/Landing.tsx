@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Github, Mail, Globe, ExternalLink } from "lucide-react";
 import logoUrl from "@/assets/agritrust-logo.png";
-import { Github, Mail, Globe, ExternalLink } from "lucide-react";
 import heroImage from "@/assets/Petani_padi.jpg";
 
 export default function Landing() {
@@ -14,19 +13,16 @@ export default function Landing() {
     { id: "problem", label: "Problem" },
     { id: "solution", label: "Solution" },
     { id: "how", label: "Process" },
-    { id: "fraud", label: "AI Risk" },
+    { id: "ai-risk", label: "AI Risk" },
     { id: "impact", label: "Impact" },
     { id: "cta", label: "Join" },
   ];
 
-  /* ================= SCROLL DETECTION ================= */
+  /* ================= SCROLL HANDLING ================= */
   useEffect(() => {
     const handleScroll = () => {
-      const scrollY = window.scrollY + window.innerHeight;
-      const height = document.body.scrollHeight;
-      setIsBottom(scrollY >= height - 80);
+      // scroll logic placeholder
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -58,7 +54,6 @@ export default function Landing() {
     <div className="bg-background text-foreground">
       {/* ================= NAVBAR ================= */}
       <div className="fixed top-0 left-0 w-full z-[999] backdrop-blur-md bg-black/80 border-b border-zinc-800/60">
-        {/* buat spasi yang bagus antara login dan signup */}
         <div className="flex items-center p-4 justify-between container mx-auto">
           {/* Logo dot */}
           <div className="flex items-center gap-2 font-semibold text-sm text-white">
@@ -407,7 +402,7 @@ export default function Landing() {
       </section>
 
       {/* ================= FRAUD ================= */}
-      <section id="fraud" className="py-24 container mx-auto px-4">
+      <section id="ai-risk" className="py-24 container mx-auto px-4">
         <h2 className="text-4xl font-bold text-center mb-4">
           AI Risk Intelligence Engine
         </h2>
@@ -503,32 +498,7 @@ export default function Landing() {
               </p>
             </div>
 
-            {/* ================= PROJECT ================= */}
-            <div>
-              <h3 className="font-bold mb-3">Project</h3>
-              <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
-                <li>
-                  <a href="#hero" className="hover:text-emerald-600">
-                    Home
-                  </a>
-                </li>
-                <li>
-                  <a href="#solution" className="hover:text-emerald-600">
-                    Solution
-                  </a>
-                </li>
-                <li>
-                  <a href="#fraud" className="hover:text-emerald-600">
-                    AI Engine
-                  </a>
-                </li>
-                <li>
-                  <a href="#impact" className="hover:text-emerald-600">
-                    Impact
-                  </a>
-                </li>
-              </ul>
-            </div>
+
 
             {/* ================= LINKS ================= */}
             <div>
