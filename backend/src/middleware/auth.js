@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { env } from '../utils/config.js';
+import { supabase as dbClient } from '../db.js';
 
 // Create Supabase client for auth verification
 const supabase = createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY);
@@ -30,6 +31,17 @@ export async function requireAuth(req, res, next) {
 
     // Attach user to request object
     req.user = user;
+
+    dbClient
+      .from('profiles')
+      .update({ last_active_at: new Date().toISOString() })
+      .eq('id', user.id)
+      .then(({ error: updateErr }) => {
+        if (updateErr) {
+          console.error('[auth] last_active_at update failed:', updateErr.message);
+        }
+      });
+
     next();
   } catch (error) {
     console.error('Auth middleware error:', error);

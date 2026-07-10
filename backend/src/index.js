@@ -10,6 +10,7 @@ import accountRoutes from "./routes/account.js";
 import { getHederaClient } from "./hederaClient.js";
 import { generalLimiter } from "./middleware/rateLimiter.js";
 import { logger } from "./middleware/logger.js";
+import { startCronJobs } from "./services/cron.js";
 import EventEmitter from 'events';
 
 // Fix for EventEmitter memory leak warning
@@ -88,6 +89,8 @@ try {
   console.error("Failed to initialize Hedera client:", error.message);
   process.exit(1);
 }
+
+startCronJobs();
 
 const PORT = env.PORT || 4000;
 const server = app.listen(PORT, "0.0.0.0", () => {
